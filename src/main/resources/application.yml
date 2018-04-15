@@ -1,0 +1,45 @@
+spring:
+  application:
+    name: vtask-service
+  datasource:
+    url: jdbc:mysql://47.93.148.25:2317/feiteng?useUnicode=true&characterEncoding=utf-8&useSSL=false
+    username: root
+    password: Yuejin123456
+#############swagger配置####################
+swagger:
+  enabled: true
+  docket:
+    app:
+      title: app接口文档
+      base-package: com.lmnml.group.controller.app
+      description: 开发中
+      version: 1.0.0.RELEASE
+    web:
+      title: cms接口文档
+      base-package: com.lmnml.group.controller.web
+      description: 开发中
+      version: 1.0.0.RELEASE
+  base-path: /**
+  exclude-path: /error, /ops/**
+#  license: Apache License, Version 2.0
+#  licenseUrl: https://www.apache.org/licenses/LICENSE-2.0.html
+#  termsOfServiceUrl: http://www.lmnml.com
+#  contact:
+#    name: 代甜
+#    url:  http://www.lmnml.com
+#    email: just2do@aliyun.com
+server:
+  port: 80
+######################## 通用Mapper/分页插件 #########################
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.lmnml.group.entity
+mapper:
+  mappers: com.lmnml.group.util.MyMapper
+  not-empty: false
+  identity: MYSQL
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql
