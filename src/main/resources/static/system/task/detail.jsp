@@ -28,7 +28,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     	margin-bottom: 10px;
     	color: #333333;
 	}
-	.page-category-title {
+	.page-VSystemCategory-title {
 		font-size: 16px;
     	font-weight: 500;
     	color: #666666;
@@ -60,12 +60,12 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		<div class="normal-absolute data-block" style="bottom:20px;">
 			<div class="task-detail">
 				<div class="page-task-title">-</div>
-				<div class="page-category-title">基本信息</div>
+				<div class="page-VSystemCategory-title">基本信息</div>
 				<div class="page-info-block">
 					<div class="page-info-item"></div>
 				</div>
-				<div class="page-category-title">操作步骤</div>
-				<div class="page-category-title">联系方式</div>
+				<div class="page-VSystemCategory-title">操作步骤</div>
+				<div class="page-VSystemCategory-title">联系方式</div>
 			</div>
 		</div>
 	</div>

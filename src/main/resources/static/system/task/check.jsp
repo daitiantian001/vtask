@@ -96,7 +96,7 @@ function loadData(){
 					$("#data-list").append("<tr>"+
 						"<td>"+n.user.name+"</td>"+
 						"<td>"+n.name+"</td>"+
-						"<td>"+n.category.name+"</td>"+
+						"<td>"+n.VSystemCategory.name+"</td>"+
 						"<td>"+n.num+"</td>"+
 						"<td>￥"+parseFloat(n.price).toFixed(2)+"</td>"+
 						"<td>"+(new Date(n.createTime).format("yyyy-MM-dd HH:mm:ss"))+"</td>"+

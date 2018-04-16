@@ -23,7 +23,7 @@ import java.util.Date;
  */
 @RestController
 @RequestMapping("app/user")
-@Api(value = "用户controller", tags = {"app接口"}, description = "app用户接口")
+@Api(value = "用户接口", tags = {"用户接口"}, description = "app用户接口")
 public class UserController extends BaseController {
 
     @Autowired

@@ -10,6 +10,7 @@ public interface IR {
 
     Object OK();
     Object OK(Object o);
+    Object OK_NUM(Integer num,Object o);
     Object NO(String s);
     Object BAD_REQ();
 }

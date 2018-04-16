@@ -12,6 +12,11 @@ public class R implements IR {
     }
 
     @Override
+    public Object OK_NUM(Integer num,Object o) {
+        return new BaseR(SUCCESS, o,num);
+    }
+
+    @Override
     public BaseR NO(String s) {
         return new BaseR(FAILTURE, s);
     }

@@ -57,7 +57,7 @@ var currentPage = 1;
 function loadData(){
 	$.ajax({
 		type: "POST",
-		url: "system/category/queryAll.do",
+		url: "system/VSystemCategoryMapper/queryAll.do",
 		data: {
 			currentPage: currentPage
 		},

@@ -9,6 +9,7 @@ public class BaseR {
     private Integer result;
     private String exception;
     private Object data;
+    private Integer total;
 
     public BaseR(Integer result) {
         this.result = result;
@@ -21,5 +22,11 @@ public class BaseR {
     public BaseR(Integer result, Object data) {
         this.result = result;
         this.data = data;
+    }
+
+    public BaseR(Integer result, Object data, Integer total) {
+        this.result = result;
+        this.data = data;
+        this.total = total;
     }
 }

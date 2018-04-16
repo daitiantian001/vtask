@@ -162,7 +162,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 function initCategory(){
 	$.ajax({
 		type: "POST",
-		url: "pdata/category/queryAll.do",
+		url: "pdata/VSystemCategoryMapper/queryAll.do",
 		dataType: "text", 
 		async:true,
 		traditional:true,
