@@ -78,6 +78,7 @@ public class UserController extends BaseController {
         vPlatformUser.setInventCode(inventCode);
         vPlatformUser.setName("赚客_" + mobile);
         vPlatformUser.setPhoto("http://yuejinimg.oss-cn-beijing.aliyuncs.com/app_icon_default_photo.png");
+        vPlatformUser.setMobile(mobile);
         vPlatformUser.setSex(0);
         userService.insertUser(vPlatformUser);
         return R.OK();
