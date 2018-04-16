@@ -15,4 +15,10 @@ public class R implements IR {
     public BaseR NO(String s) {
         return new BaseR(FAILTURE, s);
     }
+
+    @Override
+    public Object BAD_REQ() {
+        return new BaseR(FAILTURE,"请求参数错误!");
+    }
+
 }

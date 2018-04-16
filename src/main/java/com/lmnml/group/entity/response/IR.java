@@ -11,4 +11,5 @@ public interface IR {
     Object OK();
     Object OK(Object o);
     Object NO(String s);
+    Object BAD_REQ();
 }
