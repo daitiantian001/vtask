@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -80,6 +81,8 @@ public class UserController extends BaseController {
         vPlatformUser.setPhoto("http://yuejinimg.oss-cn-beijing.aliyuncs.com/app_icon_default_photo.png");
         vPlatformUser.setMobile(mobile);
         vPlatformUser.setSex(0);
+        vPlatformUser.setInventCode(new SimpleDateFormat("MMddHHmmss").format(new Date())+AliyunSms.getRandNum(1000, 99999));
+        vPlatformUser.setPhoto("http://yuejinimg.oss-cn-beijing.aliyuncs.com/app_icon_default_photo.png");
         userService.insertUser(vPlatformUser);
         return R.OK();
     }

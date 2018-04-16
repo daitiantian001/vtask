@@ -44,7 +44,7 @@ public class TaskController extends BaseController {
     }
 
     @PostMapping("list")
-    @ApiOperation(value = "任务列表", notes = "currentPage=0 类型(categoryId)不传查所有")
+    @ApiOperation(value = "任务列表", notes = "currentPage=1 类型(categoryId)不传查所有")
     @ApiResponses({
             @ApiResponse(code = 0, message = "成功"),
             @ApiResponse(code = 1, message = "失败")
@@ -53,10 +53,10 @@ public class TaskController extends BaseController {
         List list;
         Integer num;
         if(StrKit.isBlank(categoryId)){
-            list= taskService.taskList(currentPage);
+            list= taskService.taskList(currentPage-1);
             num = taskService.total();
         }else{
-            list= taskService.taskList(currentPage,categoryId);
+            list= taskService.taskList(currentPage-1,categoryId);
             num = taskService.total(categoryId);
 
         }
