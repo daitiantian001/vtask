@@ -1,5 +1,6 @@
 package com.lmnml.group.service.app;
 
+import com.lmnml.group.entity.app.VPlatformMission;
 import com.lmnml.group.entity.app.VPlatformStep;
 import com.lmnml.group.entity.app.VPlatformTask;
 import com.lmnml.group.entity.app.VSystemCategory;
@@ -23,4 +24,10 @@ public interface ITaskService {
     Integer total();
 
     List taskList(Integer currentPage, String type);
+
+    Integer findTaskStatus(String userId, String taskId);
+
+    boolean receiveTack(String userId, String taskId);
+
+    boolean submitTask(VPlatformMission vPlatformMission);
 }

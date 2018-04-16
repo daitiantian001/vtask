@@ -5,6 +5,7 @@ import com.lmnml.group.util.MyMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 import java.util.Map;
@@ -33,4 +34,7 @@ public interface VPlatformTaskMapper extends MyMapper<VPlatformTask> {
             "FROM v_platform_task vpt\n" +
             "WHERE vpt.status=1 AND vpt.end_time>NOW()")
     Integer totalNum();
+
+    @Update("UPDATE v_platform_task SET last_num=last_num-1 where id=#{taskId}")
+    void updateMin(String taskId);
 }
