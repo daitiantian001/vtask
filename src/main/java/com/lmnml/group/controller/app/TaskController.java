@@ -1,9 +1,9 @@
 package com.lmnml.group.controller.app;
 
+import com.lmnml.group.common.model.R;
+import com.lmnml.group.common.model.Result;
 import com.lmnml.group.controller.BaseController;
-import com.lmnml.group.entity.app.VPlatformMission;
-import com.lmnml.group.entity.app.VPlatformStep;
-import com.lmnml.group.entity.app.VPlatformTask;
+import com.lmnml.group.entity.PageInfo;
 import com.lmnml.group.entity.app.VSystemCategory;
 import com.lmnml.group.service.app.ITaskService;
 import com.lmnml.group.util.StrKit;
@@ -12,8 +12,9 @@ import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,101 +31,86 @@ public class TaskController extends BaseController {
     private ITaskService taskService;
 
     @GetMapping("category")
-    @ApiOperation(value = "查询类别", notes = "失败获取exception中信息")
+    @ApiOperation(value = "查询类别")
     @ApiResponses({
-            @ApiResponse(code = 0, message = "成功"),
-            @ApiResponse(code = 1, message = "失败")
+            @ApiResponse(code = 1, message = "成功"),
+            @ApiResponse(code = 0, message = "失败")
     })
-    public Object category() {
+    public Result category() {
         List<VSystemCategory> vSystemCategories = taskService.categoty();
         if (vSystemCategories == null || vSystemCategories.size() == 0) {
-            return R.NO("数据为空！");
+            return new Result("数据为空!");
         }
-        return R.OK(vSystemCategories);
+        return new Result(R.SUCCESS, vSystemCategories);
     }
 
     @PostMapping("list")
-    @ApiOperation(value = "任务列表", notes = "currentPage=1 类型(categoryId)不传查所有")
+    @ApiOperation(value = "任务列表")
     @ApiResponses({
-            @ApiResponse(code = 0, message = "成功"),
-            @ApiResponse(code = 1, message = "失败")
+            @ApiResponse(code = 1, message = "成功"),
+            @ApiResponse(code = 0, message = "失败")
     })
-    public Object taskList(Integer currentPage, String categoryId) {
+    public Result taskList(@RequestBody @Valid AppTaskList taskList) {
         List list;
         Integer num;
-        if(StrKit.isBlank(categoryId)){
-            list= taskService.taskList(currentPage-1);
+        String categoryId = taskList.categoryId;
+        Integer currentPage = taskList.getCurrentPage() - 1;
+        if (StrKit.isBlank(taskList.categoryId)) {
+            list = taskService.taskList(currentPage);
             num = taskService.total();
-        }else{
-            list= taskService.taskList(currentPage-1,categoryId);
+        } else {
+            list = taskService.taskList(currentPage, categoryId);
             num = taskService.total(categoryId);
-
         }
-
-        return R.OK_NUM(num, list);
+        Map map = new HashMap();
+        map.put("pageInfo", new PageInfo(currentPage, num));
+        map.put("tasks", list);
+        return new Result(R.SUCCESS, map);
     }
 
     @PostMapping("taskInfo")
-    @ApiOperation(value = "任务详情", notes = "status: 0.领取任务 1.待审核 2.已完成 3.已经被抢光 4.审核不通过 5.待提交")
+    @ApiOperation(value = "任务详情", notes = "status: 0.领取任务 1.待审核 2.已完成 3.已经被抢光 4.审核不通过 5.待提交 6.已下架")
     @ApiResponses({
-            @ApiResponse(code = 0, message = "成功"),
-            @ApiResponse(code = 1, message = "失败")
+            @ApiResponse(code = 1, message = "成功"),
+            @ApiResponse(code = 0, message = "失败")
     })
-    public Object taskInfo(String userId,String taskId) {
-        //查询任务详情
-        VPlatformTask vPlatformTask = taskService.findTaskInfo(taskId);
-        //查询任务步骤
-        List<VPlatformStep> vPlatformStep =taskService.findTaskStep(taskId);
-
-        Map map = new HashMap<>();
-        map.put("taskInfo",vPlatformTask);
-        map.put("taskStep",vPlatformStep);
-
-        Integer lastNum = vPlatformTask.getLastNum();
-        if(lastNum==0){
-            map.put("status",3);
-            return map;
-        }
-
-        Integer status =taskService.findTaskStatus(userId,taskId);
-        map.put("status",status==null?0:status);
-        return map;
+    public Result taskInfo(@RequestBody @Valid AppTaskInfo appTaskInfo) {
+        Map map = taskService.appTaskInfo(appTaskInfo.getTaskId(), appTaskInfo.getUserId());
+        return new Result(R.SUCCESS, map);
     }
 
     @PostMapping("receive")
-    @ApiOperation(value = "领取任务", notes = "任务详情中status为 0,4,5才可以调用该接口")
+    @ApiOperation(value = "TODO 领取任务", notes = "任务详情中status为 0才可以调用该接口")
     @ApiResponses({
             @ApiResponse(code = 0, message = "成功"),
             @ApiResponse(code = 1, message = "失败")
     })
-    public Object receiveTask(String userId,String taskId) {
-        boolean flag=taskService.receiveTack(userId,taskId);
-        if(flag){
-            return R.OK();
-        }
-        return R.NO("任务领取失败!");
+    public Result receiveTask(@RequestBody @Valid AppTaskInfo appTaskInfo) {
+        taskService.receiveTack(appTaskInfo.getUserId(), appTaskInfo.getTaskId());
+        return new Result(R.SUCCESS);
     }
 
     @PostMapping("submit")
-    @ApiOperation(value = "提交任务", notes = "失败获取exception中信息")
+    @ApiOperation(value = "TODO 提交任务")
     @ApiResponses({
             @ApiResponse(code = 0, message = "成功"),
             @ApiResponse(code = 1, message = "失败")
     })
-    public Object submitTask(@RequestBody SubmitTask submitTask) {
-        VPlatformMission vPlatformMission=new VPlatformMission();
-        vPlatformMission.setStatus(5);
-        vPlatformMission.setId(submitTask.getId());
-        vPlatformMission.setDescription(submitTask.getDescription()==null?"":submitTask.getDescription());
-        vPlatformMission.setImages(submitTask.getImages()==null?"":submitTask.getImages());
-        vPlatformMission.setPublishTime(new Date());
-        vPlatformMission.setName(submitTask.getName()==null?"":submitTask.getName());
-        vPlatformMission.setMobile(submitTask.getMobile()==null?"":submitTask.getMobile());
-        taskService.submitTask(vPlatformMission);
-        return R.OK();
+    public Result submitTask(@RequestBody SubmitTask submitTask) {
+//        VPlatformMission vPlatformMission = new VPlatformMission();
+//        vPlatformMission.setStatus(5);
+//        vPlatformMission.setId(submitTask.getId());
+//        vPlatformMission.setDescription(submitTask.getDescription() == null ? "" : submitTask.getDescription());
+//        vPlatformMission.setImages(submitTask.getImages() == null ? "" : submitTask.getImages());
+//        vPlatformMission.setPublishTime(new Date());
+//        vPlatformMission.setName(submitTask.getName() == null ? "" : submitTask.getName());
+//        vPlatformMission.setMobile(submitTask.getMobile() == null ? "" : submitTask.getMobile());
+//        taskService.submitTask(vPlatformMission);
+        return new Result(R.SUCCESS);
     }
+
     @Data
-    @ApiModel("提交任务模型")
+    @ApiModel("提交任务模型model")
     public static class SubmitTask implements Serializable {
         private String id;
         private String userId;
@@ -133,5 +119,26 @@ public class TaskController extends BaseController {
         private String images;
         private String mobile;
         private String name;
+    }
+
+    @Data
+    @ApiModel("app任务列表model")
+    public static class AppTaskList implements Serializable {
+        @ApiModelProperty("当前页从1开始")
+        @NotNull
+        private Integer currentPage;
+        @ApiModelProperty("类型(categoryId)不传查所有")
+        private String categoryId;
+    }
+
+    @Data
+    @ApiModel("app任务详情model")
+    public static class AppTaskInfo implements Serializable {
+        @ApiModelProperty("用户id")
+        @NotNull(message = "用户id不能为空!")
+        private String userId;
+        @ApiModelProperty("任务id")
+        @NotNull(message = "任务id不能为空!")
+        private String taskId;
     }
 }

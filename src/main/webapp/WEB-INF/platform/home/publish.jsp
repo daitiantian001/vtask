@@ -416,9 +416,9 @@ function publishTask(){
 			contactorName: contactorName,
 			contactorMobile: contactorMobile,
 			contactorEmail: contactorEmail,
-			stepNum: stepNum, 
+			stepNum: stepNum,
 			stepExplain: stepExplain, 
-			stepPhoto: stepPhoto, 
+			stepPhoto: stepPhoto,
 			stepLink: stepLink
 		},
 		dataType: "text", 

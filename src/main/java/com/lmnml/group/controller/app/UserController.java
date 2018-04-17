@@ -1,5 +1,7 @@
 package com.lmnml.group.controller.app;
 
+import com.lmnml.group.common.model.R;
+import com.lmnml.group.common.model.Result;
 import com.lmnml.group.controller.BaseController;
 import com.lmnml.group.entity.app.MsgCode;
 import com.lmnml.group.entity.app.VPlatformUser;
@@ -7,15 +9,19 @@ import com.lmnml.group.service.app.IUserService;
 import com.lmnml.group.util.AliyunSms;
 import com.lmnml.group.util.MD5;
 import com.lmnml.group.util.StrKit;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -33,93 +39,123 @@ public class UserController extends BaseController {
     @ApiOperation(value = "app用户登录")
     @PostMapping("login")
     @ApiResponses({
-            @ApiResponse(code = 0, message = "成功"),
-            @ApiResponse(code = 1, message = "失败")
+            @ApiResponse(code = 1, message = "成功"),
+            @ApiResponse(code = 0, message = "失败", response = Result.class),
     })
-    public Object userLogin(String password, String mobile) {
-
-        //参数校验
-        if (StrKit.isBlank(password) || StrKit.isBlank(mobile)) {
-            return R.BAD_REQ();
-        }
-
+    public Result userLogin(@RequestBody @Valid UserLogin userLogin) {
         //查询用户
-        VPlatformUser vPlatformUser = userService.findUserByMobile(mobile);
+        VPlatformUser vPlatformUser = userService.findUserByMobile(userLogin.getMobile());
         if (vPlatformUser == null) {
-            return R.NO("该手机号未注册!");
+            return new Result("手机号未注册!");
         }
-        if (!MD5.Byte32(password).equals(vPlatformUser.getPassword())) {
-            return R.NO("密码错误!");
+        if (!MD5.Byte32(userLogin.getPassword()).equals(vPlatformUser.getPassword())) {
+            return new Result("密码错误!");
         }
-        return R.OK(vPlatformUser);
+        return new Result(R.SUCCESS, vPlatformUser);
     }
 
-    @ApiOperation(value = "app用户注册", notes = "失败获取exception中信息")
+    @ApiOperation(value = "app用户注册")
     @PostMapping("register")
     @ApiResponses({
-            @ApiResponse(code = 0, message = "成功"),
-            @ApiResponse(code = 1, message = "失败")
+            @ApiResponse(code = 1, message = "成功"),
+            @ApiResponse(code = 0, message = "失败", response = Result.class)
     })
-    public Object userRegister(String mobile, String msgCode, String password, String inventCode) {
-        //TODO 校验
+    public Result userRegister(@RequestBody @Valid UserRegister userRegister) {
         //查询用户
-        VPlatformUser vPlatformUser = userService.findUserByMobile(mobile);
+        VPlatformUser vPlatformUser = userService.findUserByMobile(userRegister.getMobile());
         if (vPlatformUser != null) {
-            return R.NO("该手机号已注册!");
+            return new Result("该手机号已注册!");
         }
-        String code = userService.findMsgCode(mobile);
-        if (!msgCode.equals(code)) {
-            return R.NO("验证码错误!");
+        String code = userService.findMsgCode(userRegister.getMsgCode());
+        if (!userRegister.getMsgCode().equals(code)) {
+            return new Result("验证码错误!");
         }
         vPlatformUser = new VPlatformUser();
         vPlatformUser.setId(StrKit.ID());
         vPlatformUser.setAccount(0);
         vPlatformUser.setCreateTime(new Date());
-        vPlatformUser.setPassword(MD5.Byte32(password));
-        vPlatformUser.setInventCode(inventCode);
-        vPlatformUser.setName("赚客_" + mobile);
+        vPlatformUser.setPassword(MD5.Byte32(userRegister.getPassword()));
+        vPlatformUser.setInventCode(userRegister.getInventCode());
+        vPlatformUser.setName("赚客_" + userRegister.getMobile());
         vPlatformUser.setPhoto("http://yuejinimg.oss-cn-beijing.aliyuncs.com/app_icon_default_photo.png");
-        vPlatformUser.setMobile(mobile);
+        vPlatformUser.setMobile(userRegister.getMobile());
         vPlatformUser.setSex(0);
-        vPlatformUser.setInventCode(new SimpleDateFormat("MMddHHmmss").format(new Date())+AliyunSms.getRandNum(1000, 99999));
+        vPlatformUser.setInventCode(new SimpleDateFormat("MMddHHmmss").format(new Date()) + AliyunSms.getRandNum(1000, 99999));
         vPlatformUser.setPhoto("http://yuejinimg.oss-cn-beijing.aliyuncs.com/app_icon_default_photo.png");
         userService.insertUser(vPlatformUser);
-        return R.OK();
+        return new Result(R.SUCCESS);
     }
 
 
     @PostMapping(value = "msgCode")
     @ApiResponses({
-            @ApiResponse(code = 0, message = "成功"),
-            @ApiResponse(code = 1, message = "失败")
+            @ApiResponse(code = 1, message = "成功"),
+            @ApiResponse(code = 0, message = "失败", response = Result.class)
     })
     @ApiOperation(value = "获取验证码", notes = "失败获取exception中信息")
-    public Object sendMsg(String mobile) {
+    public Result sendMsg(@RequestBody @Valid Mobile mobile) {
 
         //先查询
-        VPlatformUser vPlatformUser = userService.findUserByMobile(mobile);
+        VPlatformUser vPlatformUser = userService.findUserByMobile(mobile.getMobile());
         if (vPlatformUser != null) {
-            return R.NO("该手机号已注册!");
+            return new Result("该手机号已注册!");
         }
 
-        Boolean flag = userService.canSend(mobile);
+        Boolean flag = userService.canSend(mobile.getMobile());
 
         if (flag == null || flag) {
-            String code=null;
+            String code = null;
             try {
-               code = AliyunSms.sendSms(mobile);
+                code = AliyunSms.sendSms(mobile.getMobile());
             } catch (Exception e) {
-               return R.NO("阿里云通讯异常");
+                return new Result("阿里云通讯异常!");
             }
-            if(StrKit.isBlank(code)){
-                return R.NO("阿里云通讯异常");
+            if (StrKit.isBlank(code)) {
+                return new Result("发送次数频繁,稍后再试!");
             }
             //存储msgCode
-            MsgCode msgCode = new MsgCode(mobile, code, new Date());
+            MsgCode msgCode = new MsgCode(mobile.getMobile(), code, new Date());
             userService.insertMsgCode(msgCode);
-            return R.OK();
+            return new Result(R.SUCCESS);
         }
-        return R.NO("请两分钟后再发送!");
+        return new Result("请两分钟后再发送!");
+    }
 
+    @Data
+    @ApiModel("app登录model")
+    public static class UserLogin implements Serializable {
+        @ApiModelProperty("手机号")
+        @NotNull(message = "手机号不能为空!")
+        @Pattern(regexp = "^1([358][0-9]|4[579]|66|7[0135678]|9[89])[0-9]{8}$", message = "请输入手机号!")
+        private String mobile;
+        @ApiModelProperty("密码")
+        @NotNull(message = "密码不能为空!")
+        @Size(min = 6, message = "密码最少6位")
+        private String password;
+    }
+
+    @Data
+    @ApiModel("app注册model")
+    public static class UserRegister implements Serializable {
+        @ApiModelProperty("手机号")
+        @NotNull(message = "手机号不能为空!")
+        @Pattern(regexp = "^1([358][0-9]|4[579]|66|7[0135678]|9[89])[0-9]{8}$", message = "请输入手机号!")
+        private String mobile;
+        @ApiModelProperty("验证码")
+        @NotNull(message = "验证码不能为空!")
+        private String msgCode;
+        @ApiModelProperty("密码")
+        @NotNull(message = "密码不能为空!")
+        private String password;
+        private String inventCode;
+    }
+
+    @Data
+    @ApiModel("app手机号model")
+    public static class Mobile implements Serializable {
+        @ApiModelProperty("手机号")
+        @NotNull(message = "手机号不能为空!")
+        @Pattern(regexp = "^1([358][0-9]|4[579]|66|7[0135678]|9[89])[0-9]{8}$", message = "请输入手机号!")
+        private String mobile;
     }
 }

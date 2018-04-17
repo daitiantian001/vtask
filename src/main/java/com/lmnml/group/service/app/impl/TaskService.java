@@ -9,13 +9,14 @@ import com.lmnml.group.entity.app.VPlatformStep;
 import com.lmnml.group.entity.app.VPlatformTask;
 import com.lmnml.group.entity.app.VSystemCategory;
 import com.lmnml.group.service.app.ITaskService;
-import com.lmnml.group.util.DateKit;
 import com.lmnml.group.util.StrKit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by daitian on 2018/4/16.
@@ -53,40 +54,39 @@ public class TaskService implements ITaskService {
     }
 
     @Override
-    public Integer findTaskStatus(String userId, String taskId) {
-        VPlatformMission vPlatformMission = new VPlatformMission();
-        vPlatformMission.setUserId(userId);
-        vPlatformMission.setTaskId(taskId);
-        List select = vPlatformMissionMapper.select(vPlatformMission);
-        if (select == null || select.size() == 0) {
-            return 0;
-        }
-        VPlatformMission v = (VPlatformMission) select.get(0);
-        if (DateKit.getMin().compareTo(v.getCreateTime()) >= 0) {
-            return 0;
-        }
-        return v.getStatus();
-    }
-    @Override
-    public boolean receiveTack(String userId, String taskId) {
+    public void receiveTack(String userId, String taskId) {
         //查询是否领取任务
-        VPlatformMission vPlatformMission = new VPlatformMission();
-        vPlatformMission.setUserId(userId);
-        vPlatformMission.setTaskId(taskId);
-        List select = vPlatformMissionMapper.select(vPlatformMission);
-        if (select == null || select.size() == 0) {
+        Integer status=vPlatformTaskMapper.findAppUserStatus(userId,taskId);
+        if (status == null) {
+            //TODO
             insertTask(userId, taskId);
-            return true;
         }
-        VPlatformMission v = (VPlatformMission) select.get(0);
-        Integer status = v.getStatus();
-        if(status !=null &&(4==status||5==status)){
-            v.setCreateTime(new Date());
-            vPlatformMissionMapper.updateByPrimaryKeySelective(v);
-            return true;
-        }
-        return false;
+    }
 
+    @Override
+    public void sendTask(VPlatformTask vPlatformTask, List<VPlatformStep> vPlatformStep) {
+        vPlatformTaskMapper.insertSelective(vPlatformTask);
+        vPlatformStepMapper.insert(vPlatformStep);
+    }
+
+    @Override
+    public Map platTaskList(String userId, Integer status, Integer currentPage) {
+        List vt = vPlatformTaskMapper.platTaskList(userId, status, currentPage);
+        Integer vtTotal = vPlatformTaskMapper.platTaskListTotal(userId, status, currentPage);
+        Map map = new HashMap();
+        map.put("tasks", vt);
+        map.put("taskTotal", vtTotal);
+        return map;
+    }
+
+    @Override
+    public Map pTaskInfo(String taskId) {
+        Map taskInfo = vPlatformTaskMapper.pTaskInfo(taskId);
+        List taskSteps = vPlatformStepMapper.findAll(taskId);
+        Map map = new HashMap();
+        map.put("taskInfo", taskInfo);
+        map.put("taskSteps", taskSteps);
+        return map;
     }
 
     @Override
@@ -96,13 +96,14 @@ public class TaskService implements ITaskService {
     }
 
     private void insertTask(String userId, String taskId) {
-        VPlatformMission vPlatformMission = new VPlatformMission();
-        vPlatformMission.setUserId(userId);
-        vPlatformMission.setTaskId(taskId);
-        vPlatformMission.setId(StrKit.ID());
-        vPlatformMission.setStatus(5);
-        vPlatformMission.setCreateTime(new Date());
-        vPlatformMissionMapper.insertSelective(vPlatformMission);
+//        VPlatformMission vPlatformMission = new VPlatformMission();
+//        vPlatformMission.setUserId(userId);
+//        vPlatformMission.setTaskId(taskId);
+//        vPlatformMission.setId(StrKit.ID());
+//        vPlatformMission.setStatus(5);
+//        vPlatformMission.setCreateTime(new Date());
+
+//        vPlatformMissionMapper.insertSelective(vPlatformMission);
         vPlatformTaskMapper.updateMin(taskId);
     }
 
@@ -117,18 +118,25 @@ public class TaskService implements ITaskService {
     }
 
     @Override
-    public VPlatformTask findTaskInfo(String taskId) {
-        VPlatformTask vPlatformTask = new VPlatformTask();
-        vPlatformTask.setId(taskId);
-        Object o = vPlatformTaskMapper.selectOne(vPlatformTask);
-        return (VPlatformTask) o;
-    }
-
-    @Override
-    public List<VPlatformStep> findTaskStep(String taskId) {
-        VPlatformStep vPlatformStep = new VPlatformStep();
-        vPlatformStep.setTaskId(taskId);
-        List select = vPlatformStepMapper.select(vPlatformStep);
-        return select;
+    public Map appTaskInfo(String taskId, String userId) {
+        //查询详情
+        Map taskInfo = vPlatformTaskMapper.appTaskInfo(taskId);
+        //查询步骤
+        List taskSteps = vPlatformTaskMapper.appTaskSteps(taskId);
+        //查询状态
+        Integer status = vPlatformTaskMapper.findAppUserStatus(userId, taskId);
+        Map map = new HashMap();
+        map.put("taskInfo", taskInfo);
+        map.put("taskSteps", taskSteps);
+        if(Integer.parseInt(taskInfo.get("lastNum").toString())<=0){
+            map.put("status",3);
+            return map;
+        }
+        if(status==null){
+            map.put("status",0);
+            return map;
+        }
+        map.put("status",  status);
+        return map;
     }
 }

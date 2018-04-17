@@ -28,6 +28,7 @@ public class VPlatformTask {
     private String contactorEmail;
     private Date createTime;
     private String userId;
+    //1.待付款 2.审核中 3.进行中 4.已下架
     private Integer status;
     private Date updateTime;
     private Integer participate;
