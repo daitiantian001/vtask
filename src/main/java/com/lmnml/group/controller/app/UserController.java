@@ -44,7 +44,7 @@ public class UserController extends BaseController {
     })
     public Result userLogin(@RequestBody @Valid UserLogin userLogin) {
         //查询用户
-        VPlatformUser vPlatformUser = userService.findUserByMobile(userLogin.getMobile());
+        VPlatformUser vPlatformUser = userService.findUserByMobile(userLogin.getMobile(),1);
         if (vPlatformUser == null) {
             return new Result("手机号未注册!");
         }
@@ -62,7 +62,7 @@ public class UserController extends BaseController {
     })
     public Result userRegister(@RequestBody @Valid UserRegister userRegister) {
         //查询用户
-        VPlatformUser vPlatformUser = userService.findUserByMobile(userRegister.getMobile());
+        VPlatformUser vPlatformUser = userService.findUserByMobile(userRegister.getMobile(),1);
         if (vPlatformUser != null) {
             return new Result("该手机号已注册!");
         }
@@ -72,16 +72,23 @@ public class UserController extends BaseController {
         }
         vPlatformUser = new VPlatformUser();
         vPlatformUser.setId(StrKit.ID());
-        vPlatformUser.setAccount(0);
-        vPlatformUser.setCreateTime(new Date());
-        vPlatformUser.setPassword(MD5.Byte32(userRegister.getPassword()));
-        vPlatformUser.setInventCode(userRegister.getInventCode());
         vPlatformUser.setName("赚客_" + userRegister.getMobile());
-        vPlatformUser.setPhoto("http://yuejinimg.oss-cn-beijing.aliyuncs.com/app_icon_default_photo.png");
         vPlatformUser.setMobile(userRegister.getMobile());
-        vPlatformUser.setSex(0);
-        vPlatformUser.setInventCode(new SimpleDateFormat("MMddHHmmss").format(new Date()) + AliyunSms.getRandNum(1000, 99999));
         vPlatformUser.setPhoto("http://yuejinimg.oss-cn-beijing.aliyuncs.com/app_icon_default_photo.png");
+        vPlatformUser.setBirthday(new Date());
+        vPlatformUser.setIdentifyType(0);
+        vPlatformUser.setSex(0);
+        vPlatformUser.setAccount(0);
+        vPlatformUser.setFrozenAccount(0);
+        vPlatformUser.setUsedAccount(0);
+        vPlatformUser.setParentId(userRegister.getInventCode());
+        vPlatformUser.setPassword(MD5.Byte32(userRegister.getPassword()));
+        vPlatformUser.setPublishType(1);
+        vPlatformUser.setAccountStatus(0);
+        vPlatformUser.setInventCode(new SimpleDateFormat("MMddHHmmss").format(new Date()) + AliyunSms.getRandNum(1000, 99999));
+        vPlatformUser.setCreateTime(new Date());
+        vPlatformUser.setState(0);
+        vPlatformUser.setUserType(1);
         userService.insertUser(vPlatformUser);
         return new Result(R.SUCCESS);
     }
@@ -96,9 +103,9 @@ public class UserController extends BaseController {
     public Result sendMsg(@RequestBody @Valid Mobile mobile) {
 
         //先查询
-        VPlatformUser vPlatformUser = userService.findUserByMobile(mobile.getMobile());
+        VPlatformUser vPlatformUser = userService.findUserByMobile(mobile.getMobile(),1);
         if (vPlatformUser != null) {
-            return new Result("该手机号已注册!");
+            return new Result("该手机号已注册为用户!");
         }
 
         Boolean flag = userService.canSend(mobile.getMobile());

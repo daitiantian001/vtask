@@ -9,18 +9,19 @@ import com.lmnml.group.entity.app.VSystemCategory;
 import com.lmnml.group.service.app.ITaskService;
 import com.lmnml.group.util.StrKit;
 import io.swagger.annotations.*;
-import jdk.nashorn.internal.ir.annotations.Ignore;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.Id;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by daitian on 2018/4/16.
@@ -56,7 +57,7 @@ public class PdataTaskController extends BaseController {
     public Result sendTask(@RequestBody @Valid SendTask sendTask) {
         VPlatformTask vPlatformTask = new VPlatformTask();
         BeanUtils.copyProperties(sendTask, vPlatformTask);
-        String taskId=StrKit.ID();
+        String taskId = StrKit.ID();
         vPlatformTask.setId(taskId);
         vPlatformTask.setCreateTime(new Date());
         vPlatformTask.setStatus(0);//待付款
@@ -76,7 +77,7 @@ public class PdataTaskController extends BaseController {
     //TODO 二次发布任务,删除任务，主动下架任务,支付任务,任务详情
 
     @PostMapping("list")
-    @ApiOperation(value = "任务列表",notes = "0.待付款 1.待审核 2.正在招 3.已下架 4.二次审核 -1.不通过")
+    @ApiOperation(value = "任务列表", notes = "0.待付款 1.待审核 2.正在招 3.已下架 4.二次审核 -1.不通过")
     @ApiResponses({
             @ApiResponse(code = 0, message = "成功"),
             @ApiResponse(code = 1, message = "失败")
@@ -93,8 +94,8 @@ public class PdataTaskController extends BaseController {
             @ApiResponse(code = 1, message = "失败")
     })
     public Result pTaskInfo(@RequestBody @Valid PTask pTask) {
-        Map map=taskService.pTaskInfo(pTask.getTaskId());
-      return new Result(R.SUCCESS,map);
+        Map map = taskService.pTaskInfo(pTask.getTaskId());
+        return new Result(R.SUCCESS, map);
     }
 
     @Data

@@ -21,8 +21,8 @@ public class UserService implements IUserService {
     private MsgCodeMapper msgCodeMapper;
 
     @Override
-    public VPlatformUser findUserByMobile(String mobile) {
-        return userMapper.findUserByMobile(mobile);
+    public VPlatformUser findUserByMobile(String mobile,Integer userType) {
+        return userMapper.findUserByMobile(mobile,userType);
     }
 
     @Override

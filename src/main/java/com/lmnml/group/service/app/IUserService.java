@@ -7,7 +7,7 @@ import com.lmnml.group.entity.app.VPlatformUser;
  * Created by daitian on 2018/4/15.
  */
 public interface IUserService {
-    VPlatformUser findUserByMobile(String mobile);
+    VPlatformUser findUserByMobile(String mobile, Integer userType);
 
     void insertMsgCode(MsgCode msgCode);
 
