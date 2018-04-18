@@ -4,16 +4,20 @@ import com.lmnml.group.common.model.R;
 import com.lmnml.group.common.model.Result;
 import com.lmnml.group.controller.BaseController;
 import com.lmnml.group.entity.PageInfo;
+import com.lmnml.group.entity.app.VPlatformUserTask;
 import com.lmnml.group.entity.app.VSystemCategory;
 import com.lmnml.group.service.app.ITaskService;
 import com.lmnml.group.util.StrKit;
 import io.swagger.annotations.*;
 import lombok.Data;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
@@ -80,45 +84,44 @@ public class TaskController extends BaseController {
     }
 
     @PostMapping("receive")
-    @ApiOperation(value = "TODO 领取任务", notes = "任务详情中status为 0才可以调用该接口")
+    @ApiOperation(value = "领取任务", notes = "任务详情中status为 0才可以调用该接口")
     @ApiResponses({
             @ApiResponse(code = 0, message = "成功"),
             @ApiResponse(code = 1, message = "失败")
     })
     public Result receiveTask(@RequestBody @Valid AppTaskInfo appTaskInfo) {
-        taskService.receiveTack(appTaskInfo.getUserId(), appTaskInfo.getTaskId());
-        return new Result(R.SUCCESS);
+        return taskService.receiveTack(appTaskInfo.getUserId(), appTaskInfo.getTaskId());
     }
 
     @PostMapping("submit")
-    @ApiOperation(value = "TODO 提交任务")
+    @ApiOperation(value = "提交任务")
     @ApiResponses({
             @ApiResponse(code = 0, message = "成功"),
             @ApiResponse(code = 1, message = "失败")
     })
-    public Result submitTask(@RequestBody SubmitTask submitTask) {
-//        VPlatformMission vPlatformMission = new VPlatformMission();
-//        vPlatformMission.setStatus(5);
-//        vPlatformMission.setId(submitTask.getId());
-//        vPlatformMission.setDescription(submitTask.getDescription() == null ? "" : submitTask.getDescription());
-//        vPlatformMission.setImages(submitTask.getImages() == null ? "" : submitTask.getImages());
-//        vPlatformMission.setPublishTime(new Date());
-//        vPlatformMission.setName(submitTask.getName() == null ? "" : submitTask.getName());
-//        vPlatformMission.setMobile(submitTask.getMobile() == null ? "" : submitTask.getMobile());
-//        taskService.submitTask(vPlatformMission);
-        return new Result(R.SUCCESS);
+    public Result submitTask(@RequestBody @Valid SubmitTask submitTask) {
+        VPlatformUserTask vPlatformUserTask = new VPlatformUserTask();
+        BeanUtils.copyProperties(submitTask,vPlatformUserTask);
+        vPlatformUserTask.setId(submitTask.getUserTaskId());
+        vPlatformUserTask.setStatus(1);//待审核
+        return taskService.submitTask(vPlatformUserTask);
     }
 
     @Data
     @ApiModel("提交任务模型model")
     public static class SubmitTask implements Serializable {
-        private String id;
+        @ApiModelProperty("用户领取任务记录id")
+        private String userTaskId;
+        @ApiModelProperty("用户id")
+        @NotNull(message = "用户id不能为空")
         private String userId;
+        @ApiModelProperty("任务id")
+        @NotNull(message = "任务id不能为空")
         private String taskId;
-        private String description;
-        private String images;
-        private String mobile;
-        private String name;
+        @ApiModelProperty("任务内容")
+        private String content;
+        @ApiModelProperty("任务截图")
+        private String imgUrl;
     }
 
     @Data

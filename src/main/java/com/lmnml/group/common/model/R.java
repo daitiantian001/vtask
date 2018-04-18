@@ -8,7 +8,7 @@ public enum R {
     SUCCESS(1, "请求成功"),
     NET_ERROR(-1, "网络异常"),
     PARAM_ER(0,"参数错误"),
-    MYTEST(10000,"测试异常");
+    MYTEST(10000,"请求失败");
     private int code;
     private String msg;
 

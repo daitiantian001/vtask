@@ -68,4 +68,9 @@ public interface VPlatformTaskMapper extends MyMapper<VPlatformTask> {
             "WHERE user_id=#{userId} AND task_id=#{taskId}")
     Integer findAppUserStatus(@Param("userId") String userId, @Param("taskId")String taskId);
 
+    @Select("SELECT price FROM v_platform_task WHERE id=#{taskId}")
+    Integer findTaskPrice(String taskId);
+
+    @Select("SELECT status FROM v_platform_task WHERE id=#{taskId}")
+    Integer findTaskStatus(String taskId);
 }

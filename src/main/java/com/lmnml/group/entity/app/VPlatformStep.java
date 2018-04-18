@@ -1,6 +1,6 @@
 package com.lmnml.group.entity.app;
 
-import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.persistence.Id;
@@ -12,9 +12,14 @@ import javax.persistence.Id;
 public class VPlatformStep {
     @Id
     private String id;
+    @ApiModelProperty("任务id")
     private String taskId;
+    @ApiModelProperty("任务提示")
     private String taskExplain;
+    @ApiModelProperty("图片提示")
     private String imgExplain;
+    @ApiModelProperty("任务链接")
     private String taskLink;
+    @ApiModelProperty("顺序")
     private Integer sort;
 }

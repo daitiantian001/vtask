@@ -1,9 +1,9 @@
 package com.lmnml.group.service.app;
 
-import com.lmnml.group.controller.pdata.PdataTaskController;
-import com.lmnml.group.entity.app.VPlatformMission;
+import com.lmnml.group.common.model.Result;
 import com.lmnml.group.entity.app.VPlatformStep;
 import com.lmnml.group.entity.app.VPlatformTask;
+import com.lmnml.group.entity.app.VPlatformUserTask;
 import com.lmnml.group.entity.app.VSystemCategory;
 
 import java.util.List;
@@ -23,9 +23,7 @@ public interface ITaskService {
 
     List taskList(Integer currentPage, String type);
 
-    void receiveTack(String userId, String taskId);
-
-    boolean submitTask(VPlatformMission vPlatformMission);
+    Result receiveTack(String userId, String taskId);
 
     void sendTask(VPlatformTask vPlatformTask, List<VPlatformStep> vPlatformStep);
 
@@ -34,4 +32,6 @@ public interface ITaskService {
     Map pTaskInfo(String pTask);
 
     Map appTaskInfo(String taskId, String userId);
+
+    Result submitTask(VPlatformUserTask vPlatformUserTask);
 }

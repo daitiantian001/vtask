@@ -7,6 +7,7 @@ import com.lmnml.group.entity.app.VPlatformUser;
 import com.lmnml.group.service.app.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Created by daitian on 2018/4/15.
@@ -26,6 +27,7 @@ public class UserService implements IUserService {
     }
 
     @Override
+    @Transactional
     public void insertMsgCode(MsgCode msgCode) {
         Object flag = msgCodeMapper.selectOne(new MsgCode(msgCode.getMobile()));
         if (flag==null) {
@@ -41,6 +43,7 @@ public class UserService implements IUserService {
     }
 
     @Override
+    @Transactional
     public void insertUser(VPlatformUser vPlatformUser) {
         userMapper.insertSelective(vPlatformUser);
     }
