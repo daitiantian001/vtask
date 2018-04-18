@@ -11,6 +11,7 @@ import com.lmnml.group.util.MD5;
 import com.lmnml.group.util.StrKit;
 import io.swagger.annotations.*;
 import lombok.Data;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -128,6 +129,14 @@ public class UserController extends BaseController {
         return new Result("请两分钟后再发送!");
     }
 
+    @PostMapping(value = "updateUserInfo")
+    @ApiOperation(value = "修改个人信息",response = Result.class)
+    public Result updateUserInfo(@RequestBody @Valid UpdateUserInfo updateUserInfo) {
+        VPlatformUser vPlatformUser=new VPlatformUser();
+        BeanUtils.copyProperties(updateUserInfo,vPlatformUser);
+        return userService.updateUserInfo(vPlatformUser);
+    }
+
     @Data
     @ApiModel("app登录model")
     public static class UserLogin implements Serializable {
@@ -164,5 +173,24 @@ public class UserController extends BaseController {
         @NotNull(message = "手机号不能为空!")
         @Pattern(regexp = "^1([358][0-9]|4[579]|66|7[0135678]|9[89])[0-9]{8}$", message = "请输入手机号!")
         private String mobile;
+    }
+
+    @Data
+    @ApiModel("app修改个人信息model")
+    public static class UpdateUserInfo implements Serializable {
+        @ApiModelProperty("手机号")
+        @Pattern(regexp = "^1([358][0-9]|4[579]|66|7[0135678]|9[89])[0-9]{8}$", message = "请输入手机号!")
+        private String phone;
+        @ApiModelProperty("姓名")
+        private String name;
+        @ApiModelProperty("生日")
+        private Date birthday;
+        @ApiModelProperty("微信openId")
+        private String openId;
+        @ApiModelProperty("支付宝Id")
+        private String zfbId;
+        @ApiModelProperty("用户Id")
+        private String id;
+
     }
 }

@@ -1,5 +1,6 @@
 package com.lmnml.group.service.app;
 
+import com.lmnml.group.common.model.Result;
 import com.lmnml.group.entity.app.MsgCode;
 import com.lmnml.group.entity.app.VPlatformUser;
 
@@ -16,4 +17,6 @@ public interface IUserService {
     void insertUser(VPlatformUser vPlatformUser);
 
     Boolean canSend(String mobile);
+
+    Result updateUserInfo(VPlatformUser vPlatformUser);
 }

@@ -1,5 +1,7 @@
 package com.lmnml.group.service.app.impl;
 
+import com.lmnml.group.common.model.R;
+import com.lmnml.group.common.model.Result;
 import com.lmnml.group.dao.app.MsgCodeMapper;
 import com.lmnml.group.dao.app.VPlatFormUserMapper;
 import com.lmnml.group.entity.app.MsgCode;
@@ -22,15 +24,15 @@ public class UserService implements IUserService {
     private MsgCodeMapper msgCodeMapper;
 
     @Override
-    public VPlatformUser findUserByMobile(String mobile,Integer userType) {
-        return userMapper.findUserByMobile(mobile,userType);
+    public VPlatformUser findUserByMobile(String mobile, Integer userType) {
+        return userMapper.findUserByMobile(mobile, userType);
     }
 
     @Override
     @Transactional
     public void insertMsgCode(MsgCode msgCode) {
         Object flag = msgCodeMapper.selectOne(new MsgCode(msgCode.getMobile()));
-        if (flag==null) {
+        if (flag == null) {
             msgCodeMapper.insertSelective(msgCode);
         } else {
             msgCodeMapper.updateByPrimaryKey(msgCode);
@@ -51,5 +53,11 @@ public class UserService implements IUserService {
     @Override
     public Boolean canSend(String mobile) {
         return msgCodeMapper.canSend(mobile);
+    }
+
+    @Override
+    public Result updateUserInfo(VPlatformUser vPlatformUser) {
+        userMapper.updateByPrimaryKeySelective(vPlatformUser);
+        return new Result(R.SUCCESS);
     }
 }
