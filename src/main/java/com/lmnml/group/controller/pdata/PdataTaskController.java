@@ -28,7 +28,7 @@ import java.util.Map;
  */
 @RequestMapping("pdata/task")
 @RestController
-@Api(value = "平台任务接口", tags = {"平台任务接口"}, description = "平台任务相关接口")
+@Api(value = "平台任务接口", tags = {"平台任务接口"}, description = "plat任务相关接口")
 public class PdataTaskController extends BaseController {
 
     @Autowired

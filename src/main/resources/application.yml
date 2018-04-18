@@ -16,12 +16,12 @@ spring:
 swagger:
   enabled: true
   docket:
-    app:
+    app接口文档:
       title: app接口文档
       base-package: com.lmnml.group.controller.app
       description: 开发中
       version: 1.0.0.RELEASE
-    cms:
+    cms接口文档:
       title: cms接口文档
       base-package: com.lmnml.group.controller.pdata
       description: 开发中

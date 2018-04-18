@@ -31,7 +31,7 @@ import java.util.Date;
  */
 @RestController
 @RequestMapping("pdata/user")
-@Api(value = "平台用户接口", tags = {"平台用户接口"}, description = "平台用户相关接口")
+@Api(value = "平台用户接口", tags = {"平台用户接口"}, description = "plat用户相关接口")
 public class PdataController extends BaseController {
 
     @Autowired
