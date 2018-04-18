@@ -21,9 +21,9 @@ swagger:
       base-package: com.lmnml.group.controller.app
       description: 开发中
       version: 1.0.0.RELEASE
-    web:
+    cms:
       title: cms接口文档
-      base-package: com.lmnml.group.controller.web
+      base-package: com.lmnml.group.controller.pdata
       description: 开发中
       version: 1.0.0.RELEASE
   base-path: /**

@@ -9,11 +9,9 @@ import com.lmnml.group.entity.app.VPlatformStep;
 import com.lmnml.group.entity.app.VPlatformTask;
 import com.lmnml.group.entity.app.VSystemCategory;
 import com.lmnml.group.service.app.ITaskService;
-import com.lmnml.group.util.StrKit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,7 +54,7 @@ public class TaskService implements ITaskService {
     @Override
     public void receiveTack(String userId, String taskId) {
         //查询是否领取任务
-        Integer status=vPlatformTaskMapper.findAppUserStatus(userId,taskId);
+        Integer status = vPlatformTaskMapper.findAppUserStatus(userId, taskId);
         if (status == null) {
             //TODO
             insertTask(userId, taskId);
@@ -66,7 +64,7 @@ public class TaskService implements ITaskService {
     @Override
     public void sendTask(VPlatformTask vPlatformTask, List<VPlatformStep> vPlatformStep) {
         vPlatformTaskMapper.insertSelective(vPlatformTask);
-        vPlatformStepMapper.insert(vPlatformStep);
+        vPlatformStep.forEach(k -> vPlatformStepMapper.insertSelective(k));
     }
 
     @Override
@@ -128,15 +126,15 @@ public class TaskService implements ITaskService {
         Map map = new HashMap();
         map.put("taskInfo", taskInfo);
         map.put("taskSteps", taskSteps);
-        if(Integer.parseInt(taskInfo.get("lastNum").toString())<=0){
-            map.put("status",3);
+        if (Integer.parseInt(taskInfo.get("lastNum").toString()) <= 0) {
+            map.put("status", 3);
             return map;
         }
-        if(status==null){
-            map.put("status",0);
+        if (status == null) {
+            map.put("status", 0);
             return map;
         }
-        map.put("status",  status);
+        map.put("status", status);
         return map;
     }
 }

@@ -17,22 +17,22 @@ import java.util.Map;
 public interface VPlatformTaskMapper extends MyMapper<VPlatformTask> {
     @Select("SELECT vpt.id taskId,vpt.name,vsc.icon,vpt.price\n" +
             "FROM v_platform_task vpt LEFT JOIN v_system_category vsc ON vpt.category_id=vsc.id\n" +
-            "WHERE vpt.status=1 AND vpt.end_time>NOW() ORDER BY vpt.create_time DESC limit #{currentPage},20")
+            "WHERE vpt.status=2 AND vpt.end_time>NOW() ORDER BY vpt.create_time DESC limit #{currentPage},20")
     List<Map> findAllInfo(Integer currentPage);
 
     @Select("SELECT vpt.id taskId,vpt.name,vsc.icon,vpt.price\n" +
             "FROM v_platform_task vpt LEFT JOIN v_system_category vsc ON vpt.category_id=vsc.id\n" +
-            "WHERE vpt.status=1 AND vpt.end_time>NOW() AND vpt.category_id=#{type} ORDER BY vpt.create_time DESC limit #{currentPage},20 ")
+            "WHERE vpt.status=2 AND vpt.end_time>NOW() AND vpt.category_id=#{type} ORDER BY vpt.create_time DESC limit #{currentPage},20 ")
     List<Map> findAllInfo2(@Param("currentPage") Integer currentPage,@Param("type") String type);
 
     @Select("SELECT COUNT(vpt.id)\n" +
             "FROM v_platform_task vpt\n" +
-            "WHERE vpt.status=1 AND vpt.end_time>NOW() AND vpt.category_id=#{type}")
+            "WHERE vpt.status=2 AND vpt.end_time>NOW() AND vpt.category_id=#{type}")
     Integer totalNum2(String type);
 
     @Select("SELECT COUNT(vpt.id)\n" +
             "FROM v_platform_task vpt\n" +
-            "WHERE vpt.status=1 AND vpt.end_time>NOW()")
+            "WHERE vpt.status=2 AND vpt.end_time>NOW()")
     Integer totalNum();
 
     @Update("UPDATE v_platform_task SET last_num=last_num-1 where id=#{taskId}")
@@ -55,17 +55,17 @@ public interface VPlatformTaskMapper extends MyMapper<VPlatformTask> {
             "WHERE id=#{taskId}")
     Map pTaskInfo(String taskId);
 
-    @Select("SELECT vpt.name,vpt.category,DATE_FORMAT(vpt.create_time,'%Y/%m/%d') createTime,DATE_FORMAT(vpt.end_time,'%Y年%m月%d日 %H:%i') endTime,vpt.status,vpt.device_type deviceType,vpt.submit_type submitType,vpt.last_num lastNum,vpt.price,vpc.status\n" +
+    @Select("SELECT vpt.name,vpt.category,DATE_FORMAT(vpt.create_time,'%Y/%m/%d') createTime,DATE_FORMAT(vpt.end_time,'%Y年%m月%d日 %H:%i') endTime,vpt.status,vpt.device_type deviceType,vpt.submit_type submitType,vpt.last_num lastNum,vpt.price\n" +
             "FROM v_platform_task vpt\n" +
             "WHERE id=#{taskId}")
     Map appTaskInfo(String taskId);
 
-    @Select("SELECT IFNULL(task_explain,\"\") taskEcplain,IFNULL(img_explain,\"\") imgExplain,IFNULL(task_link,\"\") taskLink,sort FROM v_platform_step WHERE task_id=#{taskId} order by sort asc")
-    List appTaskSteps(String taskId);
+    @Select("SELECT IFNULL(task_explain,'') taskEcplain,IFNULL(img_explain,'') imgExplain,IFNULL(task_link,'') taskLink,sort FROM v_platform_step WHERE task_id=#{taskId} order by sort asc")
+    List<Map> appTaskSteps(String taskId);
 
     @Select("SELECT status \n" +
             "FROM v_platform_user_task\n" +
-            "WHERE user_id={userId} AND task_id=#{taskId}")
+            "WHERE user_id=#{userId} AND task_id=#{taskId}")
     Integer findAppUserStatus(@Param("userId") String userId, @Param("taskId")String taskId);
 
 }

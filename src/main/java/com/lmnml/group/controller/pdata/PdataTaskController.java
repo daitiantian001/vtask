@@ -15,6 +15,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.Id;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -26,7 +27,7 @@ import java.util.*;
  */
 @RequestMapping("pdata/task")
 @RestController
-@Api(value = "任务接口", tags = {"任务接口"}, description = "平台任务相关接口")
+@Api(value = "平台任务接口", tags = {"平台任务接口"}, description = "平台任务相关接口")
 public class PdataTaskController extends BaseController {
 
     @Autowired
@@ -55,17 +56,19 @@ public class PdataTaskController extends BaseController {
     public Result sendTask(@RequestBody @Valid SendTask sendTask) {
         VPlatformTask vPlatformTask = new VPlatformTask();
         BeanUtils.copyProperties(sendTask, vPlatformTask);
-        vPlatformTask.setId(StrKit.ID());
+        String taskId=StrKit.ID();
+        vPlatformTask.setId(taskId);
         vPlatformTask.setCreateTime(new Date());
         vPlatformTask.setStatus(0);//待付款
+        vPlatformTask.setLastNum(sendTask.getNum());
         List<VPlatformStep> vPlatformSteps = new ArrayList<>();
         sendTask.getTaskSteps().forEach(k -> {
             VPlatformStep vPlatformStep = new VPlatformStep();
             BeanUtils.copyProperties(k, vPlatformStep);
             vPlatformStep.setId(StrKit.ID());
+            vPlatformStep.setTaskId(taskId);
             vPlatformSteps.add(vPlatformStep);
         });
-        VPlatformStep vPlatformStep = new VPlatformStep();
         taskService.sendTask(vPlatformTask, vPlatformSteps);
         return new Result(R.SUCCESS);
     }
@@ -73,13 +76,13 @@ public class PdataTaskController extends BaseController {
     //TODO 二次发布任务,删除任务，主动下架任务,支付任务,任务详情
 
     @PostMapping("list")
-    @ApiOperation(value = "任务列表")
+    @ApiOperation(value = "任务列表",notes = "0.待付款 1.待审核 2.正在招 3.已下架 4.二次审核 -1.不通过")
     @ApiResponses({
             @ApiResponse(code = 0, message = "成功"),
             @ApiResponse(code = 1, message = "失败")
     })
     public Result ptaskList(@RequestBody PlatTaskList taskList) {
-        Map map = taskService.platTaskList(taskList.getUserId(), taskList.getStatus(), taskList.getCurrentPage() - 1);
+        Map map = taskService.platTaskList(taskList.getUserId(), taskList.getStatus(), taskList.getCurrentPage());
         return new Result(R.SUCCESS, map);
     }
 
@@ -96,16 +99,30 @@ public class PdataTaskController extends BaseController {
 
     @Data
     @ApiModel("plat发布任务model")
-    public static class SendTask extends VPlatformTask implements Serializable {
+    public static class SendTask implements Serializable {
+        private String categoryId;
+        private String name;
+        private Integer num;
+        private Integer price;
+        private Date endTime;
+        private Integer deviceType;
+        private Integer submitType;
+        private String textExplain;
+        private String ImgExplain;
+        private String contactorName;
+        private String contactorMobile;
+        private String contactorEmail;
+        private String userId;
+        private Integer participate;
+        private String describeback;
+        private Integer ratio;
+        private String category;
         List<PlatTaskStep> taskSteps;
     }
 
     @Data
     @ApiModel("plat任务步骤model")
     public static class PlatTaskStep implements Serializable {
-        @ApiModelProperty("任务")
-        @Ignore
-        private String taskId;
         @ApiModelProperty("任务描述")
         private String taskExplain;
         @ApiModelProperty("图片描述")

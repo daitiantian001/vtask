@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.validation.ObjectError;
@@ -46,6 +47,12 @@ public class ExceptionHandlerAdvice implements ResponseBodyAdvice {
         logger.error("uri={} | requestBody={}", request.getRequestURI(), JSON.toJSONString(modelHolder.get()));
         logger.error("{}", sb.toString());
         return new Result(R.PARAM_ER.getCode(), sb.toString());
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public Result handleException(HttpMessageNotReadableException e, HttpServletRequest request) {
+        logger.error("uri={} | {}", request.getRequestURI(),"JSON格式错误!");
+        return new Result("JSON格式错误!");
     }
 
     @ExceptionHandler(Exception.class)

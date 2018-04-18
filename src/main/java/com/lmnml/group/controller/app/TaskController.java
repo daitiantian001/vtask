@@ -54,8 +54,8 @@ public class TaskController extends BaseController {
         List list;
         Integer num;
         String categoryId = taskList.categoryId;
-        Integer currentPage = taskList.getCurrentPage() - 1;
-        if (StrKit.isBlank(taskList.categoryId)) {
+        Integer currentPage = taskList.getCurrentPage() ;
+        if (StrKit.isBlank(categoryId)) {
             list = taskService.taskList(currentPage);
             num = taskService.total();
         } else {
@@ -124,7 +124,7 @@ public class TaskController extends BaseController {
     @Data
     @ApiModel("app任务列表model")
     public static class AppTaskList implements Serializable {
-        @ApiModelProperty("当前页从1开始")
+        @ApiModelProperty("当前页从0开始")
         @NotNull
         private Integer currentPage;
         @ApiModelProperty("类型(categoryId)不传查所有")
