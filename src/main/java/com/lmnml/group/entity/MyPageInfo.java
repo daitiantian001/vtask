@@ -8,7 +8,7 @@ import lombok.Data;
  */
 @Data
 @AllArgsConstructor
-public class PageInfo {
+public class MyPageInfo {
     private Integer currentPage;
     private Integer total;
 }

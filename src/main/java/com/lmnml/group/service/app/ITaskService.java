@@ -5,6 +5,7 @@ import com.lmnml.group.entity.app.VPlatformStep;
 import com.lmnml.group.entity.app.VPlatformTask;
 import com.lmnml.group.entity.app.VPlatformUserTask;
 import com.lmnml.group.entity.app.VSystemCategory;
+import io.swagger.models.auth.In;
 
 import java.util.List;
 import java.util.Map;
@@ -34,4 +35,8 @@ public interface ITaskService {
     Map appTaskInfo(String taskId, String userId);
 
     Result submitTask(VPlatformUserTask vPlatformUserTask);
+
+    Result updateSubmitTask(VPlatformUserTask vPlatformUserTask);
+
+    Result userTasks(VPlatformUserTask vPlatformUserTask, Integer currentPage);
 }

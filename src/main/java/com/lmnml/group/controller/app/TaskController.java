@@ -3,7 +3,7 @@ package com.lmnml.group.controller.app;
 import com.lmnml.group.common.model.R;
 import com.lmnml.group.common.model.Result;
 import com.lmnml.group.controller.BaseController;
-import com.lmnml.group.entity.PageInfo;
+import com.lmnml.group.entity.MyPageInfo;
 import com.lmnml.group.entity.app.VPlatformUserTask;
 import com.lmnml.group.entity.app.VSystemCategory;
 import com.lmnml.group.service.app.ITaskService;
@@ -15,9 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
@@ -67,7 +65,7 @@ public class TaskController extends BaseController {
             num = taskService.total(categoryId);
         }
         Map map = new HashMap();
-        map.put("pageInfo", new PageInfo(currentPage, num));
+        map.put("pageInfo", new MyPageInfo(currentPage, num));
         map.put("tasks", list);
         return new Result(R.SUCCESS, map);
     }
@@ -107,6 +105,46 @@ public class TaskController extends BaseController {
         return taskService.submitTask(vPlatformUserTask);
     }
 
+    @PostMapping("updateSubmit")
+    @ApiOperation(value = "修改提交内容",notes = "状态为4,5调用")
+    @ApiResponses({
+            @ApiResponse(code = 0, message = "成功"),
+            @ApiResponse(code = 1, message = "失败")
+    })
+    public Result updateSubmit(@RequestBody @Valid SubmitTask submitTask) {
+        VPlatformUserTask vPlatformUserTask = new VPlatformUserTask();
+        BeanUtils.copyProperties(submitTask,vPlatformUserTask);
+        vPlatformUserTask.setId(submitTask.getUserTaskId());
+        vPlatformUserTask.setStatus(1);//待审核
+        return taskService.updateSubmitTask(vPlatformUserTask);
+    }
+
+    @PostMapping("userTasks")
+    @ApiOperation(value = "app我的任务列表")
+    @ApiResponses({
+            @ApiResponse(code = 0, message = "成功"),
+            @ApiResponse(code = 1, message = "失败")
+    })
+    public Result userTasks(@RequestBody @Valid UserTaskModel userTaskModel) {
+        VPlatformUserTask vPlatformUserTask = new VPlatformUserTask();
+        BeanUtils.copyProperties(userTaskModel,vPlatformUserTask);
+        return taskService.userTasks(vPlatformUserTask,userTaskModel.currentPage);
+    }
+
+//    @PostMapping("findSubmit")
+//    @ApiOperation(value = "查看提交内容",notes = "状态为1调用")
+//    @ApiResponses({
+//            @ApiResponse(code = 0, message = "成功"),
+//            @ApiResponse(code = 1, message = "失败")
+//    })
+//    public Result updateSubmit(@RequestBody @Valid SubmitTask submitTask) {
+//        VPlatformUserTask vPlatformUserTask = new VPlatformUserTask();
+//        BeanUtils.copyProperties(submitTask,vPlatformUserTask);
+//        vPlatformUserTask.setId(submitTask.getUserTaskId());
+//        vPlatformUserTask.setStatus(1);//待审核
+//        return taskService.updateSubmitTask(vPlatformUserTask);
+//    }
+
     @Data
     @ApiModel("提交任务模型model")
     public static class SubmitTask implements Serializable {
@@ -144,4 +182,17 @@ public class TaskController extends BaseController {
         @NotNull(message = "任务id不能为空!")
         private String taskId;
     }
+
+    @Data
+    @ApiModel("app我的任务model")
+    public static class UserTaskModel implements Serializable{
+        @ApiModelProperty("用户Id")
+        @NotNull(message = "用户id不能为空!")
+        private String userId;
+        @ApiModelProperty("状态 1.待审核 2.已完成 4.审核不通过 5.待提交 (不传查所有)")
+        private String status;
+        @ApiModelProperty("当前页")
+        private Integer currentPage;
+    }
+
 }

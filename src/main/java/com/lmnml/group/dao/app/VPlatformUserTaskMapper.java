@@ -10,6 +10,6 @@ import org.apache.ibatis.annotations.Select;
  */
 @Mapper
 public interface VPlatformUserTaskMapper extends MyMapper<VPlatformUserTask> {
-    @Select("SELECT status FROM v_platform_user_task #WHERE id=#{id}")
+    @Select("SELECT status FROM v_platform_user_task WHERE id=#{id}")
     Integer findUserTaskStatusById(String id);
 }

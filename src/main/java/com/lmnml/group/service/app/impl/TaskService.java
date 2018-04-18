@@ -1,14 +1,21 @@
 package com.lmnml.group.service.app.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.lmnml.group.common.model.R;
 import com.lmnml.group.common.model.Result;
 import com.lmnml.group.dao.app.*;
-import com.lmnml.group.entity.app.*;
+import com.lmnml.group.entity.MyPageInfo;
+import com.lmnml.group.entity.app.VPlatformStep;
+import com.lmnml.group.entity.app.VPlatformTask;
+import com.lmnml.group.entity.app.VPlatformUserTask;
+import com.lmnml.group.entity.app.VSystemCategory;
 import com.lmnml.group.service.app.ITaskService;
 import com.lmnml.group.util.StrKit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tk.mybatis.mapper.entity.Example;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -56,23 +63,23 @@ public class TaskService implements ITaskService {
     @Override
     @Transactional
     public Result receiveTack(String userId, String taskId) {
-        Integer taskStatus=vPlatformTaskMapper.findTaskStatus(taskId);
-        if(taskStatus==3){
+        Integer taskStatus = vPlatformTaskMapper.findTaskStatus(taskId);
+        if (taskStatus == 3) {
             return new Result("任务已经下架,不能领取");
-        }else if(taskStatus==-1){
+        } else if (taskStatus == -1) {
             return new Result("任务被系统管理员关闭,不能领取");
         }
         //查询是否领取任务
         Integer status = vPlatformTaskMapper.findAppUserStatus(userId, taskId);
         if (status == null) {
             //查询价格
-            Integer price=vPlatformTaskMapper.findTaskPrice(taskId);
-            String userTaskId=insertTask(userId, taskId,price);
+            Integer price = vPlatformTaskMapper.findTaskPrice(taskId);
+            String userTaskId = insertTask(userId, taskId, price);
             Map map = new HashMap();
-            map.put("userTaskId",userTaskId);
-            return new Result(R.SUCCESS,map);
+            map.put("userTaskId", userTaskId);
+            return new Result(R.SUCCESS, map);
         }
-       return new Result("已经领取过该任务");
+        return new Result("已经领取过该任务");
     }
 
     @Override
@@ -102,9 +109,9 @@ public class TaskService implements ITaskService {
         return map;
     }
 
-    private String insertTask(String userId, String taskId,Integer price) {
+    private String insertTask(String userId, String taskId, Integer price) {
         VPlatformUserTask vPlatformUserTask = new VPlatformUserTask();
-        String id=StrKit.ID();
+        String id = StrKit.ID();
         vPlatformUserTask.setId(id);
         vPlatformUserTask.setUserId(userId);
         vPlatformUserTask.setTaskId(taskId);
@@ -120,19 +127,24 @@ public class TaskService implements ITaskService {
     @Transactional
     public Result submitTask(VPlatformUserTask vPlatformUserTask) {
 
-        Integer taskStatus=vPlatformTaskMapper.findTaskStatus(vPlatformUserTask.getTaskId());
+        Integer taskStatus = vPlatformTaskMapper.findTaskStatus(vPlatformUserTask.getTaskId());
 
         Integer userTaskStatus = vPlatformUserTaskMapper.findUserTaskStatusById(vPlatformUserTask.getId());
-        if(taskStatus==3){
+        if (taskStatus == 3) {
             return new Result("任务已经下架,不能提交");
-        }else if(taskStatus==-1){
+        } else if (taskStatus == -1) {
             return new Result("任务被系统管理员关闭,不能提交");
         }
-        if(userTaskStatus==2){
+        if (userTaskStatus == 2) {
             return new Result("您已经完成该任务,不能提交");
         }
         vPlatformUserTaskMapper.updateByPrimaryKeySelective(vPlatformUserTask);
         return new Result(R.SUCCESS);
+    }
+
+    @Override
+    public Result updateSubmitTask(VPlatformUserTask vPlatformUserTask) {
+        return submitTask(vPlatformUserTask);
     }
 
     @Override
@@ -166,5 +178,19 @@ public class TaskService implements ITaskService {
         }
         map.put("status", status);
         return map;
+    }
+
+    @Override
+    public Result userTasks(VPlatformUserTask vPlatformUserTask, Integer currentPage) {
+        PageHelper.startPage(currentPage + 1, 20);
+        Example example = new Example(VPlatformUserTask.class);
+        example.createCriteria().andEqualTo("userId", vPlatformUserTask.getUserId()).andEqualTo("status", vPlatformUserTask.getStatus());
+        List userTasks = vPlatformUserTaskMapper.selectByExample(example);
+        PageInfo pageInfo = new PageInfo(userTasks);
+        MyPageInfo myPageInfo = new MyPageInfo(currentPage , Integer.parseInt(pageInfo.getTotal() + ""));
+        Map map = new HashMap();
+        map.put("pageInfo",myPageInfo);
+        map.put("userTasks",userTasks);
+        return new Result(R.SUCCESS, map);
     }
 }
