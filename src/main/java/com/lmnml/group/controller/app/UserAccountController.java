@@ -35,11 +35,16 @@ public class UserAccountController {
     }
 
     @PostMapping("detail")
-    @ApiOperation(value = "appt账单明细")
+    @ApiOperation(value = "app账单明细")
     public Result appDetail(@RequestBody @Valid AppDetail appDetail) {
         return userService.platDetail(appDetail.getUserId(), appDetail.getStatus());
     }
 
+    @PostMapping("bind")
+    @ApiOperation(value = "app绑定账户")
+    public Result appBindAccount(@RequestBody @Valid AppBindAccount appBindAccount) {
+        return userService.appBindAccount(appBindAccount.getUserId(), appBindAccount.getType(),appBindAccount.getOpenId());
+    }
 
     @Data
     @ApiModel("plat用户钱包model")
@@ -58,5 +63,19 @@ public class UserAccountController {
         @ApiModelProperty("支出/收人 1支出 2.收人")
         @NotNull(message = "用户不能为空!")
         private Integer status;
+    }
+
+    @Data
+    @ApiModel("plat用户钱包model")
+    public static class AppBindAccount implements Serializable {
+        @ApiModelProperty("用户id")
+        @NotNull(message = "用户不能为空!")
+        private String userId;
+        @ApiModelProperty("1.微信openid 2.支付宝id")
+        @NotNull(message = "请输入绑定账户类型")
+        private Integer type;
+        @ApiModelProperty("第三方id")
+        @NotNull(message = "第三方id不能为空")
+        private String openId;
     }
 }

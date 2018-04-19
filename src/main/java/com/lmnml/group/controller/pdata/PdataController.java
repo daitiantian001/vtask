@@ -137,6 +137,25 @@ public class PdataController extends BaseController {
         VPlatformUser vPlatformUser=new VPlatformUser();
         BeanUtils.copyProperties(platUpdateUserInfo,vPlatformUser);
         vPlatformUser.setPassword(MD5.Byte32(vPlatformUser.getPassword()));
+        vPlatformUser.setId(platUpdateUserInfo.getUserId());
+        return userService.updateUserInfo(vPlatformUser);
+    }
+
+    @PostMapping(value = "identity")
+    @ApiOperation(value = "个人认证",response = Result.class)
+    public Result platIdentity(@RequestBody @Valid PlatIdentity platIdentity) {
+        VPlatformUser vPlatformUser=new VPlatformUser();
+        BeanUtils.copyProperties(platIdentity,vPlatformUser);
+        vPlatformUser.setIdentifyType(3);//个人待审核
+        return userService.updateUserInfo(vPlatformUser);
+    }
+
+    @PostMapping(value = "CompanyIdentity")
+    @ApiOperation(value = "企业认证",response = Result.class)
+    public Result platIdentity(@RequestBody @Valid PlatCompanyIdentity platCompanyIdentity) {
+        VPlatformUser vPlatformUser=new VPlatformUser();
+        BeanUtils.copyProperties(platCompanyIdentity,vPlatformUser);
+        vPlatformUser.setIdentifyType(4);//企业待审核
         return userService.updateUserInfo(vPlatformUser);
     }
 
@@ -175,8 +194,42 @@ public class PdataController extends BaseController {
         @ApiModelProperty("生日")
         private Date birthday;
         @ApiModelProperty("用户Id")
-        private String id;
+        private String userId;
         @ApiModelProperty("密码")
         private String password;
+    }
+
+    @Data
+    @ApiModel("plat个人认证model")
+    public static class PlatIdentity implements Serializable {
+        @ApiModelProperty("姓名")
+        private String contactorName;
+        @ApiModelProperty("身份证号")
+        private String identifyNum;
+        @ApiModelProperty("联系方式")
+        private String contactorMobile;
+        @ApiModelProperty("身份证图片")
+        private String identifyPhoto;
+        @ApiModelProperty("身份证地址")
+        private String identifyDesc;
+        @ApiModelProperty("用户Id")
+        private String userId;
+    }
+
+    @Data
+    @ApiModel("plat企业认证model")
+    public static class PlatCompanyIdentity implements Serializable {
+        @ApiModelProperty("认证名称")
+        private String identifyName;
+        @ApiModelProperty("简称")
+        private String identifyShortName;
+        @ApiModelProperty("联系方式")
+        private String contactorMobile;
+        @ApiModelProperty("公司地址")
+        private String identifyAddress;
+        @ApiModelProperty("营业执照")
+        private String identifyPhoto;
+        @ApiModelProperty("用户Id")
+        private String userId;
     }
 }

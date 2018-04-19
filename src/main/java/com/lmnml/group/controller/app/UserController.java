@@ -134,6 +134,7 @@ public class UserController extends BaseController {
     public Result updateUserInfo(@RequestBody @Valid UpdateUserInfo updateUserInfo) {
         VPlatformUser vPlatformUser=new VPlatformUser();
         BeanUtils.copyProperties(updateUserInfo,vPlatformUser);
+        vPlatformUser.setId(updateUserInfo.getUserId());
         return userService.updateUserInfo(vPlatformUser);
     }
 
@@ -189,6 +190,6 @@ public class UserController extends BaseController {
         @ApiModelProperty("支付宝Id")
         private String zfbId;
         @ApiModelProperty("用户Id")
-        private String id;
+        private String userId;
     }
 }

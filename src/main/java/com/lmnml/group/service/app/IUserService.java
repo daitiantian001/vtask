@@ -23,4 +23,6 @@ public interface IUserService {
     Result platAccount(String userId);
 
     Result platDetail(String userId, Integer status);
+
+    Result appBindAccount(String userId, Integer type, String openId);
 }

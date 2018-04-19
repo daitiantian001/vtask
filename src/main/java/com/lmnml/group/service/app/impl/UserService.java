@@ -75,4 +75,18 @@ public class UserService implements IUserService {
         List list = userMapper.platDetail(userId, status);
         return new Result(R.SUCCESS, list);
     }
+
+    @Override
+    @Transactional
+    public Result appBindAccount(String userId, Integer type, String openId) {
+        VPlatformUser vPlatformUser = new VPlatformUser();
+        vPlatformUser.setId(userId);
+        if(type==1){
+            vPlatformUser.setOpenId(openId);
+        }else if(type==2){
+            vPlatformUser.setZfbId(openId);
+        }
+        userMapper.insertSelective(vPlatformUser);
+        return new Result(R.SUCCESS);
+    }
 }
