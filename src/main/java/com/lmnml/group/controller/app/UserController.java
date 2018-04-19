@@ -178,11 +178,10 @@ public class UserController extends BaseController {
     @Data
     @ApiModel("app修改个人信息model")
     public static class UpdateUserInfo implements Serializable {
-        @ApiModelProperty("手机号")
-        @Pattern(regexp = "^1([358][0-9]|4[579]|66|7[0135678]|9[89])[0-9]{8}$", message = "请输入手机号!")
-        private String phone;
         @ApiModelProperty("姓名")
         private String name;
+        @ApiModelProperty("头像")
+        private String photo;
         @ApiModelProperty("生日")
         private Date birthday;
         @ApiModelProperty("微信openId")
@@ -191,6 +190,5 @@ public class UserController extends BaseController {
         private String zfbId;
         @ApiModelProperty("用户Id")
         private String id;
-
     }
 }

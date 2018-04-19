@@ -19,4 +19,8 @@ public interface IUserService {
     Boolean canSend(String mobile);
 
     Result updateUserInfo(VPlatformUser vPlatformUser);
+
+    Result platAccount(String userId);
+
+    Result platDetail(String userId, Integer status);
 }

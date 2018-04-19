@@ -11,6 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * Created by daitian on 2018/4/15.
  */
@@ -59,5 +62,17 @@ public class UserService implements IUserService {
     public Result updateUserInfo(VPlatformUser vPlatformUser) {
         userMapper.updateByPrimaryKeySelective(vPlatformUser);
         return new Result(R.SUCCESS);
+    }
+
+    @Override
+    public Result platAccount(String userId) {
+        Map map = userMapper.platAccount(userId);
+        return new Result(R.SUCCESS, map);
+    }
+
+    @Override
+    public Result platDetail(String userId, Integer status) {
+        List list = userMapper.platDetail(userId, status);
+        return new Result(R.SUCCESS, list);
     }
 }
