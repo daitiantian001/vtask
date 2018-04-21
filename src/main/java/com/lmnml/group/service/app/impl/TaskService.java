@@ -2,6 +2,9 @@ package com.lmnml.group.service.app.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.lmnml.group.common.excel.ExcelJSON;
+import com.lmnml.group.common.excel.ExcelUtil;
+import com.lmnml.group.common.exception.MyTestException;
 import com.lmnml.group.common.model.R;
 import com.lmnml.group.common.model.Result;
 import com.lmnml.group.dao.app.*;
@@ -17,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -191,6 +195,39 @@ public class TaskService implements ITaskService {
         Map map = new HashMap();
         map.put("pageInfo",myPageInfo);
         map.put("userTasks",userTasks);
-        return new Result(R.SUCCESS, map);
+        return new Result(R.SUCCESS, myPageInfo);
+    }
+
+    @Override
+    public void checkTask(String userTaskId, String note, int i) {
+        VPlatformUserTask vPlatformUserTask = new VPlatformUserTask();
+        vPlatformUserTask.setId(userTaskId);
+        vPlatformUserTask.setNote(note);
+        vPlatformUserTask.setStatus(i);
+        vPlatformUserTaskMapper.updateByPrimaryKeySelective(vPlatformUserTask);
+    }
+
+    @Override
+    @Transactional
+    public void delTask(String taskId) {
+
+        Integer taskStatus = vPlatformTaskMapper.findTaskStatus(taskId);
+        if(taskStatus==0){
+            VPlatformTask vPlatformTask = new VPlatformTask();
+            vPlatformTask.setId(taskId);
+            vPlatformTaskMapper.delete(vPlatformTask);
+            VPlatformStep vPlatformStep=new VPlatformStep();
+            vPlatformStep.setTaskId(taskId);
+            vPlatformStepMapper.delete(vPlatformStep);
+        }else{
+            throw new MyTestException("订单已经支付,不能删除");
+        }
+    }
+
+    @Override
+    public void exportTask(String taskId, String userId, HttpServletResponse response) throws Exception {
+        //查询数据
+        List<Map> maps=vPlatformUserTaskMapper.findExportTask(taskId);
+        ExcelUtil.export("用户任务数据导出", ExcelJSON.USER_TASK,maps,response);
     }
 }

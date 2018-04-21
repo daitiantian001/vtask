@@ -14,6 +14,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -71,7 +72,7 @@ public class PdataTaskController extends BaseController {
             vPlatformSteps.add(vPlatformStep);
         });
         taskService.sendTask(vPlatformTask, vPlatformSteps);
-        return new Result(R.SUCCESS);
+        return new Result(R.SUCCESS, taskId);
     }
 
     //TODO 二次发布任务,删除任务，主动下架任务,支付任务,任务详情
@@ -98,6 +99,31 @@ public class PdataTaskController extends BaseController {
         return new Result(R.SUCCESS, map);
     }
 
+    @PostMapping("checkTask")
+    @ApiOperation(value = "审核任务")
+    public Result checkTask(@RequestBody @Valid CheckTask checkTask) {
+        taskService.checkTask(checkTask.getUserTaskId(), checkTask.getNote(), checkTask.getIsAgree() == 1 ? 5 : 4);
+        return new Result(R.SUCCESS);
+    }
+
+    @PostMapping("delTask")
+    @ApiOperation(value = "删除任务")
+    public Result delTask(@RequestBody @Valid PTask pTask) {
+        taskService.delTask(pTask.getTaskId());
+        return new Result(R.SUCCESS);
+    }
+
+    @GetMapping("exportTask")
+    @ApiOperation(value = "CHECK 数据导出")
+    public Result exportTask(String taskId,String userId, HttpServletResponse response) {
+        try {
+            taskService.exportTask(taskId, userId, response);
+            return new Result(R.SUCCESS);
+        } catch (Exception e) {
+            return new Result(R.NET_ERROR);
+        }
+    }
+
     @Data
     @ApiModel("plat发布任务model")
     public static class SendTask implements Serializable {
@@ -106,7 +132,9 @@ public class PdataTaskController extends BaseController {
         private Integer num;
         private Integer price;
         private Date endTime;
+        @ApiModelProperty("设备类型 0.不限 1.安卓 2.ios")
         private Integer deviceType;
+        @ApiModelProperty("提交类型 1.文字 2.图片")
         private Integer submitType;
         private String textExplain;
         private String ImgExplain;
@@ -152,4 +180,17 @@ public class PdataTaskController extends BaseController {
         @NotNull(message = "请输入任务id")
         private String taskId;
     }
+
+    @Data
+    @ApiModel("plat任务审核model")
+    public static class CheckTask implements Serializable {
+        @ApiModelProperty("任务id")
+        @NotNull(message = "请输入任务id")
+        private String userTaskId;
+        @ApiModelProperty("审批意见")
+        private String note;
+        @ApiModelProperty("是否同意 1.同意 2.拒绝")
+        private Integer isAgree;
+    }
+
 }

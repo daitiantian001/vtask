@@ -6,6 +6,7 @@ import io.swagger.models.auth.In;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 import java.util.Map;
@@ -22,11 +23,14 @@ public interface VPlatFormUserMapper extends MyMapper<VPlatformUser> {
     @Select("SELECT vpu.account,vpu.frozen_account frozenAccount,vpu.used_account usedAccount\n" +
             "FROM v_platform_user vpu \n" +
             "WHERE vpu.id=#{userId}")
-    Map platAccount(String userId);
+    Map<String,Integer> platAccount(String userId);
 
     @Select("SELECT id,DATE_FORMAT(create_time,'%Y-%m-%d %H:%i') createTime,type,money,pay_status payStatus\n" +
             "FROM v_platform_dealrecord v\n" +
             "WHERE user_id=#{userId} AND status=#{status} \n" +
             "ORDER BY create_time DESC\n")
     List<Map> platDetail(@Param("userId") String userId, @Param("status")Integer status);
+
+    @Update("UPDATE v_platform_user SET account=account+{money} AND used_account=used_account+#{money} WHERE id=#{userId}")
+    void updateAccount(@Param("userId") String userId, @Param("money")Integer money);
 }

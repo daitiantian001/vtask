@@ -18,9 +18,9 @@ public class VPlatformDealrecord {
     @ApiModelProperty("订单生成时间")
     private Date createTime;
     @ApiModelProperty("订单类型 1.充值 2.提现 3.微任务预支付 4.微任务佣金 5.微任务邀请佣金 6.误判充值补偿 7.微任务预支付退款")
-    private String type;
+    private Integer type;
     @ApiModelProperty("金额")
-    private String money;
+    private Integer money;
     @ApiModelProperty("第三方订单id")
     private String pId;
     @ApiModelProperty("类型")
@@ -34,5 +34,7 @@ public class VPlatformDealrecord {
     @ApiModelProperty("支付人id")
     private String sellerId;
     @ApiModelProperty("收支类型")
-    private String status;
+    private Integer status;
+    @ApiModelProperty("IP")
+    private String ip;
 }

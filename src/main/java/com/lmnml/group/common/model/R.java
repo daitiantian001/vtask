@@ -7,8 +7,8 @@ package com.lmnml.group.common.model;
 public enum R {
     SUCCESS(1, "请求成功"),
     NET_ERROR(-1, "网络异常"),
-    PARAM_ER(0,"参数错误"),
-    MYTEST(10000,"请求失败");
+    MYTEST(0,"请求失败"),
+    PARAM_ER(10001,"参数错误");
     private int code;
     private String msg;
 

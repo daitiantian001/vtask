@@ -38,12 +38,12 @@ public interface VPlatformTaskMapper extends MyMapper<VPlatformTask> {
     @Update("UPDATE v_platform_task SET last_num=last_num-1 where id=#{taskId}")
     void updateMin(String taskId);
 
-    @Select("SELECT vps.id,vps.name,vps.price,vps.num,vps.last_num lastNum\n" +
+    @Select("SELECT vps.id,vps.name,vps.price,vps.num,vps.last_num lastNum,DATE_FORMAT(vpt.end_time,'%Y年%m月%d日 %H:%i') endTime endTime,vps.check_time checkTime\n" +
             "FROM v_platform_task vps\n" +
             "WHERE vps.status=#{status} AND vps.user_id=#{userId}\n" +
             "ORDER BY vps.create_time DESC\n" +
             "LIMIT #{currentPage},10")
-    List platTaskList(@Param("userId") String userId, @Param("status")Integer status, @Param("currentPage")Integer currentPage);
+    List<Map> platTaskList(@Param("userId") String userId, @Param("status")Integer status, @Param("currentPage")Integer currentPage);
 
     @Select("SELECT count(vps.id)" +
             "FROM v_platform_task vps\n" +
@@ -73,4 +73,11 @@ public interface VPlatformTaskMapper extends MyMapper<VPlatformTask> {
 
     @Select("SELECT status FROM v_platform_task WHERE id=#{taskId}")
     Integer findTaskStatus(String taskId);
+
+    @Select("SELECT price FROM v_platform_task WHERE id=#{taskId}")
+    Integer findTotalPriceByTd(String taskId);
+
+
+    @Update("UPDATE FROM v_platform_task set status=#{status} WHERE id=#{taskId}")
+    void updateTaskStatus(@Param("taskId") String taskId,@Param("status") Integer status);
 }

@@ -34,7 +34,9 @@ public class PayUtil {
     private static final String SCRKEY = "";
     public static final String APPID = "";
     public static final String MCH_ID = "";
-    public static final String NOTIFY_URL = "";
+    public static final String NOTIFY_URL = "http://112/openApi/notify/";
+    public static final String WX_JS_PAY="wx";
+    public static final String WX_JS_2_PAY="wx2";
     private static final String API_URL = "https://api.mch.weixin.qq.com/pay/unifiedorder";
 
     private static final String hexDigits[] = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d",
@@ -118,7 +120,7 @@ public class PayUtil {
         return sb.toString();
     }
 
-    public static Map<String, String> pcPay(WxPay wxPay) throws Exception {
+    public static Map<String, String> jsPay(WxPay wxPay) throws Exception {
         Map map = parseXml(sendXMLDataByPost(API_URL,"","",toXml(wxPay)));
         SortedMap<String, String> resultMap = new TreeMap<>();
         resultMap.put("appId", wxPay.getAppid());
@@ -129,7 +131,6 @@ public class PayUtil {
         resultMap.put("paySign", getSign(resultMap));
         return resultMap;
     }
-
     public static Map<String, String> parseXml(String strxml) throws Exception {
         InputStream inputStream = new ByteArrayInputStream(strxml.getBytes("UTF-8"));
         return getReturnMap(inputStream);

@@ -5,8 +5,8 @@ import com.lmnml.group.entity.app.VPlatformStep;
 import com.lmnml.group.entity.app.VPlatformTask;
 import com.lmnml.group.entity.app.VPlatformUserTask;
 import com.lmnml.group.entity.app.VSystemCategory;
-import io.swagger.models.auth.In;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
 
@@ -39,4 +39,10 @@ public interface ITaskService {
     Result updateSubmitTask(VPlatformUserTask vPlatformUserTask);
 
     Result userTasks(VPlatformUserTask vPlatformUserTask, Integer currentPage);
+
+    void checkTask(String userTaskId, String note, int i);
+
+    void delTask(String taskId);
+
+    void exportTask(String taskId, String userId, HttpServletResponse response) throws Exception;
 }

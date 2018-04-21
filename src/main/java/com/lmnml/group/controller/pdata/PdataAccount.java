@@ -2,6 +2,7 @@ package com.lmnml.group.controller.pdata;
 
 import com.lmnml.group.common.model.Result;
 import com.lmnml.group.service.app.IUserService;
+import com.lmnml.group.util.IpUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -36,8 +38,30 @@ public class PdataAccount {
 
     @PostMapping("detail")
     @ApiOperation(value = "plat账单明细")
-    public Result platDetail(@RequestBody @Valid PlatDetail platdDetail) {
-        return userService.platDetail(platdDetail.getUserId(), platdDetail.getStatus());
+    public Result platDetail(@RequestBody @Valid PlatDetail platDetail) {
+        return userService.platDetail(platDetail.getUserId(), platDetail.getStatus());
+    }
+
+    @PostMapping("recharge")
+    @ApiOperation(value = "CHECK plat充值")
+    public Result rechargeAccount(@RequestBody @Valid RechargeModel rechargeModel, HttpServletRequest request) throws Exception {
+        String ip=IpUtil.getIp(request);
+        return userService.rechargeAccount(rechargeModel.getUserId(),rechargeModel.getTotal(),rechargeModel.getType(),ip,rechargeModel.getOpenId());
+    }
+
+    @PostMapping("cash")
+    @ApiOperation(value = "TODO plat提现")
+    public Result cashAccount(@RequestBody @Valid RechargeModel rechargeModel, HttpServletRequest request) throws Exception {
+        String ip=IpUtil.getIp(request);
+//        return userService.cashAccount(rechargeModel.getUserId(),rechargeModel.getTotal(),rechargeModel.getType(),ip);
+        return null;
+    }
+
+    @PostMapping("pay")
+    @ApiOperation(value = "CHECK plat支付")
+    public Result payTask(@RequestBody @Valid PayTask payTask, HttpServletRequest request) throws Exception {
+        String ip=IpUtil.getIp(request);
+        return userService.payTask(payTask.getUserId(), payTask.getTaskId(),payTask.getType(),ip,payTask.getOpenId());
     }
 
     @Data
@@ -58,4 +82,39 @@ public class PdataAccount {
         @NotNull(message = "用户不能为空!")
         private Integer status;
     }
+
+    @Data
+    @ApiModel("plat支付model")
+    public static class PayTask implements Serializable {
+        @ApiModelProperty("用户id")
+        @NotNull(message = "用户不能为空!")
+        private String userId;
+        @ApiModelProperty("任务id")
+        @NotNull(message = "任务id不能为空")
+        private String taskId;
+        @ApiModelProperty("支付类型 1.账户 2.微信 3.支付宝")
+        @NotNull(message = "任务id不能为空")
+        private Integer type;
+        @ApiModelProperty("openId（分）")
+        @NotNull(message = "openId不能为空")
+        private String openId;
+    }
+
+    @Data
+    @ApiModel("plat充值model")
+    public static class RechargeModel implements Serializable {
+        @ApiModelProperty("用户id")
+        @NotNull(message = "用户不能为空!")
+        private String userId;
+        @ApiModelProperty("支付类型 2.微信 3.支付宝")
+        @NotNull(message = "任务id不能为空")
+        private Integer type;
+        @ApiModelProperty("充值金额（分）")
+        @NotNull(message = "金额不能为空")
+        private Integer total;
+        @ApiModelProperty("openId（分）")
+        @NotNull(message = "openId不能为空")
+        private String openId;
+    }
+
 }

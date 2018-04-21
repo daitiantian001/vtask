@@ -40,4 +40,6 @@ public class VPlatformUserTask {
     private Date finishTime;
     @ApiModelProperty("")
     private String id_card;
+    @ApiModelProperty("审核意见")
+    private String note;
 }

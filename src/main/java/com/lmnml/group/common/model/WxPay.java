@@ -65,10 +65,11 @@ public class WxPay {
         this.nonce_str = PayUtil.nonceStr();
     }
 
-    private WxPay(String body,String tradeType,String out_trade_no,int total_fee,String attach,String spbill_create_ip, String openid,String product_id,String scene_info) throws Exception {
+    private WxPay(String body,String url,String tradeType,String out_trade_no,int total_fee,String attach,String spbill_create_ip, String openid,String product_id,String scene_info) throws Exception {
         this();
         this.trade_type=tradeType;
         this.body=body;
+        this.notify_url=notify_url+url;
         this.out_trade_no = out_trade_no;
         this.total_fee = total_fee;
         this.spbill_create_ip = spbill_create_ip;
@@ -90,8 +91,8 @@ public class WxPay {
      * @return
      * @throws Exception
      */
-    public static WxPay h5Pay(String body, String out_trade_no, int total_fee, String attach, String spbill_create_ip, String scene_info) throws Exception {
-        return new WxPay(body,WxPayEnum.H5.getType(),out_trade_no,total_fee,attach,spbill_create_ip,null,null,scene_info);
+    public static WxPay h5Pay(String body,String out_trade_no, int total_fee, String attach, String spbill_create_ip, String scene_info) throws Exception {
+        return new WxPay(body,PayUtil.WX_JS_PAY,WxPayEnum.H5.getType(),out_trade_no,total_fee,attach,spbill_create_ip,null,null,scene_info);
     }
 
     /**
@@ -105,7 +106,7 @@ public class WxPay {
      * @throws Exception
      */
     public static WxPay appPay(String body, String out_trade_no, int total_fee, String attach, String spbill_create_ip) throws Exception {
-        return new WxPay(body,WxPayEnum.APP.getType(),out_trade_no,total_fee,attach,spbill_create_ip,null,null,null);
+        return new WxPay(body,PayUtil.WX_JS_PAY,WxPayEnum.APP.getType(),out_trade_no,total_fee,attach,spbill_create_ip,null,null,null);
     }
 
     /**
@@ -120,7 +121,10 @@ public class WxPay {
      * @throws Exception
      */
     public static WxPay jsPay(String body, String out_trade_no, int total_fee, String attach, String spbill_create_ip, String openid) throws Exception {
-        return new WxPay(body,WxPayEnum.JS.getType(),out_trade_no,total_fee,attach,spbill_create_ip,openid,null,null);
+        return new WxPay(body,PayUtil.WX_JS_PAY,WxPayEnum.JS.getType(),out_trade_no,total_fee,attach,spbill_create_ip,openid,null,null);
+    }
+    public static WxPay js2Pay(String body, String out_trade_no, int total_fee, String attach, String spbill_create_ip, String openid) throws Exception {
+        return new WxPay(body,PayUtil.WX_JS_2_PAY,WxPayEnum.JS.getType(),out_trade_no,total_fee,attach,spbill_create_ip,openid,null,null);
     }
 
     /**
@@ -135,6 +139,6 @@ public class WxPay {
      * @throws Exception
      */
     public static WxPay smPay(String body, String out_trade_no, int total_fee, String attach, String spbill_create_ip, String product_id) throws Exception {
-        return new WxPay(body,WxPayEnum.SM.getType(),out_trade_no,total_fee,attach,spbill_create_ip,null,product_id,null);
+        return new WxPay(body,PayUtil.WX_JS_PAY,WxPayEnum.SM.getType(),out_trade_no,total_fee,attach,spbill_create_ip,null,product_id,null);
     }
 }
