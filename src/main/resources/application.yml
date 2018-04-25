@@ -26,6 +26,11 @@ swagger:
       base-package: com.lmnml.group.controller.pdata
       description: 开发中
       version: 1.0.0.RELEASE
+    sys接口文档:
+      title: sys接口文档
+      base-package: com.lmnml.group.controller.sys
+      description: 开发中
+      version: 1.0.0.RELEASE
   base-path: /**
   exclude-path: /error, /ops/**
 #  license: Apache License, Version 2.0

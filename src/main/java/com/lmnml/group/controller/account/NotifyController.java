@@ -20,7 +20,7 @@ import java.util.Map;
  */
 @RequestMapping("openApi/notify")
 @RestController
-@Api(value = "任务接口", tags = {"任务接口"}, description = "app任务相关接口")
+@Api(value = "支付回调接口", tags = {"支付接口"}, description = "plat支付相关接口")
 public class NotifyController extends BaseController {
 
     @Autowired

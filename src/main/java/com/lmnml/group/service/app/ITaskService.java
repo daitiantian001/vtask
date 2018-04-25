@@ -45,4 +45,12 @@ public interface ITaskService {
     void delTask(String taskId);
 
     void exportTask(String taskId, String userId, HttpServletResponse response) throws Exception;
+
+    Result sysCategoryAdd(VSystemCategory vSystemCategory);
+
+    Result sysCategoryUpdate(VSystemCategory vSystemCategory);
+
+    Result sysTaskList(Integer currentPage);
+
+    Result sysTaskCheck(String targetId, Integer result, String sUserId);
 }

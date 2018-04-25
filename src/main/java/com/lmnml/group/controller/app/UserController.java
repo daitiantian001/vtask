@@ -67,6 +67,14 @@ public class UserController extends BaseController {
         if (vPlatformUser != null) {
             return new Result("该手机号已注册!");
         }
+        if(vPlatformUser.getAccountStatus()==0){
+            return new Result("未激活!");
+        }
+
+        if(vPlatformUser.getAccountStatus()==2){
+            return new Result("该账户被禁用,请联系客服!");
+        }
+
         String code = userService.findMsgCode(userRegister.getMsgCode());
         if (!userRegister.getMsgCode().equals(code)) {
             return new Result("验证码错误!");

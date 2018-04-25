@@ -46,10 +46,18 @@ public class PdataController extends BaseController {
     })
     public Object userLogin(@RequestBody @Valid PlatUserRegister platUserRegister, HttpServletResponse response) {
         //查询用户
-        VPlatformUser vPlatformUser = userService.findUserByMobile(platUserRegister.getMobile(),1);
+        VPlatformUser vPlatformUser = userService.findUserByMobile(platUserRegister.getMobile(),2);
         if (vPlatformUser == null) {
             return new Result("手机号未注册!");
         }
+        if(vPlatformUser.getAccountStatus()==0){
+            return new Result("未激活!");
+        }
+
+        if(vPlatformUser.getAccountStatus()==2){
+            return new Result("该账户被禁用,请联系客服!");
+        }
+
         if (!MD5.Byte32(platUserRegister.getPassword()).equals(vPlatformUser.getPassword())) {
             return new Result("密码错误!");
         }
@@ -106,7 +114,7 @@ public class PdataController extends BaseController {
     public Result sendMsg(@RequestBody @Valid PlatMobile mobile) {
 
         //先查询
-        VPlatformUser vPlatformUser = userService.findUserByMobile(mobile.getMobile(),1);
+        VPlatformUser vPlatformUser = userService.findUserByMobile(mobile.getMobile(),2);
         if (vPlatformUser != null) {
             return new Result("该手机号已注册为商户!");
         }
@@ -147,6 +155,7 @@ public class PdataController extends BaseController {
         VPlatformUser vPlatformUser=new VPlatformUser();
         BeanUtils.copyProperties(platIdentity,vPlatformUser);
         vPlatformUser.setIdentifyType(3);//个人待审核
+        vPlatformUser.setCheckTime(new Date());
         return userService.updateUserInfo(vPlatformUser);
     }
 
@@ -156,6 +165,7 @@ public class PdataController extends BaseController {
         VPlatformUser vPlatformUser=new VPlatformUser();
         BeanUtils.copyProperties(platCompanyIdentity,vPlatformUser);
         vPlatformUser.setIdentifyType(4);//企业待审核
+        vPlatformUser.setCheckTime(new Date());
         return userService.updateUserInfo(vPlatformUser);
     }
 

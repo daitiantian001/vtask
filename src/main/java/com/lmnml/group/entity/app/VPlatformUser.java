@@ -35,7 +35,7 @@ public class VPlatformUser {
     private String unionId;
     @ApiModelProperty("支付宝Id")
     private String zfbId;
-    @ApiModelProperty("认证类型 0.未认证 1.个人 2.企业 3.个人待审核 4.企业待审核")
+    @ApiModelProperty("认证类型 0.未认证 1.个人 2.企业 3.个人待审核 4.企业待审核 5.认证失败")
     private Integer identifyType;
     @ApiModelProperty("认证名称")
     private String identifyName;
@@ -65,7 +65,7 @@ public class VPlatformUser {
     private String password;
     @ApiModelProperty("权限 1.可以发布任务/可领取任务 2.不能发布任务/不能领取任务")
     private Integer publishType;
-    @ApiModelProperty("账户状态 0.未激活 1.激活")
+    @ApiModelProperty("账户状态 0.未激活 1.激活 2.被禁用")
     private Integer accountStatus;
     @ApiModelProperty("邀请码")
     private String inventCode;
@@ -73,6 +73,8 @@ public class VPlatformUser {
     private Date createTime;
     @ApiModelProperty("区域 0.某地区")
     private Integer state;
-    @ApiModelProperty("用户类型 1.普通用户 2.商家")
+    @ApiModelProperty("用户类型 1.普通用户 2.商家 3.系统")
     private Integer userType;
+    @ApiModelProperty("发起认证时间")
+    private Date checkTime;
 }

@@ -77,7 +77,12 @@ public interface VPlatformTaskMapper extends MyMapper<VPlatformTask> {
     @Select("SELECT price FROM v_platform_task WHERE id=#{taskId}")
     Integer findTotalPriceByTd(String taskId);
 
-
     @Update("UPDATE FROM v_platform_task set status=#{status} WHERE id=#{taskId}")
     void updateTaskStatus(@Param("taskId") String taskId,@Param("status") Integer status);
+
+    @Select("SELECT count(id) FROM v_platform_task WHERE status in (1,4)")
+    Integer total();
+
+    @Select("SELECT * FROM v_platform_task WHERE status in (1,4) ORDER BY create_time DESC limit #{currentPage},10")
+    List<VPlatformTask> findTasks(Integer currentPage);
 }

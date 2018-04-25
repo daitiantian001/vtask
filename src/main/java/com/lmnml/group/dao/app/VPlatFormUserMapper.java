@@ -33,4 +33,20 @@ public interface VPlatFormUserMapper extends MyMapper<VPlatformUser> {
 
     @Update("UPDATE v_platform_user SET account=account+{money} AND used_account=used_account+#{money} WHERE id=#{userId}")
     void updateAccount(@Param("userId") String userId, @Param("money")Integer money);
+
+    @Select("SELECT vpu.id,vpu.contactor_name contactorName,vpu.identify_num identifyNum,vpu.contactor_mobile contactorMobile,vpu.identify_photo identifyPhoto,vpu.identify_address identifyAddress\n" +
+            "FROM v_platform_user vpu\n" +
+            "WHERE vpu.identify_type=3 and user_type=2 order by check_time desc limit #{currentPage},10")
+    List<Map> sysUserCheckList(Integer currentPage);
+
+    @Select("SELECT count(vpu.id) FROM v_platform_user vpu WHERE vpu.identify_type=3 and user_type=2 ")
+    Integer sysUserCheckListNum();
+
+    @Select("SELECT vpu.id,vpu.identify_name identifyName,vpu.identify_short_name identifyShortName,vpu.contactor_mobile contactorMobile,vpu.identify_address identifyAddress,vpu.identify_photo identifyPhoto\n" +
+            "FROM v_platform_user vpu\n" +
+            "WHERE vpu.identify_type=4 and user_type=2  order by check_time desc limit {currentPage},10")
+    List sysUserCheckList2(Integer currentPage);
+
+    @Select("SELECT count(vpu.id) FROM v_platform_user vpu WHERE vpu.identify_type=4 and user_type=2 ")
+    Integer sysUserCheckListNum2();
 }

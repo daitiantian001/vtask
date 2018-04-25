@@ -7,6 +7,8 @@ import com.lmnml.group.controller.BaseController;
 import com.lmnml.group.util.StrKit;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,7 +24,7 @@ import java.io.InputStream;
 @Api(value = "平台文件接口", tags = {"平台文件接口"}, description = "plat文件传输")
 public class PataImgController extends BaseController {
 
-    @RequestMapping("upload")
+    @PostMapping("upload")
     @ApiOperation(value = "plat上传文件")
     public Result save(MultipartFile file, String ext) {
         try {
@@ -43,7 +45,7 @@ public class PataImgController extends BaseController {
         }
     }
 
-    @RequestMapping("qrcode")
+    @GetMapping("qrcode")
     @ApiOperation(value = "plat获取二维码")
     public void save(String content) {
 //        return new Result(R.SUCCESS,"http://yuejinimg.oss-cn-beijing.aliyuncs.com/");

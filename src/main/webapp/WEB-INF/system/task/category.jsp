@@ -1,4 +1,4 @@
-<%@page import="cn.net.vtask.util.CookieTools"%>
+<%@page import="com.lmnml.group.util.CookieTools"%>
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%
 String path = request.getContextPath();

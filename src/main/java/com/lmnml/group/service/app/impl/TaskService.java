@@ -230,4 +230,54 @@ public class TaskService implements ITaskService {
         List<Map> maps=vPlatformUserTaskMapper.findExportTask(taskId);
         ExcelUtil.export("用户任务数据导出", ExcelJSON.USER_TASK,maps,response);
     }
+
+    @Override
+    @Transactional
+    public Result sysCategoryAdd(VSystemCategory vSystemCategory) {
+        //查询
+        VSystemCategory v= (VSystemCategory) vSystemCategoryMapper.selectOne(vSystemCategory);
+        if(v!=null){
+            return new Result("名称重复!");
+        }
+        vSystemCategory.setId(StrKit.ID());
+        vSystemCategory.setStatus(0);
+        vSystemCategoryMapper.insertSelective(vSystemCategory);
+        return new Result(R.SUCCESS);
+    }
+
+    @Override
+    @Transactional
+    public Result sysCategoryUpdate(VSystemCategory vSystemCategory) {
+        List<String> names=vSystemCategoryMapper.findName(vSystemCategory.getName());
+        if(names.contains(vSystemCategory.getName())){
+            return new Result("名称已经存在,换个名称");
+        }
+        vSystemCategoryMapper.insertSelective(vSystemCategory);
+        return new Result(R.SUCCESS);
+    }
+
+    @Override
+    public Result sysTaskList(Integer currentPage) {
+
+        Map map = new HashMap();
+        Integer total=vPlatformTaskMapper.total();
+        List<VPlatformTask> vPlatformTasks = vPlatformTaskMapper.findTasks(currentPage);
+        MyPageInfo myPageInfo = new MyPageInfo(currentPage,total);
+        map.put("pageInfo",myPageInfo);
+        map.put("tasks",vPlatformTasks);
+        return new Result(R.SUCCESS,map);
+    }
+
+    @Override
+    public Result sysTaskCheck(String targetId, Integer result, String sUserId) {
+        VPlatformTask vPlatformTask =new VPlatformTask();
+        vPlatformTask.setId(targetId);
+        if(result==1){
+            vPlatformTask.setStatus(2);
+        }else if(result==2){
+            vPlatformTask.setStatus(5);
+        }
+        vPlatformTaskMapper.updateByPrimaryKeySelective(vPlatformTask);
+        return new Result(R.SUCCESS);
+    }
 }

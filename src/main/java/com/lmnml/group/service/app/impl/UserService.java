@@ -10,9 +10,11 @@ import com.lmnml.group.dao.app.MsgCodeMapper;
 import com.lmnml.group.dao.app.VPlatFormUserMapper;
 import com.lmnml.group.dao.app.VPlatformDealrecordMapper;
 import com.lmnml.group.dao.app.VPlatformTaskMapper;
+import com.lmnml.group.dao.sys.VSystemUserMapper;
 import com.lmnml.group.entity.app.MsgCode;
 import com.lmnml.group.entity.app.VPlatformDealrecord;
 import com.lmnml.group.entity.app.VPlatformUser;
+import com.lmnml.group.entity.web.VSystemUser;
 import com.lmnml.group.service.app.IUserService;
 import com.lmnml.group.util.JsonUtil;
 import com.lmnml.group.util.StrKit;
@@ -37,6 +39,9 @@ public class UserService implements IUserService {
     private VPlatFormUserMapper userMapper;
 
     @Autowired
+    private VSystemUserMapper vSystemUserMapper;
+
+    @Autowired
     private MsgCodeMapper msgCodeMapper;
 
     @Autowired
@@ -48,6 +53,11 @@ public class UserService implements IUserService {
     @Override
     public VPlatformUser findUserByMobile(String mobile, Integer userType) {
         return userMapper.findUserByMobile(mobile, userType);
+    }
+
+    @Override
+    public VSystemUser findSysUserByMobile(String mobile) {
+        return vSystemUserMapper.findSysUserByMobile(mobile);
     }
 
     @Override
@@ -231,20 +241,59 @@ public class UserService implements IUserService {
     @Override
     public Result rechargeAccount(String userId, Integer total, Integer type, String ip, String openId) throws Exception {
         Map result = new HashMap();
-        String id =StrKit.ID();
+        String id = StrKit.ID();
         //充值
         switch (type) {
             case 2:
                 //微信支付
-                String attach = JsonUtil.toJson(new Attach(ip,id,id,userId));//附带信息 ip,targetId,id
+                String attach = JsonUtil.toJson(new Attach(ip, id, id, userId));//附带信息 ip,targetId,id
                 Map<String, String> stringStringMap = PayUtil.jsPay(WxPay.js2Pay("赚客-微任务支付", StrKit.ID(), total, attach, ip, openId));
                 result.put("payType", 2);
                 result.put("payInfo", stringStringMap);
                 return new Result(R.SUCCESS, result);
             case 3:
+
                 return new Result(R.SUCCESS);
             default:
                 return new Result(R.NET_ERROR);
         }
+    }
+
+    @Override
+    public Result findSysList(String id) {
+        Map map = vSystemUserMapper.findSysList(id);
+        return new Result(R.SUCCESS, map);
+    }
+
+    @Override
+    public Result sysUserCheckList(Integer currentPage, Integer type) {
+        Map map = new HashMap();
+        if (type == 3) {//个人
+            List list = userMapper.sysUserCheckList(currentPage);
+            Integer integer = userMapper.sysUserCheckListNum();
+            map.put("checks", list);
+            map.put("total", integer);
+            return new Result(R.SUCCESS, map);
+        } else if (type == 4) {//企业
+            List list = userMapper.sysUserCheckList2(currentPage);
+            Integer integer = userMapper.sysUserCheckListNum2();
+            map.put("checks", list);
+            map.put("total", integer);
+            return new Result(R.SUCCESS, map);
+        }
+        return new Result(R.NET_ERROR);
+    }
+
+    @Override
+    public Result sysUserCheck(String targetId, Integer type, Integer sysCheckModelType, String sUserId) {
+        VPlatformUser vPlatformUser = new VPlatformUser();
+        vPlatformUser.setId(targetId);
+        if(type==1){
+            vPlatformUser.setIdentifyType(sysCheckModelType==3?1:2);
+        }else if(type==2){
+            vPlatformUser.setIdentifyType(5);
+        }
+        userMapper.updateByPrimaryKeySelective(vPlatformUser);
+        return new Result(R.SUCCESS);
     }
 }
