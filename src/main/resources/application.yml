@@ -59,3 +59,8 @@ pagehelper:
 logging:
   level:
     com.lmnml.group: debug
+##########################支付相关################################
+api:
+  wx:
+    key:
+  ali:

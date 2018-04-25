@@ -1,10 +1,9 @@
 package com.lmnml.group.service.app.impl;
 
+import com.alipay.api.internal.util.AlipayUtils;
 import com.lmnml.group.common.exception.MyTestException;
-import com.lmnml.group.common.model.Attach;
-import com.lmnml.group.common.model.R;
-import com.lmnml.group.common.model.Result;
-import com.lmnml.group.common.model.WxPay;
+import com.lmnml.group.common.model.*;
+import com.lmnml.group.common.pay.AliPayUtil;
 import com.lmnml.group.common.pay.PayUtil;
 import com.lmnml.group.dao.app.MsgCodeMapper;
 import com.lmnml.group.dao.app.VPlatFormUserMapper;
@@ -126,6 +125,7 @@ public class UserService implements IUserService {
         Integer money = vPlatformTaskMapper.findTotalPriceByTd(taskId);
         Map result = new HashMap();
         String id = StrKit.ID();
+        String attach = JsonUtil.toJson(new Attach(ip, taskId, id, userId));//附带信息 ip,targetId,id
         switch (type) {
             case 1:
                 //查询可用余额
@@ -150,13 +150,16 @@ public class UserService implements IUserService {
                 return new Result("账户余额不足!");
             case 2:
                 //微信支付
-                String attach = JsonUtil.toJson(new Attach(ip, taskId, id, userId));//附带信息 ip,targetId,id
                 Map<String, String> stringStringMap = PayUtil.jsPay(WxPay.jsPay("赚客-微任务支付", StrKit.ID(), money, attach, ip, openId));
                 result.put("payType", 2);
                 result.put("payInfo", stringStringMap);
                 return new Result(R.SUCCESS, result);
             case 3:
                 //支付宝支付
+                String payInfo = AliPayUtil.jsPay(new AliPay("赚客-微任务支付宝支付",StrKit.ID(),money,attach,ip));
+                result.put("payType",3);
+                result.put("payInfo",payInfo);
+                return new Result(R.SUCCESS);
 
             default:
                 return new Result(R.NET_ERROR);
@@ -182,6 +185,7 @@ public class UserService implements IUserService {
                     vPlatformDealrecord.setCreateTime(new Date());
                     vPlatformDealrecord.setType(3);//微信任务预支付
                     vPlatformDealrecord.setTaskId(attach.getTargetId());
+                    vPlatformDealrecord.setPayType(2);//微信;
                     vPlatformDealrecord.setStatus(1);//支出
                     vPlatformDealrecord.setIp(attach.getIp());
                     //扣除金额
@@ -220,13 +224,13 @@ public class UserService implements IUserService {
                     vPlatformDealrecord.setCreateTime(new Date());
                     vPlatformDealrecord.setType(1);//微信充值
                     vPlatformDealrecord.setPId(attach.getTargetId());
+                    vPlatformDealrecord.setPayType(2);//微信;;
                     vPlatformDealrecord.setStatus(2);//收入
                     vPlatformDealrecord.setIp(attach.getIp());
                     //增加金额
                     userMapper.updateAccount(attach.getUserId(), total);
                     //生成记录
                     vPlatformDealrecordMapper.insert(vPlatformDealrecord);
-                    resp.getWriter().write(PayUtil.setXML("SUCCESS", "OK"));
                 } else {
                     throw new MyTestException(String.format("%s:时间:%s", "微信支付异常", new Date()));
                 }
@@ -239,20 +243,88 @@ public class UserService implements IUserService {
     }
 
     @Override
+    @Transactional
+    public void aliPay(Map<String, String> m, HttpServletRequest request, HttpServletResponse resp) {
+        if(AliPayUtil.verify(m)){
+            if(m.get("trade_status").equals("TRADE_FINISHED") || m.get("trade_status").equals("TRADE_SUCCESS")){
+                String json = m.get("attach");
+                Attach attach = JsonUtil.fromJson(json, Attach.class);
+                //TODO ; 判断金额是否相等
+                Integer total = Integer.parseInt(m.get("total"));
+                VPlatformDealrecord vPlatformDealrecord = new VPlatformDealrecord();
+                vPlatformDealrecord.setId(StrKit.ID());
+                vPlatformDealrecord.setUserId(attach.getUserId());
+                vPlatformDealrecord.setCreateTime(new Date());
+                vPlatformDealrecord.setType(3);//微任务预支付
+                vPlatformDealrecord.setTaskId(attach.getTargetId());
+                vPlatformDealrecord.setPayType(3);//支付宝
+                vPlatformDealrecord.setStatus(1);//支出
+                vPlatformDealrecord.setIp(attach.getIp());
+                //扣除金额
+                userMapper.updateAccount(attach.getUserId(), -total);
+                //生成记录
+                vPlatformDealrecordMapper.insert(vPlatformDealrecord);
+                //修改状态
+                vPlatformTaskMapper.updateTaskStatus(attach.getTargetId(), 1);//待审核
+
+            }else {
+                throw new MyTestException(String.format("%s:时间:%s", "支付宝支付异常", new Date()));
+            }
+        }else{
+            throw new MyTestException(String.format("%s:时间:%s", "支付宝支付异常", new Date()));
+        }
+
+    }
+
+    @Override
+    @Transactional
+    public void aliPay2(Map<String, String> m, HttpServletRequest request, HttpServletResponse resp) {
+        if(AliPayUtil.verify(m)){
+            if(m.get("trade_status").equals("TRADE_FINISHED") || m.get("trade_status").equals("TRADE_SUCCESS")){
+                String json = m.get("attach");
+                Attach attach = JsonUtil.fromJson(json, Attach.class);
+                //TODO ; 判断金额是否相等
+                Integer total = Integer.parseInt(m.get("total"));
+                VPlatformDealrecord vPlatformDealrecord = new VPlatformDealrecord();
+                vPlatformDealrecord.setId(StrKit.ID());
+                vPlatformDealrecord.setUserId(attach.getUserId());
+                vPlatformDealrecord.setCreateTime(new Date());
+                vPlatformDealrecord.setType(1);//充值
+                vPlatformDealrecord.setTaskId(attach.getTargetId());
+                vPlatformDealrecord.setPayType(3);//支付宝
+                vPlatformDealrecord.setStatus(1);//支出
+                vPlatformDealrecord.setIp(attach.getIp());
+                //增加金额
+                userMapper.updateAccount(attach.getUserId(), total);
+                //生成记录
+                vPlatformDealrecordMapper.insert(vPlatformDealrecord);
+
+            }else {
+                throw new MyTestException(String.format("%s:时间:%s", "支付宝支付异常", new Date()));
+            }
+        }else{
+            throw new MyTestException(String.format("%s:时间:%s", "支付宝支付异常", new Date()));
+        }
+
+    }
+
+    @Override
     public Result rechargeAccount(String userId, Integer total, Integer type, String ip, String openId) throws Exception {
         Map result = new HashMap();
         String id = StrKit.ID();
+        String attach = JsonUtil.toJson(new Attach(ip, id, id, userId));//附带信息 ip,targetId,id
         //充值
         switch (type) {
             case 2:
                 //微信支付
-                String attach = JsonUtil.toJson(new Attach(ip, id, id, userId));//附带信息 ip,targetId,id
-                Map<String, String> stringStringMap = PayUtil.jsPay(WxPay.js2Pay("赚客-微任务支付", StrKit.ID(), total, attach, ip, openId));
+                Map<String, String> stringStringMap = PayUtil.jsPay(WxPay.js2Pay("赚客-微任务微信支付", StrKit.ID(), total, attach, ip, openId));
                 result.put("payType", 2);
                 result.put("payInfo", stringStringMap);
                 return new Result(R.SUCCESS, result);
             case 3:
-
+                String payInfo = AliPayUtil.jsPay2(new AliPay("赚客-微任务支付宝支付",StrKit.ID(),total,attach,ip));
+                result.put("payType",3);
+                result.put("payInfo",payInfo);
                 return new Result(R.SUCCESS);
             default:
                 return new Result(R.NET_ERROR);

@@ -15,6 +15,7 @@ import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
+import org.springframework.stereotype.Component;
 
 import javax.net.ssl.SSLContext;
 import javax.servlet.http.HttpServletRequest;
@@ -28,16 +29,17 @@ import java.util.*;
 /**
  * Created by daitian on 2017/5/13.
  */
+@Component
 public class PayUtil {
-
-    private static final String KEY = "";
+    private static final String KEY = "p9z8v7b4j5h6u7iioq2we64n7vcx8ds6";
+    public static final String APPID = "wx692baa083acfd459";
     private static final String SCRKEY = "";
-    public static final String APPID = "";
-    public static final String MCH_ID = "";
-    public static final String NOTIFY_URL = "http://112/openApi/notify/";
-    public static final String WX_JS_PAY="wx";
-    public static final String WX_JS_2_PAY="wx2";
+    public static final String MCH_ID = "1304440901";
+    public static final String NOTIFY_URL = "http://lmnml.com/openApi/notify/";
+    public static final String WX_JS_PAY = "wx";
+    public static final String WX_JS_2_PAY = "wx2";
     private static final String API_URL = "https://api.mch.weixin.qq.com/pay/unifiedorder";
+    public static String WX_P12_PATH = PayUtil.class.getClassLoader().getResource("crt/wx/apiclient_cert.p12").getPath();
 
     private static final String hexDigits[] = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d",
             "e", "f"};
@@ -105,7 +107,7 @@ public class PayUtil {
         return MD5Encode(sb.toString(), "UTF-8").toUpperCase();
     }
 
-    public static String nonceStr(){
+    public static String nonceStr() {
         return getRandomStrByLen(30);
     }
 
@@ -121,22 +123,23 @@ public class PayUtil {
     }
 
     public static Map<String, String> jsPay(WxPay wxPay) throws Exception {
-        Map map = parseXml(sendXMLDataByPost(API_URL,"","",toXml(wxPay)));
+        Map map = parseXml(sendXMLDataByPost(API_URL, WX_P12_PATH, MCH_ID, toXml(wxPay)));
         SortedMap<String, String> resultMap = new TreeMap<>();
         resultMap.put("appId", wxPay.getAppid());
         resultMap.put("signType", "MD5");
         resultMap.put("package", "prepay_id=" + map.get("prepay_id"));
         resultMap.put("nonceStr", nonceStr());
-        resultMap.put("timeStamp",timeStamp() );
+        resultMap.put("timeStamp", timeStamp());
         resultMap.put("paySign", getSign(resultMap));
         return resultMap;
     }
+
     public static Map<String, String> parseXml(String strxml) throws Exception {
         InputStream inputStream = new ByteArrayInputStream(strxml.getBytes("UTF-8"));
         return getReturnMap(inputStream);
     }
 
-    private static String timeStamp(){
+    private static String timeStamp() {
         return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
     }
 
@@ -188,11 +191,11 @@ public class PayUtil {
         return map;
     }
 
-    public static String sendXMLDataByPost(String url,String assetsPath,String assetsPwd,String xmlData)
+    public static String sendXMLDataByPost(String url, String assetsPath, String assetsPwd, String xmlData)
             throws IOException {
         String result = "";
-        try{
-            KeyStore keyStore  = KeyStore.getInstance("PKCS12");
+        try {
+            KeyStore keyStore = KeyStore.getInstance("PKCS12");
             FileInputStream instream = new FileInputStream(new File(assetsPath));
             try {
                 keyStore.load(instream, assetsPwd.toCharArray());
@@ -206,7 +209,7 @@ public class PayUtil {
             // Allow TLSv1 protocol only
             SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(
                     sslcontext,
-                    new String[] { "TLSv1" },
+                    new String[]{"TLSv1"},
                     null,
                     SSLConnectionSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER);
             CloseableHttpClient httpclient = HttpClients.custom()
@@ -217,13 +220,13 @@ public class PayUtil {
             post.setEntity(entity);
             post.setHeader("Content-Type", "text/xml;charset=UTF-8");
             HttpResponse response = httpclient.execute(post);
-            if(response.getStatusLine().getStatusCode()== HttpStatus.SC_OK){
-                HttpEntity resultEntity=response.getEntity();
-                if (entity!=null) {
+            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+                HttpEntity resultEntity = response.getEntity();
+                if (entity != null) {
                     result = EntityUtils.toString(resultEntity);
                 }
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return result;

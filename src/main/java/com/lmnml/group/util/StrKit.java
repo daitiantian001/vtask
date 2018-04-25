@@ -64,4 +64,19 @@ public class StrKit {
     public static String ID(){
         return UUID.randomUUID().toString().replaceAll("-", "");
     }
+
+    public static String addPoint(String money){
+        StringBuilder  sb = new StringBuilder (money);
+        int length = sb.length();
+        if(length==0){
+            sb.append("0.00");
+        }else if(length==2){
+            sb.insert(0, "0.");
+        }else if(length==1){
+            sb.insert(0, "0.0");
+        }else{
+            sb.insert(length-2,".");
+        }
+        return sb.toString();
+    }
 }

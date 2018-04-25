@@ -24,7 +24,7 @@ public class VPlatformDealrecord {
     @ApiModelProperty("第三方订单id")
     private String pId;
     @ApiModelProperty("类型")
-    private String payType;
+    private Integer payType;
     @ApiModelProperty("支付状态")
     private String payStatus;
     @ApiModelProperty("任务id")

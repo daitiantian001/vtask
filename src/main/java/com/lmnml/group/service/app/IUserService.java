@@ -46,4 +46,8 @@ public interface IUserService {
     Result sysUserCheckList(Integer currentPage, Integer type);
 
     Result sysUserCheck(String targetId, Integer type, Integer sysCheckModelType, String sUserId);
+
+    void aliPay(Map<String, String> m, HttpServletRequest request, HttpServletResponse resp);
+
+    void aliPay2(Map<String, String> m, HttpServletRequest request, HttpServletResponse resp);
 }

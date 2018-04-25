@@ -1,5 +1,6 @@
 package com.lmnml.group.controller.account;
 
+import com.lmnml.group.common.pay.AliPayUtil;
 import com.lmnml.group.common.pay.PayUtil;
 import com.lmnml.group.controller.BaseController;
 import com.lmnml.group.service.app.IUserService;
@@ -53,6 +54,32 @@ public class NotifyController extends BaseController {
                 resp.getWriter().write(PayUtil.setXML("ERROR", "error"));
             } catch (IOException e1) {
             }
+        }
+    }
+
+    @PostMapping("ali")
+    @ApiOperation(value = "ali支付")
+    public String aliNotify(HttpServletRequest request, HttpServletResponse resp){
+        Map<String, String> m = null;
+        try {
+            m = AliPayUtil.parseReq(request);
+            userService.aliPay(m,request,resp);
+            return "success";
+        } catch (Exception e) {
+            return "fail";
+        }
+    }
+
+    @PostMapping("ali2")
+    @ApiOperation(value = "ali充值")
+    public String aliNotify2(HttpServletRequest request, HttpServletResponse resp){
+        Map<String, String> m = null;
+        try {
+            m = AliPayUtil.parseReq(request);
+            userService.aliPay2(m,request,resp);
+            return "success";
+        } catch (Exception e) {
+            return "fail";
         }
     }
 }
