@@ -70,14 +70,15 @@ public class AliPayUtil {
         model.setOutTradeNo(aliPay.getId());
         model.setTotalAmount(StrKit.addPoint(aliPay.getTotal() + ""));
         model.setProductCode("QUICK_MSECURITY_PAY");
+        String passbackParams = URLEncoder.encode(aliPay.getAttach());
+        model.setPassbackParams(passbackParams);
         request.setBizModel(model);
         request.setNotifyUrl(NOTIFY_URL + Ali_JS2_PAY);
         try {
             //这里和普通的接口调用不同，使用的是sdkExecute
-            AlipayTradeAppPayResponse response = alipayClient.sdkExecute(request);
-            String passbackParams = URLEncoder.encode(aliPay.getAttach());
-            model.setPassbackParams(passbackParams);
-            return response.getBody();
+//            AlipayTradeAppPayResponse response = alipayClient.sdkExecute(request);
+            return alipayClient.pageExecute(request).getBody();
+//            return response.getBody();
         } catch (AlipayApiException e) {
             e.printStackTrace();
         }

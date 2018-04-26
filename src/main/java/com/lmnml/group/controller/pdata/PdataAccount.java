@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -44,9 +45,10 @@ public class PdataAccount {
 
     @PostMapping("recharge")
     @ApiOperation(value = "CHECK plat充值")
-    public Result rechargeAccount(@RequestBody @Valid RechargeModel rechargeModel, HttpServletRequest request) throws Exception {
+    public Result rechargeAccount(@RequestBody @Valid RechargeModel rechargeModel, HttpServletRequest request, HttpServletResponse response) throws Exception {
         String ip=IpUtil.getIp(request);
-        return userService.rechargeAccount(rechargeModel.getUserId(),rechargeModel.getTotal(),rechargeModel.getType(),ip,rechargeModel.getOpenId());
+        String openId="ouxT7vl7SkMNNHEIDA1zuKnTewYw";//rechargeModel.getOpenId()
+        return userService.rechargeAccount(rechargeModel.getUserId(),rechargeModel.getTotal(),rechargeModel.getType(),ip,openId,response);
     }
 
     @PostMapping("cash")
@@ -61,7 +63,8 @@ public class PdataAccount {
     @ApiOperation(value = "CHECK plat支付")
     public Result payTask(@RequestBody @Valid PayTask payTask, HttpServletRequest request) throws Exception {
         String ip=IpUtil.getIp(request);
-        return userService.payTask(payTask.getUserId(), payTask.getTaskId(),payTask.getType(),ip,payTask.getOpenId());
+        String openId="ouxT7vl7SkMNNHEIDA1zuKnTewYw";//payTask.getOpenId()
+        return userService.payTask(payTask.getUserId(), payTask.getTaskId(),payTask.getType(),ip,openId);
     }
 
     @Data

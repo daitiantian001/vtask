@@ -11,8 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Attach {
-    private String ip;
     private String targetId;
-    private String orderId;
     private String userId;
 }

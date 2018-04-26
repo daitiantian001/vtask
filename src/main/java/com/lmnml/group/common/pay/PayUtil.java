@@ -21,6 +21,8 @@ import javax.net.ssl.SSLContext;
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.lang.reflect.Field;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.security.KeyStore;
 import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
@@ -123,7 +125,7 @@ public class PayUtil {
     }
 
     public static Map<String, String> jsPay(WxPay wxPay) throws Exception {
-        Map map = parseXml(sendXMLDataByPost(API_URL, WX_P12_PATH, MCH_ID, toXml(wxPay)));
+        Map map = parseXml(doPost(API_URL,toXml(wxPay)));
         SortedMap<String, String> resultMap = new TreeMap<>();
         resultMap.put("appId", wxPay.getAppid());
         resultMap.put("signType", "MD5");
@@ -152,14 +154,17 @@ public class PayUtil {
     private static String toXml(WxPay wxPay) throws Exception {
         StringBuffer sb = new StringBuffer();
         sb.append("<xml>");
-        for (Field field : wxPay.getClass().getDeclaredFields()) {
+        Field[] declaredFields = wxPay.getClass().getDeclaredFields();
+        Field.setAccessible(declaredFields,true);
+        for (Field field : declaredFields) {
             if (field.get(wxPay) != null && !field.get(wxPay).equals(0)) {
                 String fieldName = field.getName();
-                if ("attach".equalsIgnoreCase(fieldName)) {
-                    sb.append("<" + fieldName + "><![CDATA[" + field.get(wxPay) + "]]</" + fieldName + ">");
-                } else {
-                    sb.append("<" + fieldName + ">" + field.get(wxPay) + "</" + fieldName + ">");
-                }
+//                if ("attach".equalsIgnoreCase(fieldName)) {
+//                    sb.append("<" + fieldName + "><![CDATA[" + field.get(wxPay) + "]]</" + fieldName + ">");
+//                } else {
+//                    sb.append("<" + fieldName + ">" + field.get(wxPay) + "</" + fieldName + ">");
+//                }
+                sb.append("<" + fieldName + ">" + field.get(wxPay) + "</" + fieldName + ">");
             }
         }
         sb.append("</xml>");
@@ -189,6 +194,53 @@ public class PayUtil {
         // 释放资源
         inputStream.close();
         return map;
+    }
+
+
+    public static String doPost(String url, String parameter) {
+        OutputStreamWriter out = null;
+        BufferedReader in = null;
+        String result = "";
+        try {
+            URL realUrl = new URL(url);
+            // 打开和URL之间的连接
+            HttpURLConnection conn = (HttpURLConnection) realUrl.openConnection();
+            // 发送POST请求必须设置如下两行
+            conn.setDoOutput(true);
+            conn.setDoInput(true);
+            // 获取URLConnection对象对应的输出流
+            out = new OutputStreamWriter(conn.getOutputStream(), "UTF-8");
+            // 发送请求参数
+            out.write(parameter);
+            // flush输出流的缓冲
+            out.flush();
+            out.close();
+            // 定义BufferedReader输入流来读取URL的响应
+
+            in = new BufferedReader(
+                    new InputStreamReader(conn.getInputStream(), "utf-8"));
+            String line;
+            while ((line = in.readLine()) != null) {
+                result += line;
+            }
+        } catch (Exception e) {
+            System.out.println("发送 POST 请求出现异常！" + e);
+            e.printStackTrace();
+        }
+        //使用finally块来关闭输出流、输入流
+        finally {
+            try {
+                if (out != null) {
+                    out.close();
+                }
+                if (in != null) {
+                    in.close();
+                }
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+        return result;
     }
 
     public static String sendXMLDataByPost(String url, String assetsPath, String assetsPwd, String xmlData)

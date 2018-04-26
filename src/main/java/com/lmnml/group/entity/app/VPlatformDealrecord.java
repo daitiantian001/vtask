@@ -23,7 +23,7 @@ public class VPlatformDealrecord {
     private Integer money;
     @ApiModelProperty("第三方订单id")
     private String pId;
-    @ApiModelProperty("类型")
+    @ApiModelProperty("类型 1.账户余额 2.微信 3.支付宝")
     private Integer payType;
     @ApiModelProperty("支付状态")
     private String payStatus;
@@ -35,6 +35,4 @@ public class VPlatformDealrecord {
     private String sellerId;
     @ApiModelProperty("收支类型")
     private Integer status;
-    @ApiModelProperty("IP")
-    private String ip;
 }
