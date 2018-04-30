@@ -1,0 +1,398 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta charset="UTF-8"/>
+	<meta http-equiv="pragma" content="no-cache">
+	<meta http-equiv="cache-control" content="no-cache">
+	<meta http-equiv="expires" content="0">    
+	<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+	<meta http-equiv="description" content="This is my page">
+	<link rel="stylesheet" type="text/css" href="../../css/basic.css"/>
+	<link rel="stylesheet" type="text/css" href="../../css/loading.css"/>
+	<link rel="stylesheet" type="text/css" href="../../js/bootstrap/css/bootstrap-datetimepicker.css"/>
+	<link rel="stylesheet" type="text/css" href="../../js/select/bootstrap.css"/>
+	<link rel="stylesheet" type="text/css" href="../../js/select/bootstrap-select.css"/>
+	
+	<script type="text/javascript" src="../../js/jquery-1.11.1.js"></script>
+	<script type="text/javascript" src="../../js/basic.js"></script>
+	<script type="text/javascript" src="../../js/bootstrap/js/bootstrap-datetimepicker.js"></script>
+	<script type="text/javascript" src="../../js/select/bootstrap.min.js"></script>
+	<script type="text/javascript" src="../../js/select/bootstrap-select.js"></script>
+	
+	<link rel="stylesheet" type="text/css" href="../../js/layer/css/layui.css"/>
+	<script type="text/javascript" src="../../js/layer/layui.js"></script>
+	
+	<link rel="stylesheet" type="text/css" href="../../js/ztree/css/zTreeStyle/zTreeStyle.css"/>
+	<script type="text/javascript" src="../../js/ztree/js/jquery.ztree.core.js"></script>
+	<script type="text/javascript">
+	layui.use('layer', function(){
+		var layer = layui.layer;
+	});
+	$(document).ready(function(){
+		$(".win-menu-item").click(function(){
+			window.location.href = "platform/"+$(this).attr("url")+".do";
+		});
+		
+		$(".top-photo").click(function(){
+			$(".top-win-block").fadeIn(200);
+			$("body").bind("click", function(event){
+				var e = e || window.event; 
+				var elem = e.target || e.srcElement; 
+				while (elem) {
+					if (elem.className == "top-win-block" || elem.className == "top-photo") {
+						return; 
+					}
+					elem = elem.parentNode; 
+				}
+				$("body").unbind("click");
+				$(".top-win-block").fadeOut(200);
+			});
+		});
+	});
+	</script>
+</head>
+<body>
+	<div class="top-bar">
+		<div class="top-bar-block">
+			<img class="top-logo" src="../../css/images/icon_platform_logo.png"/>
+			<div class="top-menus">
+				<div id="task-menu" class="top-menu-bar" url="task" onclick="javascript:window.location.href='index.html'">微任务</div>
+				<div id="purse-menu" class="top-menu-bar" url="purse" onclick="javascript:window.location.href='purse.html'">我的钱包</div>
+			</div>
+			<img class="top-photo" src="//iconfont.alicdn.com/t/1493123647101.png@200h_200w.jpg"/>
+			<div class="publish-btn">立即发布</div>
+			<div class="top-win-block" style="display:none;">
+				<div class="nick-name">小米商城</div>
+				<div class="win-menu-item" url="merchant">商家信息</div>
+				<div class="win-menu-item" url="logout">退出</div>
+			</div>
+		</div>
+	</div>
+	<div class="container-block">
+		<div class="container-bg" style="padding:20px;">
+			<div class="page-color-title">钱包充值</div>
+			<div class="tip-info-item">1、钱包功能仅支持支付工资之用，不得用于洗钱、套现、虚假交易等禁止行为。</div>
+			<div class="tip-info-item">2、对于用户利用钱包进行恶意充值提现、洗钱、套现等用途，口袋兼职将扣留充值金额一个月，情节严重者，将会报警处理。</div>
+			<div class="tip-info-item">3、使用钱包充值即默认遵守以上使用条款。</div>
+			<div class="charge-form">
+				<div class="charge-form-title">充值金额</div>
+				<div class="charge-form-value"><input type="text" value="1"/></div>
+			</div>
+			<div class="pay-type-title">请选择支付方式：</div>
+			<div class="pay-type-item">
+				<input name="pay-type" type="radio" checked="checked"/>
+				<img src="../../css/images/icon_pay_zbf.png"/>
+			</div>
+			<div class="pay-type-item">
+				<input name="pay-type" type="radio"/>
+				<img src="../../css/images/icon_pay_wx.png"/>
+			</div>
+			<div style="width:240px;padding:20px 0;">
+				<div class="submit-btn">立即支付</div>
+			</div>
+		</div>
+	</div>
+	<div class="page-footer">
+		<div class="page-footer-link">
+			<span>服务协议</span>
+			<!--<span>在线客服</span>
+			<span>意见反馈</span>-->
+			<span>服务热线 : 020-61789961 ( 9:30-18:00 )</span>
+		</div>
+		<div class="page-footer-text">粤ICP备14067646号-1  口袋兼职 版权所有Copyright © 2018 kdjz.com, All Rights Reserved</div>
+	</div>
+</body>
+<script type="text/javascript">
+function initCategory(){
+	$.ajax({
+		type: "POST",
+		url: "pdata/category/queryAll.do",
+		dataType: "text", 
+		async:true,
+		traditional:true,
+		success: function(data) {
+			var jsonObject = eval('(' + data + ')');
+			if(jsonObject.result==1){
+				$.each(jsonObject.data, function(i, n){
+					$("#categoryId").append("<option value=\""+n.id+"\">"+n.name+"</option>");
+				});
+				$("#categoryId").selectpicker("refresh");
+			}else{
+				layer.msg(jsonObject.exception);
+			}
+		}
+	});
+}
+
+var numArr = ['一', '二', '三', '四', '五'];
+function addStep(){
+	var num = $(".step-item").size();
+	if(num<5){
+		$("#step-list").append("<div class=\"step-item\">"+
+			"<div class=\"form-title step-num\">步骤"+numArr[num]+"</div>"+
+			"<div class=\"form-title require\">步骤说明</div>"+
+			"<div class=\"form-value\">"+
+				"<textarea name=\"stepExplain\" placeholder=\"请输入该步骤的说明\"></textarea>"+
+			"</div>"+
+			"<div class=\"form-check-block explain-tips\"></div>"+
+			"<div class=\"form-title\">步骤图示</div>"+
+			"<div class=\"form-value image-block-"+num+"\">"+
+				"<div class=\"image-uploader\" num=\""+num+"\">&#xe664;</div>"+
+				"<div class=\"file-block-"+num+"\" style=\"display:none;\"><input id=\"file-"+num+"\" type=\"file\" accept=\"image/jpeg, image/jpg, image/png\"/></div>"+
+			"</div>"+
+			"<div class=\"form-title\">关键链接</div>"+
+			"<div class=\"form-value\">"+
+				"<input name=\"stepLink\" type=\"text\" placeholder=\"请输入链接地址\"/>"+
+			"</div>"+
+			"<div class=\"form-check-block link-tips\"></div>"+
+			"<div class=\"step-item-close\">&#xe646;</div>"+
+		"</div>");
+		$(".step-item-close").click(function(){
+			$(this).parent().remove();
+			$.each($(".step-num"), function(i, n){
+				$(n).html("步骤"+numArr[i]);
+			});
+		});
+		if(num==4) $(".form-add-btn").hide();
+	}
+	initUploader();
+}
+
+function uploadImage(num){
+	$("#file-"+num).unbind("change");
+	var index = document.getElementById("file-"+num).files[0].name.lastIndexOf(".");
+	var ext = document.getElementById("file-"+num).files[0].name.substr(index+1);
+	var formData = new FormData();
+	formData.append("file", document.getElementById("file-"+num).files[0]);
+	formData.append("ext", ext);
+	$.ajax({
+		type: "POST",
+		url: "pdata/image/upload.do",
+		data: formData,
+		contentType: false,
+		processData: false,
+		dataType: "text", 
+		async: true,
+		traditional: true,
+		success: function(data){
+			var jsonObject = eval('(' + data + ')');
+			if(jsonObject.result==1){
+				$(".image-block-"+num).prepend("<div class=\"image-uploader-item\">"+
+					"<img src=\""+jsonObject.data+"\"/>"+
+					"<div class=\"image-uploader-mask\"></div>"+
+					"<div class=\"image-uploader-view\">&#xe73d;</div>"+
+					"<div class=\"image-uploader-delete\">&#xe6b4;</div>"+
+				"</div>");
+				$(".file-block-"+num).html("<input id=\"file-"+num+"\" type=\"file\" accept=\"image/jpeg, image/jpg, image/png\"/>");
+			}else{
+				layer.msg(jsonObject.exception);
+			}
+		}
+	});
+}
+
+function initUploader(){
+	$(".image-uploader").unbind("click");
+	$(".image-uploader").bind("click", function(){
+		var num = $(this).attr("num");
+		$("#file-"+num).bind("change", function(){
+			uploadImage(num);
+		});
+		$("#file-"+num).click();
+	});
+}
+
+function initForm(){
+	$("#name").keydown(function(){
+		$("#name-tips").html("");
+	});
+	$("#num").keydown(function(){
+		$("#num-tips").html("");
+	});
+	$("#endTime").change(function(){
+		$("#endTime-tips").html("");
+	});
+	$("textarea[name='stepExplain']").keydown(function(){
+		$(this).parent().next().html("");
+	});
+}
+
+function publishTask(){
+	var categoryId = $("#categoryId").val();
+	var name = $("#name").val();
+	if(name==""){
+		$("#name-tips").html("<div>请填写任务名称！</div>");
+		$("#name").focus();
+		return;
+	}else if(name.length<5){
+		$("#name-tips").html("<div>任务名称太短啦，至少5个字！</div>");
+		$("#name").focus();
+		return;
+	}else if(name.length>20){
+		$("#name-tips").html("<div>任务名称太长啦，最多20个字！</div>");
+		$("#name").focus();
+		return;
+	}
+	var reg = /^[0-9]*$/;
+	var num = $("#num").val();
+	if(num==""){
+		$("#num-tips").html("<div>请填写任务数量！</div>");
+		$("#num").focus();
+		return;
+	}else if(!reg.test(num) || parseInt(num)<100 || parseInt(num)>1000000){
+		$("#num-tips").html("<div>请输入正确的任务数量，参考值：100 - 1000000！</div>");
+		$("#num").focus();
+		return;
+	}
+	var price = $("#price").val();
+	if(price==""){
+		$("#price-tips").html("<div>请填写任务单价！</div>");
+		$("#price").focus();
+		return;
+	}else if(!reg.test(num) || parseInt(num)<1 || parseInt(num)>1000){
+		$("#num-tips").html("<div>请输入正确的任务单价，参考值：1 - 1000！</div>");
+		$("#num").focus();
+		return;
+	}
+	var endTimeStr = $("#endTime").val();
+	if(endTimeStr==""){
+		$("#endTime-tips").html("<div>请选择截止时间！</div>");
+		$("#endTime").focus();
+		return;
+	}
+	var checkTime = $("#checkTime").val();
+	
+	var deviceType = 0;
+	$.each($("input[name='device-limit']"), function(i, n){
+		if($(n).prop("checked")){
+			deviceType = $(n).val();
+		}
+	});
+	
+	var submitType = 0;
+	$.each($("input[name='tip-type']"), function(i, n){
+		if($(n).prop("checked")){
+			submitType = $(n).val();
+		}
+	});
+	
+	var textExplain = $("#textExplain").val();
+	var imgExplain = $("#imgExplain").val();
+	if(submitType==0 || submitType==1){
+		if(textExplain==""){
+			$("#textExplain-tips").html("<div>请填写文字说明！</div>");
+			$("#textExplain").focus();
+			return;
+		}
+	}
+	
+	if(submitType==0 || submitType==2){
+		if(imgExplain==""){
+			$("#imgExplain-tips").html("<div>请填写图片说明！</div>");
+			$("#imgExplain").focus();
+			return;
+		}
+	}
+	
+	var contactorName = $("#contactorName").val();
+	if(contactorName==""){
+		$("#contactorName-tips").html("<div>请填写联系人！</div>");
+		$("#contactorName").focus();
+		return;
+	}
+	var contactorMobile = $("#contactorMobile").val();
+	if(contactorMobile==""){
+		$("#contactorMobile-tips").html("<div>请填写联系电话！</div>");
+		$("#contactorMobile").focus();
+		return;
+	}
+	var contactorEmail = $("#contactorEmail").val();
+	if(contactorEmail==""){
+		$("#contactorEmail-tips").html("<div>请填写联系邮箱！</div>");
+		$("#contactorEmail").focus();
+		return;
+	}
+	
+	var stepNum = new Array();
+	var stepExplain = new Array();
+	var stepPhoto = new Array();
+	var stepLink = new Array();
+	
+	var stopSubmit = false;
+	$.each($(".step-item"), function(i, n){
+		stepNum.push(i+1);
+		stepExplain.push($(n).find("textarea[name='stepExplain']").val());
+		if($(n).find("textarea[name='stepExplain']").val()==""){
+			$(n).find("div.explain-tips").html("<div>请填写步骤说明！</div>");
+			$(n).find("textarea[name='stepExplain']").focus();
+			stopSubmit = true;
+			return;
+		}
+		stepLink.push($(n).find("input[name='stepLink']").val());
+		var photos = "";
+		$.each($(n).find(".image-uploader-item img"), function(x, y){
+			if(photos==""){
+				photos += $(y).attr("src");
+			}else{
+				photos += ";"+$(y).attr("src");
+			}
+		});
+		stepPhoto.push(photos);
+	});
+	if(stopSubmit){
+		return;
+	}
+	
+	$.ajax({
+		type: "POST",
+		url: "pdata/task/save.do",
+		data: {
+			categoryId: categoryId,
+			name: name,
+			num: num,
+			price: price,
+			endTimeStr: endTimeStr,
+			checkTime: checkTime,
+			deviceType: deviceType,
+			submitType: submitType,
+			textExplain: textExplain,
+			imgExplain: imgExplain,
+			contactorName: contactorName,
+			contactorMobile: contactorMobile,
+			contactorEmail: contactorEmail,
+			stepNum: stepNum, 
+			stepExplain: stepExplain, 
+			stepPhoto: stepPhoto, 
+			stepLink: stepLink
+		},
+		dataType: "text", 
+		async: true,
+		traditional: true,
+		success: function(data) {
+			var jsonObject = eval('(' + data + ')');
+			if(jsonObject.result==1){
+				window.location.href = "platform/pay.do?taskId="+jsonObject.data.id;
+			}else{
+				layer.msg(jsonObject.exception);
+			}
+		}
+	});
+}
+
+$(document).ready(function(){
+	initCategory();
+	initUploader();
+	initForm();
+	
+	$(".date-picker").datetimepicker({
+        format: "yyyy-mm-dd HH:mm:ss",
+        todayHighlight: true,
+        minView: 2,
+        autoclose: true,
+        todayBtn: true
+    });
+	
+});
+</script>
+</html>

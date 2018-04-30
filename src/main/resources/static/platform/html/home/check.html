@@ -1,0 +1,236 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta charset="UTF-8"/>
+	<meta http-equiv="pragma" content="no-cache">
+	<meta http-equiv="cache-control" content="no-cache">
+	<meta http-equiv="expires" content="0">    
+	<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+	<meta http-equiv="description" content="This is my page">
+	<link rel="stylesheet" type="text/css" href="../../css/basic.css"/>
+	<link rel="stylesheet" type="text/css" href="../../css/loading.css"/>
+	<link rel="stylesheet" type="text/css" href="../../js/bootstrap/css/bootstrap-datetimepicker.css"/>
+	<link rel="stylesheet" type="text/css" href="../../js/select/bootstrap.css"/>
+	<link rel="stylesheet" type="text/css" href="../../js/select/bootstrap-select.css"/>
+	
+	<script type="text/javascript" src="../../js/jquery-1.11.1.js"></script>
+	<script type="text/javascript" src="../../js/basic.js"></script>
+	<script type="text/javascript" src="../../js/bootstrap/js/bootstrap-datetimepicker.js"></script>
+	<script type="text/javascript" src="../../js/select/bootstrap.min.js"></script>
+	<script type="text/javascript" src="../../js/select/bootstrap-select.js"></script>
+	
+	<link rel="stylesheet" type="text/css" href="../../js/layer/css/layui.css"/>
+	<script type="text/javascript" src="../../js/layer/layui.js"></script>
+	
+	<link rel="stylesheet" type="text/css" href="../../js/ztree/css/zTreeStyle/zTreeStyle.css"/>
+	<script type="text/javascript" src="../../js/ztree/js/jquery.ztree.core.js"></script>
+	<style>
+	.utask-item {
+		position: relative;
+		width: 100%;
+		border-bottom: 1px solid #e5e5e5;
+		padding-left: 90px;
+		padding-top: 20px;
+	}
+	.utask-item .utask-item-icon {
+		position: absolute;
+		top: 20px;
+		left: 25px;
+		width: 50px;
+		height: 50px;
+	}
+	.utask-item .utask-item-title {
+		height: 30px;
+		line-height: 30px;
+		font-size: 15px;
+		font-weight: bold;
+		color: #333333;
+	}
+	.utask-item .utask-item-time {
+		height: 30px;
+		line-height: 30px;
+		font-size: 14px;
+		color: #999999;
+	}
+	.utask-item .utask-item-text {
+		height: 30px;
+		line-height: 30px;
+		font-size: 14px;
+		color: #999999;
+	}
+	.utask-item .utask-item-text b {
+		color: #333333;
+	}
+	.utask-item .utask-item-imgs {
+		width: 330px;
+		font-size: 0;
+	}
+	.utask-item .utask-item-imgs img {
+		display: inline-block;
+		width: 100px;
+		height: 100px;
+		box-shadow: 0 0 5px #e5e5e5;
+		margin: 5px;
+	}
+	.utask-item .utask-item-btns {
+		position: absolute;
+		bottom: 10px;
+		right: 30px;
+	}
+	</style>
+	<script type="text/javascript">
+	layui.use('layer', function(){
+		var layer = layui.layer;
+	});
+	$(document).ready(function(){
+		$(".win-menu-item").click(function(){
+			window.location.href = "platform/"+$(this).attr("url")+".do";
+		});
+		
+		$(".top-photo").click(function(){
+			$(".top-win-block").fadeIn(200);
+			$("body").bind("click", function(event){
+				var e = e || window.event; 
+				var elem = e.target || e.srcElement; 
+				while (elem) {
+					if (elem.className == "top-win-block" || elem.className == "top-photo") {
+						return; 
+					}
+					elem = elem.parentNode; 
+				}
+				$("body").unbind("click");
+				$(".top-win-block").fadeOut(200);
+			});
+		});
+	});
+	</script>
+</head>
+<body>
+	<div class="top-bar">
+		<div class="top-bar-block">
+			<img class="top-logo" src="../../css/images/icon_platform_logo.png"/>
+			<div class="top-menus">
+				<div id="task-menu" class="top-menu-bar active" url="task" onclick="javascript:window.location.href='index.html'">微任务</div>
+				<div id="purse-menu" class="top-menu-bar" url="purse" onclick="javascript:window.location.href='purse.html'">我的钱包</div>
+			</div>
+			<img class="top-photo" src="//iconfont.alicdn.com/t/1493123647101.png@200h_200w.jpg"/>
+			<div class="publish-btn" onclick="javascript:window.location.href='publish.html'">立即发布</div>
+			<div class="top-win-block" style="display:none;">
+				<div class="nick-name">小米商城</div>
+				<div class="win-menu-item" url="merchant">商家信息</div>
+				<div class="win-menu-item" url="logout">退出</div>
+			</div>
+		</div>
+	</div>
+	<div class="container-block">
+		<div class="menu-tabs">
+			<div class="menu-tab-item active" url="0">待审核</div>
+			<div class="menu-tab-item" url="1">已审核</div>
+			<div class="menu-tab-item" url="-1">未通过</div>
+			<div class="menu-tab-item" url="3">已通过</div>
+		</div>
+		<div class="container-bg" style="padding:20px;">
+			<div id="data-list">
+				<div class="utask-item">
+					<img class="utask-item-icon" src="http://iconfont.alicdn.com/t/1493123647101.png@200h_200w.jpg" style="border-radius:50%;"/>
+					<div class="utask-item-title">哈小妹</div>
+					<div class="utask-item-time">2018-03-26 19:06</div>
+					<div class="utask-item-text"><b>任务提交内容：</b>加萨达斯看来大家ask来得及卡拉圣诞节卡死</div>
+					<div class="utask-item-imgs">
+						<img src="../../css/images/icon_win_wxpay.png"/>
+						<img src="../../css/images/icon_win_wxpay.png"/>
+						<img src="../../css/images/icon_win_wxpay.png"/>
+						<img src="../../css/images/icon_win_wxpay.png"/>
+						<img src="../../css/images/icon_win_wxpay.png"/>
+					</div>
+					<div class="utask-item-btns">
+						<span class="layui-btn layui-btn-primary">打回</span>
+						<span class="layui-btn layui-btn-normal">通过</span>
+					</div>
+				</div>
+			</div>
+			<div class="page-block">
+				<div class="page-num-btn"><span>上一页</span></div>
+				<div class="page-num-btn active"><span>1</span></div>
+				<div class="page-num-btn"><span>2</span></div>
+				<div class="page-num-btn"><span>3</span></div>
+				<div class="page-num-btn"><span>4</span></div>
+				<div class="page-num-btn"><span>25</span></div>
+				<div class="page-num-point">…</div>
+				<div class="page-num-btn"><span>下一页</span></div>
+				<div class="page-num-btn"><input type="text"/></div>
+				<div class="page-num-btn"><span>跳转</span></div>
+			</div>
+		</div>
+	</div>
+	<div class="page-footer">
+		<div class="page-footer-link">
+			<span>服务协议</span>
+			<!--<span>在线客服</span>
+			<span>意见反馈</span>-->
+			<span>服务热线 : 020-61789961 ( 9:30-18:00 )</span>
+		</div>
+		<div class="page-footer-text">粤ICP备14067646号-1  口袋兼职 版权所有Copyright © 2018 kdjz.com, All Rights Reserved</div>
+	</div>
+</body>
+<script type="text/javascript">
+var status = 2, currentPage = 1;
+
+function loadTask(){
+	$.ajax({
+		type: "POST",
+		url: "pdata/task/list.do",
+		data: {
+			status: status,
+			currentPage: currentPage
+		},
+		dataType: "text", 
+		async:true,
+		traditional:true,
+		success: function(data) {
+			var jsonObject = eval('(' + data + ')');
+			if(jsonObject.result==1){
+				if(jsonObject.pageInfo.pageInfo.totalRows==0){
+					$("#data-list").html("<div class=\"null-list\"><img src=\"platform/css/images/icon_list_null.png\"/><div class=\"null-tips\">暂无正在招的微任务~</div></div>");
+				}else{
+					$("#data-list").html("");
+				}
+				$.each(jsonObject.data, function(i, n){
+					var btns = "";
+					if(status==0){
+						btns = "<span class=\"layui-btn layui-btn-primary\">删除</span>"+
+						    "<span class=\"layui-btn layui-btn-normal\" onclick=\"payTask('"+n.id+"');\">立即付款</span>";
+					}
+					$("#data-list").append("<div class=\"task-item\">"+
+						"<img class=\"task-item-icon\" src=\"platform/css/images/icon_type_task.png\"/>"+
+						"<div class=\"task-item-title\">"+n.name+"</div>"+
+						"<div class=\"task-item-time\">"+(new Date(n.createTime).format("yyyy-MM-dd HH:mm"))+"</div>"+
+						"<div class=\"task-item-desc\">该微任务待付款<span>"+(parseFloat(n.price)*0.01*parseInt(n.num)).toFixed(2)+"</span>元</div>"+
+						"<div class=\"task-item-btns\">"+btns+"</div>"+
+					"</div>");
+				});
+			}else{
+				layer.msg(jsonObject.exception);
+			}
+		}
+	});
+}
+
+function payTask(id){
+	window.location.href = "platform/pay.do?taskId="+id;
+}
+
+$(document).ready(function(){
+	$(".menu-tab-item").click(function(){
+		$(".menu-tab-item.active").removeClass("active");
+		$(this).addClass("active");
+		status = parseInt($(this).attr("url"));
+		currentPage = 1;
+		loadTask();
+	});
+	
+	loadTask();
+});
+</script>
+</html>

@@ -1,0 +1,259 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta charset="UTF-8"/>
+	<meta http-equiv="pragma" content="no-cache">
+	<meta http-equiv="cache-control" content="no-cache">
+	<meta http-equiv="expires" content="0">    
+	<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+	<meta http-equiv="description" content="This is my page">
+	<link rel="stylesheet" type="text/css" href="../../css/basic.css"/>
+	<link rel="stylesheet" type="text/css" href="../../css/loading.css"/>
+	<link rel="stylesheet" type="text/css" href="../../js/bootstrap/css/bootstrap-datetimepicker.css"/>
+	<link rel="stylesheet" type="text/css" href="../../js/select/bootstrap.css"/>
+	<link rel="stylesheet" type="text/css" href="../../js/select/bootstrap-select.css"/>
+	
+	<script type="text/javascript" src="../../js/jquery-1.11.1.js"></script>
+	<script type="text/javascript" src="../../js/basic.js"></script>
+	<script type="text/javascript" src="../../js/bootstrap/js/bootstrap-datetimepicker.js"></script>
+	<script type="text/javascript" src="../../js/select/bootstrap.min.js"></script>
+	<script type="text/javascript" src="../../js/select/bootstrap-select.js"></script>
+	
+	<link rel="stylesheet" type="text/css" href="../../js/layer/css/layui.css"/>
+	<script type="text/javascript" src="../../js/layer/layui.js"></script>
+	
+	<link rel="stylesheet" type="text/css" href="../../js/ztree/css/zTreeStyle/zTreeStyle.css"/>
+	<script type="text/javascript" src="../../js/ztree/js/jquery.ztree.core.js"></script>
+	<script type="text/javascript">
+	layui.use('layer', function(){
+		var layer = layui.layer;
+	});
+	$(document).ready(function(){
+		$(".win-menu-item").click(function(){
+			window.location.href = "platform/"+$(this).attr("url")+".do";
+		});
+		
+		$(".top-photo").click(function(){
+			$(".top-win-block").fadeIn(200);
+			$("body").bind("click", function(event){
+				var e = e || window.event; 
+				var elem = e.target || e.srcElement; 
+				while (elem) {
+					if (elem.className == "top-win-block" || elem.className == "top-photo") {
+						return; 
+					}
+					elem = elem.parentNode; 
+				}
+				$("body").unbind("click");
+				$(".top-win-block").fadeOut(200);
+			});
+		});
+	});
+	</script>
+</head>
+<body>
+	<div class="top-bar">
+		<div class="top-bar-block">
+			<img class="top-logo" src="../../css/images/icon_platform_logo.png"/>
+			<div class="top-menus">
+				<div id="task-menu" class="top-menu-bar" url="task" onclick="javascript:window.location.href='index.html'">微任务</div>
+				<div id="purse-menu" class="top-menu-bar active" url="purse">我的钱包</div>
+			</div>
+			<img class="top-photo" src="//iconfont.alicdn.com/t/1493123647101.png@200h_200w.jpg"/>
+			<div class="publish-btn" onclick="javascript:window.location.href='publish.html'">立即发布</div>
+			<div class="top-win-block" style="display:none;">
+				<div class="nick-name">小米商城</div>
+				<div class="win-menu-item" url="merchant">商家信息</div>
+				<div class="win-menu-item" url="logout">退出</div>
+			</div>
+		</div>
+	</div>
+	<div class="container-block">
+		<div class="container-bg" style="padding:20px;">
+			<div class="page-title">我的钱包</div>
+			<div class="purse-account">
+				<div class="purse-yue">余额：<span id="user-account">100.00</span>元</div>
+				<div class="purse-btns">
+				    <span class="layui-btn layui-btn-primary" onclick="javascript:window.location.href='takeout.html';">提现</span>
+				    <span class="layui-btn layui-btn-normal" onclick="javascript:window.location.href='charge.html';">充值</span>
+				</div>
+			</div>
+			<div class="page-title">账单明细</div>
+			<div class="page-tabs">
+				<div class="page-tab-item active" url="1">支出</div>
+				<div class="page-tab-item" url="0">收入</div>
+			</div>
+			<div class="purse-data-list">
+				<table class="purse-data-table">
+					<thead>
+						<tr>
+							<td>时间</td>
+							<td>交易名称</td>
+							<td>交易对象</td>
+							<td>交易状态</td>
+							<td>金额（元）</td>
+						</tr>
+					</thead>
+					<tbody id="data-list"><tr><td>2018-01-25 13:06:15</td><td>提现</td><td>飞腾赚客</td><td>提现成功</td><td>￥5000.00</td></tr><tr><td>2018-01-25 12:28:51</td><td>微任务预支付-公众号投票 无需关注</td><td>飞腾赚客</td><td>交易成功</td><td>￥100.00</td></tr></tbody>
+				</table>
+			</div>
+			<div class="page-block">
+				<div class="page-num-btn"><span>上一页</span></div>
+				<div class="page-num-btn active"><span>1</span></div>
+				<div class="page-num-btn"><span>2</span></div>
+				<div class="page-num-btn"><span>3</span></div>
+				<div class="page-num-btn"><span>4</span></div>
+				<div class="page-num-btn"><span>25</span></div>
+				<div class="page-num-point">…</div>
+				<div class="page-num-btn"><span>下一页</span></div>
+				<div class="page-num-btn"><input type="text"/></div>
+				<div class="page-num-btn"><span>跳转</span></div>
+			</div>
+		</div>
+	</div>
+	<div class="page-footer">
+		<div class="page-footer-link">
+			<span>服务协议</span>
+			<!--<span>在线客服</span>
+			<span>意见反馈</span>-->
+			<span>服务热线 : 020-61789961 ( 9:30-18:00 )</span>
+		</div>
+		<div class="page-footer-text">粤ICP备14067646号-1  口袋兼职 版权所有Copyright © 2018 kdjz.com, All Rights Reserved</div>
+	</div>
+</body>
+<script type="text/javascript">
+function initInfo(){
+	$.ajax({
+		type: "POST",
+		url: "pdata/user/queryById.do",
+		dataType: "text", 
+		async:true,
+		traditional:true,
+		success: function(data) {
+			var jsonObject = eval('(' + data + ')');
+			if(jsonObject.result==1){
+				$("#user-account").html(parseFloat(jsonObject.data.account*0.01).toFixed(2));
+			}else{
+				layer.msg(jsonObject.exception);
+			}
+		}
+	});
+}
+
+var type = 1, currentPage = 1;
+function loadRecord(){
+	$.ajax({
+		type: "POST",
+		url: "pdata/deal/finance.do",
+		data: {
+			type: type, 
+			currentPage: currentPage
+		},
+		dataType: "text", 
+		async:true,
+		traditional:true,
+		success: function(data) {
+			var jsonObject = eval('(' + data + ')');
+			if(jsonObject.result==1){
+				if(jsonObject.pageInfo.pageInfo.totalRows==0){
+					$("#data-list").html("<tr><td colspan=\"5\" style=\"text-align:center;color:#999999;\">暂无账单明细~</td></tr>");
+				}else{
+					$("#data-list").html("");
+				}
+				$.each(jsonObject.data, function(i, n){
+					switch(n.type){
+					case 1:
+						$("#data-list").append("<tr>"+
+							"<td>"+(new Date(n.createTime).format("yyyy-MM-dd HH:mm:ss"))+"</td>"+
+							"<td>充值</td>"+
+							"<td>飞腾赚客</td>"+
+							"<td>交易成功</td>"+
+							"<td>￥"+parseFloat(n.money*0.01).toFixed(2)+"</td>"+
+						"</tr>");
+						break;
+					case 2:
+						var status = "";
+						if(n.payStatus==-1){
+							status = "提现失败";
+						}else if(n.payStatus==2){
+							status = "待审核";
+						}else if(n.payStatus==1){
+							status = "提现成功";
+						}
+						$("#data-list").append("<tr>"+
+							"<td>"+(new Date(n.createTime).format("yyyy-MM-dd HH:mm:ss"))+"</td>"+
+							"<td>提现</td>"+
+							"<td>飞腾赚客</td>"+
+							"<td>"+status+"</td>"+
+							"<td>￥"+parseFloat(n.money*0.01).toFixed(2)+"</td>"+
+						"</tr>");
+						break;
+					case 3:
+						$("#data-list").append("<tr>"+
+							"<td>"+(new Date(n.createTime).format("yyyy-MM-dd HH:mm:ss"))+"</td>"+
+							"<td>微任务预支付-"+n.task.name+"</td>"+
+							"<td>飞腾赚客</td>"+
+							"<td>交易成功</td>"+
+							"<td>￥"+parseFloat(n.money*0.01).toFixed(2)+"</td>"+
+						"</tr>");
+						break;
+					case 4:
+						$("#data-list").append("<tr>"+
+							"<td>"+(new Date(n.createTime).format("yyyy-MM-dd HH:mm:ss"))+"</td>"+
+							"<td>微任务佣金-"+n.task.name+"</td>"+
+							"<td>"+n.user.name+"</td>"+
+							"<td>交易成功</td>"+
+							"<td>￥"+parseFloat(n.money*0.01).toFixed(2)+"</td>"+
+						"</tr>");
+						break;
+					case 5:
+						$("#data-list").append("<tr>"+
+							"<td>"+(new Date(n.createTime).format("yyyy-MM-dd HH:mm:ss"))+"</td>"+
+							"<td>微任务邀请佣金</td>"+
+							"<td>"+n.user.name+"</td>"+
+							"<td>交易成功</td>"+
+							"<td>￥"+parseFloat(n.money*0.01).toFixed(2)+"</td>"+
+						"</tr>");
+						break;
+					case 6:
+						$("#data-list").append("<tr>"+
+							"<td>"+(new Date(n.createTime).format("yyyy-MM-dd HH:mm:ss"))+"</td>"+
+							"<td>误判充值补偿</td>"+
+							"<td>飞腾赚客</td>"+
+							"<td>交易成功</td>"+
+							"<td>￥"+parseFloat(n.money*0.01).toFixed(2)+"</td>"+
+						"</tr>");
+						break;
+					case 7:
+						$("#data-list").append("<tr>"+
+							"<td>"+(new Date(n.createTime).format("yyyy-MM-dd HH:mm:ss"))+"</td>"+
+							"<td>微任务预支付退款-"+n.task.name+"</td>"+
+							"<td>飞腾赚客</td>"+
+							"<td>交易成功</td>"+
+							"<td>￥"+parseFloat(n.money*0.01).toFixed(2)+"</td>"+
+						"</tr>");
+						break;
+					}
+				});
+			}else{
+				layer.msg(jsonObject.exception);
+			}
+		}
+	});
+}
+
+$(document).ready(function(){
+	$(".page-tab-item").click(function(){
+		$(".page-tab-item.active").removeClass("active");
+		$(this).addClass("active");
+		type = parseInt($(this).attr("url"));
+		currentPage = 1;
+		loadRecord();
+	});
+	
+	initInfo();
+	loadRecord();
+});
+</script>
+</html>

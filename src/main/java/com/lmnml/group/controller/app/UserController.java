@@ -45,7 +45,7 @@ public class UserController extends BaseController {
     })
     public Result userLogin(@RequestBody @Valid UserLogin userLogin) {
         //查询用户
-        VPlatformUser vPlatformUser = userService.findUserByMobile(userLogin.getMobile(),1);
+        VPlatformUser vPlatformUser = userService.findUserByMobile(userLogin.getMobile(), 1);
         if (vPlatformUser == null) {
             return new Result("手机号未注册!");
         }
@@ -63,15 +63,15 @@ public class UserController extends BaseController {
     })
     public Result userRegister(@RequestBody @Valid UserRegister userRegister) {
         //查询用户
-        VPlatformUser vPlatformUser = userService.findUserByMobile(userRegister.getMobile(),1);
+        VPlatformUser vPlatformUser = userService.findUserByMobile(userRegister.getMobile(), 1);
         if (vPlatformUser != null) {
             return new Result("该手机号已注册!");
         }
-        if(vPlatformUser.getAccountStatus()==0){
+        if (vPlatformUser.getAccountStatus() == 0) {
             return new Result("未激活!");
         }
 
-        if(vPlatformUser.getAccountStatus()==2){
+        if (vPlatformUser.getAccountStatus() == 2) {
             return new Result("该账户被禁用,请联系客服!");
         }
 
@@ -112,7 +112,7 @@ public class UserController extends BaseController {
     public Result sendMsg(@RequestBody @Valid Mobile mobile) {
 
         //先查询
-        VPlatformUser vPlatformUser = userService.findUserByMobile(mobile.getMobile(),1);
+        VPlatformUser vPlatformUser = userService.findUserByMobile(mobile.getMobile(), 1);
         if (vPlatformUser != null) {
             return new Result("该手机号已注册为用户!");
         }
@@ -138,10 +138,10 @@ public class UserController extends BaseController {
     }
 
     @PostMapping(value = "updateUserInfo")
-    @ApiOperation(value = "修改个人信息",response = Result.class)
+    @ApiOperation(value = "修改个人信息", response = Result.class)
     public Result updateUserInfo(@RequestBody @Valid UpdateUserInfo updateUserInfo) {
-        VPlatformUser vPlatformUser=new VPlatformUser();
-        BeanUtils.copyProperties(updateUserInfo,vPlatformUser);
+        VPlatformUser vPlatformUser = new VPlatformUser();
+        BeanUtils.copyProperties(updateUserInfo, vPlatformUser);
         vPlatformUser.setId(updateUserInfo.getUserId());
         return userService.updateUserInfo(vPlatformUser);
     }
