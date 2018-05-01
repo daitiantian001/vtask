@@ -280,4 +280,14 @@ public class TaskService implements ITaskService {
         vPlatformTaskMapper.updateByPrimaryKeySelective(vPlatformTask);
         return new Result(R.SUCCESS);
     }
+
+    @Override
+    public Result plaUserTaskList(String taskId, Integer currentPage, String checkType) {
+        List<Map> checks=vPlatformUserTaskMapper.findCheckListByTaskId(taskId,currentPage,checkType);
+       Integer total= vPlatformUserTaskMapper.findCheckListTotalByTaskId(taskId,checkType);
+       Map map = new HashMap();
+       map.put("checks",checks);
+       map.put("total",total);
+        return new Result(R.SUCCESS,map);
+    }
 }

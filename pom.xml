@@ -5,7 +5,7 @@
 
 	<groupId>com.lmnml.group</groupId>
 	<artifactId>vtask</artifactId>
-	<version>1.0</version>
+	<version>2.0</version>
 	<packaging>jar</packaging>
 
 	<name>vtask</name>
@@ -29,28 +29,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-		<!--&lt;!&ndash;&lt;!&ndash; servlet 依赖包 &ndash;&gt;&ndash;&gt;-->
-		<!--<dependency>-->
-			<!--<groupId>javax.servlet</groupId>-->
-			<!--<artifactId>javax.servlet-api</artifactId>-->
-			<!--&lt;!&ndash;<scope>provided</scope>&ndash;&gt;-->
-		<!--</dependency>-->
-		<!--&lt;!&ndash; JSTL (JSP standard Tag Library) JSP 标准标签库 &ndash;&gt;-->
-		<!--<dependency>-->
-			<!--<groupId>javax.servlet</groupId>-->
-			<!--<artifactId>jstl</artifactId>-->
-		<!--</dependency>-->
-		<!--&lt;!&ndash; Tomcat的支持 &ndash;&gt;-->
-		<!--<dependency>-->
-			<!--<groupId>org.springframework.boot</groupId>-->
-			<!--<artifactId>spring-boot-starter-tomcat</artifactId>-->
-			  <!--&lt;!&ndash;<scope>provided</scope>&ndash;&gt;-->
-		<!--</dependency>-->
-		<!--<dependency>-->
-			<!--<groupId>org.apache.tomcat.embed</groupId>-->
-			<!--<artifactId>tomcat-embed-jasper</artifactId>-->
-			 <!--&lt;!&ndash;<scope>provided</scope>&ndash;&gt;-->
-		<!--</dependency>-->
 		<!--mybaist-->
 		<dependency>
 			<groupId>org.mybatis.spring.boot</groupId>

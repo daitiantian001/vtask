@@ -7,6 +7,7 @@ import com.lmnml.group.entity.app.VPlatformStep;
 import com.lmnml.group.entity.app.VPlatformTask;
 import com.lmnml.group.entity.app.VSystemCategory;
 import com.lmnml.group.service.app.ITaskService;
+import com.lmnml.group.util.DateKit;
 import com.lmnml.group.util.StrKit;
 import io.swagger.annotations.*;
 import lombok.Data;
@@ -63,6 +64,7 @@ public class PdataTaskController extends BaseController {
         vPlatformTask.setCreateTime(new Date());
         vPlatformTask.setStatus(0);//待付款
         vPlatformTask.setLastNum(sendTask.getNum());
+        vPlatformTask.setEndTime(DateKit.getTime(sendTask.endTime));
         List<VPlatformStep> vPlatformSteps = new ArrayList<>();
         sendTask.getTaskSteps().forEach(k -> {
             VPlatformStep vPlatformStep = new VPlatformStep();
@@ -78,14 +80,24 @@ public class PdataTaskController extends BaseController {
     //TODO 二次发布任务,删除任务，主动下架任务,支付任务,任务详情
 
     @PostMapping("list")
-    @ApiOperation(value = "任务列表", notes = "0.待付款 1.待审核 2.正在招 3.已下架 4.二次审核 -1.不通过")
+    @ApiOperation(value = "任务列表", notes = "0.待付款 1.待审核 2.正在招 3.已下架 4.二次审核 5.不通过")
     @ApiResponses({
             @ApiResponse(code = 0, message = "成功"),
             @ApiResponse(code = 1, message = "失败")
     })
-    public Result ptaskList(@RequestBody PlatTaskList taskList) {
+    public Result ptaskList(@RequestBody @Valid PlatTaskList taskList) {
         Map map = taskService.platTaskList(taskList.getUserId(), taskList.getStatus(), taskList.getCurrentPage());
         return new Result(R.SUCCESS, map);
+    }
+
+    @PostMapping("checkList")
+    @ApiOperation(value = "任务审核列表", notes = "0.待付款 1.待审核 2.正在招 3.已下架 4.二次审核 5.不通过")
+    @ApiResponses({
+            @ApiResponse(code = 0, message = "成功"),
+            @ApiResponse(code = 1, message = "失败")
+    })
+    public Result plaUserTaskList(@RequestBody  @Valid PlatUserTaskList platUserTaskList) {
+        return taskService.plaUserTaskList(platUserTaskList.getTaskId(), platUserTaskList.getCurrentPage(),platUserTaskList.getCheckType());
     }
 
     @PostMapping("taskInfo")
@@ -131,7 +143,7 @@ public class PdataTaskController extends BaseController {
         private String name;
         private Integer num;
         private Integer price;
-        private Date endTime;
+        private String endTime;
         @ApiModelProperty("设备类型 0.不限 1.安卓 2.ios")
         private Integer deviceType;
         @ApiModelProperty("提交类型 1.文字 2.图片")
@@ -165,12 +177,23 @@ public class PdataTaskController extends BaseController {
     @Data
     @ApiModel("plat任务列表model")
     public static class PlatTaskList implements Serializable {
-        @Size(min = -2, max = 7, message = "状态必须是数字")
+//        @Size(min = -2, max = 7, message = "状态必须是数字")
         private Integer status;
         @NotNull(message = "当前页不能为空")
         private Integer currentPage;
         @NotNull(message = "用户id不能为空")
         private String userId;
+    }
+
+    @Data
+    @ApiModel("plat任务审核列表model")
+    public static class PlatUserTaskList implements Serializable {
+        @NotNull(message = "当前页不能为空")
+        private Integer currentPage;
+        @NotNull(message = "任务id不能为空")
+        private String taskId;
+        @NotNull(message = "checkType不能为空")
+        private String checkType;
     }
 
     @Data

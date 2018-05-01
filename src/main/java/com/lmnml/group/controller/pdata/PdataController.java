@@ -14,10 +14,7 @@ import io.swagger.annotations.*;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -44,7 +41,7 @@ public class PdataController extends BaseController {
             @ApiResponse(code = 1, message = "成功"),
             @ApiResponse(code = 0, message = "失败")
     })
-    public Object userLogin(@RequestBody @Valid PlatUserRegister platUserRegister, HttpServletResponse response) {
+    public Result userLogin(@RequestBody @Valid PlatUserLogin platUserRegister, HttpServletResponse response) {
         //查询用户
         VPlatformUser vPlatformUser = userService.findUserByMobile(platUserRegister.getMobile(),2);
         if (vPlatformUser == null) {
@@ -65,25 +62,36 @@ public class PdataController extends BaseController {
         return new Result(R.SUCCESS, vPlatformUser);
     }
 
+    @GetMapping("logout")
+    @ApiOperation(value = "plat用户注销")
+    @ApiResponses({
+            @ApiResponse(code = 1, message = "成功"),
+            @ApiResponse(code = 0, message = "失败")
+    })
+    public Result userLogout(HttpServletResponse response) {
+        CookieTools.removeCookie(response, "userInfo");
+        return new Result(R.SUCCESS);
+    }
+
     @PostMapping("register")
     @ApiOperation(value = "plat用户注册")
     @ApiResponses({
             @ApiResponse(code = 1, message = "成功"),
             @ApiResponse(code = 0, message = "失败")
     })
-    public Object userRegister(@RequestBody @Valid PlatUserRegister platUserRegister) {
+    public Result userRegister(@RequestBody @Valid PlatUserRegister platUserRegister) {
         //查询用户
         VPlatformUser vPlatformUser = userService.findUserByMobile(platUserRegister.getMobile(),2);
         if (vPlatformUser != null) {
             return new Result("该手机号已注册!");
         }
-        String code = userService.findMsgCode(platUserRegister.getMsgCode());
+        String code = userService.findMsgCode(platUserRegister.getMobile());
         if (!platUserRegister.getMsgCode().equals(code)) {
             return new Result("验证码错误!");
         }
         vPlatformUser = new VPlatformUser();
         vPlatformUser.setId(StrKit.ID());
-        vPlatformUser.setName("赚客_" + platUserRegister.getMobile());
+        vPlatformUser.setName("赚客商户_" + platUserRegister.getMobile());
         vPlatformUser.setMobile(platUserRegister.getMobile());
         vPlatformUser.setPhoto("http://yuejinimg.oss-cn-beijing.aliyuncs.com/app_icon_default_photo.png");
         vPlatformUser.setBirthday(new Date());
@@ -95,7 +103,7 @@ public class PdataController extends BaseController {
         vPlatformUser.setParentId(platUserRegister.getInventCode());
         vPlatformUser.setPassword(MD5.Byte32(platUserRegister.getPassword()));
         vPlatformUser.setPublishType(1);
-        vPlatformUser.setAccountStatus(0);
+        vPlatformUser.setAccountStatus(1);
         vPlatformUser.setInventCode(new SimpleDateFormat("MMddHHmmss").format(new Date()) + AliyunSms.getRandNum(1000, 99999));
         vPlatformUser.setCreateTime(new Date());
         vPlatformUser.setState(0);
@@ -183,6 +191,17 @@ public class PdataController extends BaseController {
         @NotNull(message = "密码不能为空!")
         private String password;
         private String inventCode;
+    }
+
+    @Data
+    @ApiModel("palt登录model")
+    public static class PlatUserLogin implements Serializable {
+        @ApiModelProperty("手机号")
+        @NotNull(message = "手机号不能为空!")
+        @Pattern(regexp = "^1([358][0-9]|4[579]|66|7[0135678]|9[89])[0-9]{8}$", message = "请输入手机号!")
+        private String mobile;
+        @NotNull(message = "密码不能为空!")
+        private String password;
     }
 
     @Data

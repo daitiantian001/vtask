@@ -75,7 +75,7 @@ public class UserController extends BaseController {
             return new Result("该账户被禁用,请联系客服!");
         }
 
-        String code = userService.findMsgCode(userRegister.getMsgCode());
+        String code = userService.findMsgCode(userRegister.getMobile());
         if (!userRegister.getMsgCode().equals(code)) {
             return new Result("验证码错误!");
         }

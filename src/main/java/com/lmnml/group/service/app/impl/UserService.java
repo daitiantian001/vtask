@@ -50,7 +50,10 @@ public class UserService implements IUserService {
 
     @Override
     public VPlatformUser findUserByMobile(String mobile, Integer userType) {
-        return userMapper.findUserByMobile(mobile, userType);
+        VPlatformUser vPlatformUser = new VPlatformUser();
+        vPlatformUser.setMobile(mobile);
+        vPlatformUser.setUserType(userType);
+        return (VPlatformUser) userMapper.selectOne(vPlatformUser);
     }
 
     @Override
@@ -100,7 +103,11 @@ public class UserService implements IUserService {
     @Override
     public Result platDetail(String userId, Integer status) {
         List list = userMapper.platDetail(userId, status);
-        return new Result(R.SUCCESS, list);
+        Integer total=userMapper.platDetailTotal(userId,status);
+        Map map =new HashMap();
+        map.put("details",list);
+        map.put("total",total);
+        return new Result(R.SUCCESS, map);
     }
 
     @Override

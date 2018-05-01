@@ -4,6 +4,7 @@ const url_set = {
     raffleId: getParam('raffleId'),
     token: getParam('token')
 }
+
 function getParam(name) {
     var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
     var r = window.location.search.substr(1).match(reg);

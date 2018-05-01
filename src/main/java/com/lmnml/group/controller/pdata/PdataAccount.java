@@ -82,7 +82,7 @@ public class PdataAccount {
         @NotNull(message = "用户不能为空!")
         private String userId;
         @ApiModelProperty("支出/收人 1支出 2.收人")
-        @NotNull(message = "用户不能为空!")
+        @NotNull(message = "收支状态不能为空")
         private Integer status;
     }
 

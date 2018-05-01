@@ -1,5 +1,7 @@
 package com.lmnml.group.util;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -12,5 +14,15 @@ public class DateKit {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.MINUTE, -30);
         return calendar.getTime();
+    }
+
+    public static Date getTime(String str){
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        try {
+            return simpleDateFormat.parse(str);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

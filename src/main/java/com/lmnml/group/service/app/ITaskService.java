@@ -53,4 +53,6 @@ public interface ITaskService {
     Result sysTaskList(Integer currentPage);
 
     Result sysTaskCheck(String targetId, Integer result, String sUserId);
+
+    Result plaUserTaskList(String taskId, Integer currentPage, String checkType);
 }

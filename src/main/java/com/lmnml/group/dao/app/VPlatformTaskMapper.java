@@ -38,7 +38,7 @@ public interface VPlatformTaskMapper extends MyMapper<VPlatformTask> {
     @Update("UPDATE v_platform_task SET last_num=last_num-1 where id=#{taskId}")
     void updateMin(String taskId);
 
-    @Select("SELECT vps.id,vps.name,vps.price,vps.num,vps.last_num lastNum,DATE_FORMAT(vpt.end_time,'%Y年%m月%d日 %H:%i') endTime endTime,vps.check_time checkTime\n" +
+    @Select("SELECT vps.id,vps.name,vps.price,vps.num,vps.last_num lastNum,DATE_FORMAT(vps.end_time,'%Y年%m月%d日 %H:%i') endTime,vps.check_time checkTime\n" +
             "FROM v_platform_task vps\n" +
             "WHERE vps.status=#{status} AND vps.user_id=#{userId}\n" +
             "ORDER BY vps.create_time DESC\n" +

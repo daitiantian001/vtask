@@ -31,6 +31,11 @@ public interface VPlatFormUserMapper extends MyMapper<VPlatformUser> {
             "ORDER BY create_time DESC\n")
     List<Map> platDetail(@Param("userId") String userId, @Param("status")Integer status);
 
+    @Select("SELECT count(id)\n" +
+            "FROM v_platform_dealrecord\n" +
+            "WHERE user_id=#{userId} AND status=#{status} \n")
+    Integer platDetailTotal(@Param("userId") String userId, @Param("status")Integer status);
+
     @Update("UPDATE v_platform_user SET account=account+{money} AND used_account=used_account+#{money} WHERE id=#{userId}")
     void updateAccount(@Param("userId") String userId, @Param("money")Integer money);
 
