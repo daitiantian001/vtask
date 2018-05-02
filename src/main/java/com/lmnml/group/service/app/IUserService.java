@@ -35,7 +35,7 @@ public interface IUserService {
 
     void wxPay(Map<String, String> m, HttpServletRequest request, HttpServletResponse resp);
 
-    Result rechargeAccount(String userId, Integer total, Integer type, String ip, String openId, HttpServletResponse response) throws Exception;
+    Result rechargeAccount(String userId, Integer total, Integer type, String ip, HttpServletResponse response) throws Exception;
 
     void wx2Pay(Map<String, String> m, HttpServletRequest request, HttpServletResponse resp);
 

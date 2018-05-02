@@ -139,6 +139,6 @@ public class WxPay {
      * @throws Exception
      */
     public static WxPay smPay(String body, String out_trade_no, int total_fee, String attach, String spbill_create_ip, String product_id) throws Exception {
-        return new WxPay(body,PayUtil.WX_JS_PAY,WxPayEnum.SM.getType(),out_trade_no,total_fee,attach,spbill_create_ip,null,product_id,null);
+        return new WxPay(body,PayUtil.WX_SM_PAY,WxPayEnum.SM.getType(),out_trade_no,total_fee,attach,spbill_create_ip,null,product_id,null);
     }
 }

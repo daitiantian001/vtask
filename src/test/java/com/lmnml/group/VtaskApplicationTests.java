@@ -13,13 +13,31 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class VtaskApplicationTests {
 
     @Test
+    public void name() throws Exception {
+    }
+
+    @Test
     public void contextLoads() {
+        String s="";
+        System.out.println(getCotent(s));
+    }
+
+    public static String getCotent(String source){
+        StringBuffer target=new StringBuffer();
+        Pattern pattern = Pattern.compile(">([^<]*)<");
+        Matcher macher = pattern.matcher(source);
+        while (macher.find()){
+            target.append(macher.group());
+        }
+        return target.toString().replaceAll("<>","").replaceAll("\n","");
     }
 
     private void a() {

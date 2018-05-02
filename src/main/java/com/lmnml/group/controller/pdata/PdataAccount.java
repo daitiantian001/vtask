@@ -47,8 +47,7 @@ public class PdataAccount {
     @ApiOperation(value = "CHECK plat充值")
     public Result rechargeAccount(@RequestBody @Valid RechargeModel rechargeModel, HttpServletRequest request, HttpServletResponse response) throws Exception {
         String ip=IpUtil.getIp(request);
-        String openId="ouxT7vl7SkMNNHEIDA1zuKnTewYw";//rechargeModel.getOpenId()
-        return userService.rechargeAccount(rechargeModel.getUserId(),rechargeModel.getTotal(),rechargeModel.getType(),ip,openId,response);
+        return userService.rechargeAccount(rechargeModel.getUserId(),rechargeModel.getTotal(),rechargeModel.getType(),ip,response);
     }
 
     @PostMapping("cash")

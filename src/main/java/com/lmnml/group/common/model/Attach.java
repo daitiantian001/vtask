@@ -13,4 +13,5 @@ import lombok.NoArgsConstructor;
 public class Attach {
     private String targetId;
     private String userId;
+//    private String type;
 }

@@ -160,8 +160,9 @@ function loadTask(status,currentPage){
                             "<div class=\"task-item-btns\">"+btns+"</div>"+
                             "</div>");
 					}else if(status==2){
-                        btns = "<span class=\"layui-btn layui-btn-primary\" onclick=\"offTask('"+n.id+"');\">下架</span>"+
-                            "<span class=\"layui-btn layui-btn-primary\" onclick=\"offTask('"+n.id+"');\">增加数量</span>"+
+                        btns =
+//                        "<span class=\"layui-btn layui-btn-primary\" onclick=\"offTask('"+n.id+"');\">下架</span>"+
+//                            "<span class=\"layui-btn layui-btn-primary\" onclick=\"offTask('"+n.id+"');\">增加数量</span>"+
                             "<span class=\"layui-btn layui-btn-normal\" onclick=\"javascript:window.location.href='check.html?taskId="+n.id+"';\">去审核</span>";
                         $("#data-list").append("<div class=\"task-item\">"+
                             "<img class=\"task-item-icon\" src=\"../../css/images/icon_type_task.png\"/>"+
@@ -180,8 +181,9 @@ function loadTask(status,currentPage){
                             "<div class=\"task-item-btns\">"+btns+"</div>"+
                             "</div>");
 					}else{
-                        btns = "<span class=\"layui-btn layui-btn-primary\" onclick=\"bTask('"+n.id+"');\">退款</span>"+
-                            "<span class=\"layui-btn layui-btn-normal\" onclick=\"toTask('"+n.id+"');\">重新发布</span>";
+                        btns =
+//                            "<span class=\"layui-btn layui-btn-primary\" onclick=\"bTask('"+n.id+"');\">退款</span>"+
+//                            "<span class=\"layui-btn layui-btn-normal\" onclick=\"toTask('"+n.id+"');\">重新发布</span>";
                         $("#data-list").append("<div class=\"task-item\">"+
                             "<img class=\"task-item-icon\" src=\"../../css/images/icon_type_task.png\"/>"+
                             "<div class=\"task-item-title\">"+n.name+"</div>"+

@@ -34,21 +34,7 @@ public class NotifyController extends BaseController {
         try {
             m = PayUtil.parseXml(request);
             userService.wxPay(m,request,resp);
-        } catch (Exception e) {
-            try {
-                resp.getWriter().write(PayUtil.setXML("ERROR", "error"));
-            } catch (IOException e1) {
-            }
-        }
-    }
-
-    @PostMapping("wx2")
-    @ApiOperation(value = "wx充值")
-    public void wx2Notify(HttpServletRequest request, HttpServletResponse resp){
-        Map<String, String> m = null;
-        try {
-            m = PayUtil.parseXml(request);
-            userService.wx2Pay(m,request,resp);
+//            userService.wx2Pay(m,request,resp);
         } catch (Exception e) {
             try {
                 resp.getWriter().write(PayUtil.setXML("ERROR", "error"));

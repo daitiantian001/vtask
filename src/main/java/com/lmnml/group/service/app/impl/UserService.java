@@ -315,7 +315,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public Result rechargeAccount(String userId, Integer total, Integer type, String ip, String openId, HttpServletResponse response) throws Exception {
+    public Result rechargeAccount(String userId, Integer total, Integer type, String ip, HttpServletResponse response) throws Exception {
         Map result = new HashMap();
         String id = StrKit.ID();
         String attach = JsonUtil.toJson(new Attach(id,userId));//附带信息 targetId,userId
@@ -323,12 +323,12 @@ public class UserService implements IUserService {
         switch (type) {
             case 2:
                 //微信支付
-                Map<String, String> stringStringMap = PayUtil.jsPay(WxPay.js2Pay("赚客-微任务微信支付", id, total, attach, ip, openId));
+                Map<String, String> stringStringMap = PayUtil.jsPay(WxPay.smPay("赚客-微任务微信支付", id, total, attach, ip,"WX_RECHARGE"));
                 result.put("payType", 2);
                 result.put("payInfo", stringStringMap);
                 return new Result(R.SUCCESS, result);
             case 3:
-                String payInfo = AliPayUtil.jsPay2(new AliPay("赚客-微任务支付宝支付",id,total,attach,ip));
+                String payInfo = AliPayUtil.smPay(new AliPay("赚客-微任务支付宝支付",id,total,attach,ip));
                 result.put("payType",3);
                 result.put("payInfo",payInfo);
                 return new Result(R.SUCCESS,result);
