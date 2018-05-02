@@ -24,7 +24,7 @@
 	<link rel="stylesheet" type="text/css" href="../../js/layer/css/layui.css"/>
 	<script type="text/javascript" src="../../js/layer/layui.js"></script>
 	<script type="text/javascript" src="../../../js/common.js"></script>
-	
+
 	<link rel="stylesheet" type="text/css" href="../../js/ztree/css/zTreeStyle/zTreeStyle.css"/>
 	<script type="text/javascript" src="../../js/ztree/js/jquery.ztree.core.js"></script>
 	<style>
@@ -180,7 +180,6 @@
 <script type="text/javascript">
 var status = 2, currentPage = 1;
 const userInfo=JSON.parse($.cookie("userInfo"));
-
 function loadTask(){
 	$.ajax({
 		type: "POST",
@@ -216,14 +215,14 @@ function loadTask(){
 					"</div>");
 				});
 			}else{
-                layer.msg(data.exception);
+				layer.msg(jsonObject.exception);
 			}
 		}
 	});
 }
 
 function payTask(id){
-	window.location.href = "platform/pay?taskId="+id;
+	window.location.href = "platform/pay.do?taskId="+id;
 }
 
 $(document).ready(function(){
@@ -237,7 +236,7 @@ $(document).ready(function(){
 
     $("#nick-name").html(userInfo.name);
     $("#top-photo").attr('src',userInfo.photo);
-	
+
 	loadTask();
 });
 </script>
