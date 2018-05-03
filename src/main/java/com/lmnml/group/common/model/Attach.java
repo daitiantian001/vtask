@@ -11,7 +11,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Attach {
+    public static final String RECHARGE="1";
+    public static final String PAY_TASK="2";
     private String targetId;
     private String userId;
-//    private String type;
+    private String type;
 }

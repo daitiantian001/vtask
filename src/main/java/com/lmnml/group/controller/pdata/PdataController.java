@@ -58,7 +58,6 @@ public class PdataController extends BaseController {
         if (!MD5.Byte32(platUserRegister.getPassword()).equals(vPlatformUser.getPassword())) {
             return new Result("密码错误!");
         }
-        CookieTools.addCookie(response, "puserId", vPlatformUser.getId());
         return new Result(R.SUCCESS, vPlatformUser);
     }
 

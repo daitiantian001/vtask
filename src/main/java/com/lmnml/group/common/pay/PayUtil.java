@@ -33,7 +33,7 @@ import java.util.*;
  */
 @Component
 public class PayUtil {
-    private static final String KEY = "fd098f56d9e73192a8f71c6eda851682";//"p9z8v7b4j5h6u7iioq2we64n7vcx8ds6";
+    private static final String KEY = "3bf890bba71e8a213e55460a19395a6c";//"p9z8v7b4j5h6u7iioq2we64n7vcx8ds6";
     public static final String APPID = "wx7ebb725a5d673c9d";//"wxbc9aad9a263e30c8";//"wx692baa083acfd459";
     private static final String SCRKEY = "fd098f56d9e73192a8f71c6eda851682";
     public static final String MCH_ID = "1500654521";//"1500654521";//"1304440901";
@@ -135,6 +135,11 @@ public class PayUtil {
         resultMap.put("timeStamp", timeStamp());
         resultMap.put("paySign", getSign(resultMap));
         return resultMap;
+    }
+
+    public static String smPay(WxPay wxPay) throws Exception {
+        Map map = parseXml(doPost(API_URL,toXml(wxPay)));
+        return map.get("code_url")+"";
     }
 
     public static Map<String, String> parseXml(String strxml) throws Exception {

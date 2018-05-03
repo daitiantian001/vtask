@@ -28,7 +28,7 @@ public class NotifyController extends BaseController {
     private IUserService userService;
 
     @PostMapping("wx")
-    @ApiOperation(value = "wx支付")
+    @ApiOperation(value = "wx支付/充值")
     public void wxNotify(HttpServletRequest request, HttpServletResponse resp){
         Map<String, String> m = null;
         try {
@@ -44,28 +44,17 @@ public class NotifyController extends BaseController {
     }
 
     @PostMapping("ali")
-    @ApiOperation(value = "ali支付")
+    @ApiOperation(value = "ali支付/充值")
     public String aliNotify(HttpServletRequest request, HttpServletResponse resp){
         Map<String, String> m = null;
         try {
             m = AliPayUtil.parseReq(request);
             userService.aliPay(m,request,resp);
+//            userService.aliPay2(m,request,resp);
             return "success";
         } catch (Exception e) {
             return "fail";
         }
     }
 
-    @PostMapping("ali2")
-    @ApiOperation(value = "ali充值")
-    public String aliNotify2(HttpServletRequest request, HttpServletResponse resp){
-        Map<String, String> m = null;
-        try {
-            m = AliPayUtil.parseReq(request);
-            userService.aliPay2(m,request,resp);
-            return "success";
-        } catch (Exception e) {
-            return "fail";
-        }
-    }
 }

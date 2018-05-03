@@ -31,13 +31,13 @@ public interface IUserService {
 
     Result appBindAccount(String userId, Integer type, String openId);
 
-    Result payTask(String userId, String taskId, Integer type, String ip, String openId) throws Exception;
+    Result payTask(String userId, String taskId, Integer type, String ip, String productId) throws Exception;
 
     void wxPay(Map<String, String> m, HttpServletRequest request, HttpServletResponse resp);
 
     Result rechargeAccount(String userId, Integer total, Integer type, String ip, HttpServletResponse response) throws Exception;
 
-    void wx2Pay(Map<String, String> m, HttpServletRequest request, HttpServletResponse resp);
+//    void wx2Pay(Map<String, String> m, HttpServletRequest request, HttpServletResponse resp);
 
     VSystemUser findSysUserByMobile(String mobile);
 
@@ -49,5 +49,5 @@ public interface IUserService {
 
     void aliPay(Map<String, String> m, HttpServletRequest request, HttpServletResponse resp);
 
-    void aliPay2(Map<String, String> m, HttpServletRequest request, HttpServletResponse resp);
+//    void aliPay2(Map<String, String> m, HttpServletRequest request, HttpServletResponse resp);
 }

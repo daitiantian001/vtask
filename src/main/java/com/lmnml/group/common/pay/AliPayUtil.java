@@ -41,7 +41,7 @@ public class AliPayUtil {
     public static final String Ali_JS_PAY = "ali";
     public static final String Ali_JS2_PAY = "ali2";
 
-    private static AlipayClient alipayClient = new DefaultAlipayClient(ALIPAY_GATEWAY, APP_ID, PRIVATE_KEY, "json", "utf-8", ZFB_PUBLIC_KEY,"RSA2");
+    private static AlipayClient alipayClient = new DefaultAlipayClient(ALIPAY_GATEWAY, APP_ID, PRIVATE_KEY, "json", "utf-8", ALIPAY_PUBLIC_KEY,"RSA2");
 
     public static String jsPay(AliPay aliPay) {
         AlipayTradeAppPayRequest request = new AlipayTradeAppPayRequest();
@@ -94,11 +94,11 @@ public class AliPayUtil {
     public static String smPay(AliPay aliPay) {
         AlipayTradePrecreateRequest request = new AlipayTradePrecreateRequest();
         AlipayTradeAppPayModel model = new AlipayTradeAppPayModel();
-        model.setBody(aliPay.getBody());
-        model.setSubject(aliPay.getIp());
+//        model.setBody(aliPay.getBody());
+        model.setSubject(aliPay.getBody());
         model.setTimeoutExpress("30m");
         model.setOutTradeNo(aliPay.getId());
-        model.setStoreId("DTOO1");
+        model.setStoreId(aliPay.getStoreId());
         model.setTotalAmount(StrKit.addPoint(aliPay.getTotal() + ""));
 //        model.setProductCode("QUICK_MSECURITY_PAY");
         String passbackParams = URLEncoder.encode(aliPay.getAttach());
@@ -109,7 +109,6 @@ public class AliPayUtil {
             //这里和普通的接口调用不同，使用的是sdkExecute
             AlipayTradePrecreateResponse execute= alipayClient.execute(request);
             return execute.getBody();
-//            return response.getBody();
         } catch (AlipayApiException e) {
             e.printStackTrace();
         }

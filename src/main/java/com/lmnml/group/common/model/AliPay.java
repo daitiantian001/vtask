@@ -16,4 +16,5 @@ public class AliPay {
     private Integer total;
     private String attach;
     private String ip;
+    private String storeId;
 }

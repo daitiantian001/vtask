@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:v-on="http://www.w3.org/1999/xhtml">
 <head>
 	<title></title>
 	<meta charset="UTF-8"/>
@@ -107,24 +107,28 @@
 	}
 	</style>
 </head>
-<body style="background:#29333e;">
-	<div class="normal-relative">
-		<div class="normal-absolute login-form">
+<script type="application/javascript" src="../../../js/vue.min.js"></script>
+<script type="application/javascript" src="../../../js/common.js"></script>
+<script type="application/javascript" src="../../../js/axios.js"></script>
+<body style="background:#29333e;" id="box">
+<div class="normal-relative">
+	<div class="normal-absolute login-form">
 			<div class="login-text">飞腾赚客后台管理系统</div>
 			<div class="login-input-block">
 				<div class="login-input-item">
 					<span class="item-icon">&#xe736;</span>
-					<input id="mobile" class="login-input-text" type="text" placeholder="请输入手机号" autocomplete="off"/>
+					<input id="mobile" class="login-input-text" type="text" placeholder="请输入手机号" autocomplete="off" v-model="mobile"/>
 				</div>
 				<div class="login-input-item">
 					<span class="item-icon">&#xe6c0;</span>
-					<input id="password" class="login-input-text" type="password" placeholder="请输入密码" autocomplete="off"/>
+					<input id="password" class="login-input-text" type="password" placeholder="请输入密码" autocomplete="off" v-model="password"/>
 				</div>
-				<div class="login-submit" onclick="login();">登&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;录</div>
+				<div class="login-submit" @click="login">登&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;录</div>
 			</div>
 		</div>
-		<div class="icp-text">沪ICP备17053958号</div>
-		<div class="company-text">版权所有© 2017~2018 RIPPED letsgetripped.cn</div>
-	</div>
+	<div class="icp-text">沪ICP备17053958号</div>
+	<div class="company-text">版权所有© 2017~2018 RIPPED letsgetripped.cn</div>
+</div>
 </body>
+<script type="application/javascript" src="../../../js/home/login.js"></script>
 </html>

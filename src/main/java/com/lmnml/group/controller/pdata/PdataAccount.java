@@ -50,20 +50,19 @@ public class PdataAccount {
         return userService.rechargeAccount(rechargeModel.getUserId(),rechargeModel.getTotal(),rechargeModel.getType(),ip,response);
     }
 
+    @PostMapping("pay")
+    @ApiOperation(value = "CHECK plat支付")
+    public Result payTask(@RequestBody @Valid PayTask payTask, HttpServletRequest request) throws Exception {
+        String ip=IpUtil.getIp(request);
+        return userService.payTask(payTask.getUserId(), payTask.getTaskId(),payTask.getType(),ip,"WX_PAY_01");
+    }
+
     @PostMapping("cash")
     @ApiOperation(value = "TODO plat提现")
     public Result cashAccount(@RequestBody @Valid RechargeModel rechargeModel, HttpServletRequest request) throws Exception {
         String ip=IpUtil.getIp(request);
 //        return userService.cashAccount(rechargeModel.getUserId(),rechargeModel.getTotal(),rechargeModel.getType(),ip);
         return null;
-    }
-
-    @PostMapping("pay")
-    @ApiOperation(value = "CHECK plat支付")
-    public Result payTask(@RequestBody @Valid PayTask payTask, HttpServletRequest request) throws Exception {
-        String ip=IpUtil.getIp(request);
-        String openId="ouxT7vl7SkMNNHEIDA1zuKnTewYw";//payTask.getOpenId()
-        return userService.payTask(payTask.getUserId(), payTask.getTaskId(),payTask.getType(),ip,openId);
     }
 
     @Data
@@ -97,9 +96,6 @@ public class PdataAccount {
         @ApiModelProperty("支付类型 1.账户 2.微信 3.支付宝")
         @NotNull(message = "任务id不能为空")
         private Integer type;
-        @ApiModelProperty("openId（分）")
-        @NotNull(message = "openId不能为空")
-        private String openId;
     }
 
     @Data
@@ -114,9 +110,6 @@ public class PdataAccount {
         @ApiModelProperty("充值金额（分）")
         @NotNull(message = "金额不能为空")
         private Integer total;
-        @ApiModelProperty("openId（分）")
-        @NotNull(message = "openId不能为空")
-        private String openId;
     }
 
 }
