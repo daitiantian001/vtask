@@ -3,6 +3,7 @@ package com.lmnml.group.controller.sys;
 import com.lmnml.group.common.model.R;
 import com.lmnml.group.common.model.Result;
 import com.lmnml.group.controller.BaseController;
+import com.lmnml.group.entity.app.VPlatformUser;
 import com.lmnml.group.entity.web.VSystemUser;
 import com.lmnml.group.service.app.IUserService;
 import com.lmnml.group.util.MD5;
@@ -68,13 +69,29 @@ public class SysUserController extends BaseController {
     @ApiOperation(value = "sys商户资料审核列表")
     @PostMapping("list")
     public Result sysUserCheckList(@RequestBody @Valid SysCheckListModel sysCheckListModel) {
-        return userService.sysUserCheckList(sysCheckListModel.getCurrentPage(),sysCheckListModel.getType());
+        VPlatformUser vPlatformUser= new VPlatformUser();
+        vPlatformUser.setIdentifyType(sysCheckListModel.type);
+        vPlatformUser.setUserType(2);//商户
+        vPlatformUser.setName(sysCheckListModel.getName());
+        return userService.sysUserCheckList(sysCheckListModel.getCurrentPage(),7,vPlatformUser);
+    }
+
+    @ApiOperation(value = "sys封停/解封商户")
+    @PostMapping("off")
+    public Result sysUserOff(@RequestBody @Valid SysUserOffModel sysUserOffModel) {
+        VPlatformUser vPlatformUser= new VPlatformUser();
+        vPlatformUser.setId(sysUserOffModel.getId());
+        vPlatformUser.setPublishType(sysUserOffModel.getType());//封停
+        return userService.sysUserOff(vPlatformUser);
     }
 
     @ApiOperation(value = "sys商户资料审核")
     @PostMapping("check")
     public Result sysUserCheck(@RequestBody @Valid SysCheckModel sysCheckModel) {
-        return userService.sysUserCheck(sysCheckModel.getTargetId(),sysCheckModel.getResult(),sysCheckModel.getType(),sysCheckModel.getSUserId());
+        VPlatformUser vPlatformUser = new VPlatformUser();
+        vPlatformUser.setId(sysCheckModel.getId());
+        vPlatformUser.setIdentifyType(sysCheckModel.getType());
+        return userService.sysUserCheck(vPlatformUser);
     }
 
     @Data
@@ -97,6 +114,16 @@ public class SysUserController extends BaseController {
         @NotNull(message = "id不能为空!")
         private String id;
     }
+    @Data
+    @ApiModel("sys封停/解封model")
+    public static class SysUserOffModel implements Serializable {
+        @ApiModelProperty("id")
+        @NotNull(message = "id不能为空!")
+        private String id;
+        @ApiModelProperty("id")
+        @NotNull(message = "id不能为空!")
+        private Integer type;
+    }
 
     @Data
     @ApiModel("sys审核列表model")
@@ -107,22 +134,21 @@ public class SysUserController extends BaseController {
         @ApiModelProperty("审核类型  3.个人 4.商户")
         @NotNull(message = "id不能为空!")
         private Integer type;
+        @ApiModelProperty("商家名称")
+        private String name;
     }
 
     @Data
     @ApiModel("sys审核model")
     public static class SysCheckModel implements Serializable {
-        @ApiModelProperty("审核结果1.通过 2.拒绝")
+        @ApiModelProperty("审核结果1.个人通过 2.企业通过 5.个人拒绝 6.企业拒绝")
         @NotNull(message = "审核结果不能为空")
-        private Integer result;
-        @ApiModelProperty("审核类型  3.个人 4.商户")
-        @NotNull(message = "id不能为空!")
         private Integer type;
-        @ApiModelProperty("系统用户id")
-        @NotNull(message = "系统用户id,不能为空")
-        private String sUserId;
+//        @ApiModelProperty("系统用户id")
+//        @NotNull(message = "系统用户id,不能为空")
+//        private String sUserId;
         @ApiModelProperty("审核对象id")
         @NotNull(message = "对象id不能为空")
-        private String targetId;
+        private String id;
     }
 }

@@ -37,17 +37,15 @@ public interface IUserService {
 
     Result rechargeAccount(String userId, Integer total, Integer type, String ip, HttpServletResponse response) throws Exception;
 
-//    void wx2Pay(Map<String, String> m, HttpServletRequest request, HttpServletResponse resp);
-
     VSystemUser findSysUserByMobile(String mobile);
 
     Result findSysList(String id);
 
-    Result sysUserCheckList(Integer currentPage, Integer type);
-
-    Result sysUserCheck(String targetId, Integer type, Integer sysCheckModelType, String sUserId);
-
     void aliPay(Map<String, String> m, HttpServletRequest request, HttpServletResponse resp);
 
-//    void aliPay2(Map<String, String> m, HttpServletRequest request, HttpServletResponse resp);
+    Result sysUserCheckList(Integer currentPage, int pageSize, VPlatformUser vPlatformUser);
+
+    Result sysUserOff(VPlatformUser vPlatformUser);
+
+    Result sysUserCheck(VPlatformUser vPlatformUser);
 }

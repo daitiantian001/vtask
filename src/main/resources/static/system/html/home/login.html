@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:v-on="http://www.w3.org/1999/xhtml">
+<html>
 <head>
 	<title></title>
 	<meta charset="UTF-8"/>
@@ -22,6 +22,8 @@
 	<script type="text/javascript" src="../../js/layer/layui.js"></script>
 	<link rel="stylesheet" type="text/css" href="../../js/ztree/css/zTreeStyle/zTreeStyle.css"/>
 	<script type="text/javascript" src="../../js/ztree/js/jquery.ztree.core.js"></script>
+	<script type="text/javascript" src="../../js/jquery.cookie.js"></script>
+	<script type="text/javascript" src="../../../js/common.js"></script>
 	<style type="text/css">
 	.login-form {
 		width: 400px;
@@ -107,28 +109,51 @@
 	}
 	</style>
 </head>
-<script type="application/javascript" src="../../../js/vue.min.js"></script>
-<script type="application/javascript" src="../../../js/common.js"></script>
-<script type="application/javascript" src="../../../js/axios.js"></script>
 <body style="background:#29333e;" id="box">
 <div class="normal-relative">
 	<div class="normal-absolute login-form">
-			<div class="login-text">飞腾赚客后台管理系统</div>
-			<div class="login-input-block">
-				<div class="login-input-item">
-					<span class="item-icon">&#xe736;</span>
-					<input id="mobile" class="login-input-text" type="text" placeholder="请输入手机号" autocomplete="off" v-model="mobile"/>
-				</div>
-				<div class="login-input-item">
-					<span class="item-icon">&#xe6c0;</span>
-					<input id="password" class="login-input-text" type="password" placeholder="请输入密码" autocomplete="off" v-model="password"/>
-				</div>
-				<div class="login-submit" @click="login">登&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;录</div>
+		<div class="login-text">飞腾赚客后台管理系统</div>
+		<div class="login-input-block">
+			<div class="login-input-item">
+				<span class="item-icon">&#xe736;</span>
+				<input id="mobile" class="login-input-text" type="text" placeholder="请输入手机号" autocomplete="off"/>
 			</div>
+			<div class="login-input-item">
+				<span class="item-icon">&#xe6c0;</span>
+				<input id="password" class="login-input-text" type="password" placeholder="请输入密码" autocomplete="off"/>
+			</div>
+			<div class="login-submit" onclick="login()">登&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;录</div>
 		</div>
+	</div>
 	<div class="icp-text">沪ICP备17053958号</div>
 	<div class="company-text">版权所有© 2017~2018 RIPPED letsgetripped.cn</div>
 </div>
+<script>
+    layui.use('layer', function(){
+        var layer = layui.layer;
+    });
+    function login(){
+        $.ajax({
+            type: "POST",
+            url: url_set.urlHead+"sys/user/login",
+            data:JSON.stringify({
+                mobile: $("#mobile").val(),
+                password: $("#password").val()
+            }),
+            dataType: "json",
+            contentType:"application/json;charset=utf-8",
+            async: false,
+            traditional: true,
+            success: function(data){
+                if(data.result==1){
+                    $.cookie('userInfo',JSON.stringify(data.data));
+                    window.location.href="index.html";
+                }else{
+                    layer.msg(data.exception);
+                }
+            }
+        });
+    }
+</script>
 </body>
-<script type="application/javascript" src="../../../js/home/login.js"></script>
 </html>

@@ -11,3 +11,9 @@ function getParam(name) {
     if (r != null)return unescape(r[2]);
     return null;
 }
+const aConfig={
+    baseURL:url_set.urlHead,
+}
+// axios.defaults.baseURL =url_set.urlHead;
+// // axios.defaults.headers.common['Authorization'] = AUTH_TOKEN;
+axios.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8';

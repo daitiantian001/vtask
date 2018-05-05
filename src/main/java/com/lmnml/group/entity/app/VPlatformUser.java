@@ -35,7 +35,7 @@ public class VPlatformUser {
     private String unionId;
     @ApiModelProperty("支付宝Id")
     private String zfbId;
-    @ApiModelProperty("认证类型 0.未认证 1.个人 2.企业 3.个人待审核 4.企业待审核 5.认证失败")
+    @ApiModelProperty("认证类型 0.未认证 1.个人 2.企业 3.个人待审核 4.企业待审核 5.个人认证失败 6企业认证失败")
     private Integer identifyType;
     @ApiModelProperty("认证名称")
     private String identifyName;
@@ -45,6 +45,8 @@ public class VPlatformUser {
     private String identifyAddress;
     @ApiModelProperty("身份描述")
     private String identifyDesc;
+    @ApiModelProperty("行业")
+    private String identifyTrade;
     @ApiModelProperty("联系人")
     private String contactorName;
     @ApiModelProperty("联系电话")

@@ -1,5 +1,6 @@
 package com.lmnml.group.service.app.impl;
 
+import com.github.pagehelper.PageHelper;
 import com.lmnml.group.common.exception.MyTestException;
 import com.lmnml.group.common.model.*;
 import com.lmnml.group.common.pay.AliPayUtil;
@@ -19,6 +20,7 @@ import com.lmnml.group.util.StrKit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tk.mybatis.mapper.entity.Example;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -397,33 +399,25 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public Result sysUserCheckList(Integer currentPage, Integer type) {
-        Map map = new HashMap();
-        if (type == 3) {//个人
-            List list = userMapper.sysUserCheckList(currentPage);
-            Integer integer = userMapper.sysUserCheckListNum();
-            map.put("checks", list);
-            map.put("total", integer);
-            return new Result(R.SUCCESS, map);
-        } else if (type == 4) {//企业
-            List list = userMapper.sysUserCheckList2(currentPage);
-            Integer integer = userMapper.sysUserCheckListNum2();
-            map.put("checks", list);
-            map.put("total", integer);
-            return new Result(R.SUCCESS, map);
-        }
-        return new Result(R.NET_ERROR);
+    public Result sysUserCheckList(Integer currentPage, int pageSize, VPlatformUser vPlatformUser) {
+        Example example = new Example(VPlatformUser.class);
+        String name = vPlatformUser.getName();
+        vPlatformUser.setName(null);
+        example.createCriteria().andEqualTo(vPlatformUser).andLike("name",StrKit.isBlank(name)?null:'%'+name+'%');
+        example.setOrderByClause("create_time desc");
+        PageHelper.startPage(currentPage,pageSize,true);
+        List list = userMapper.selectByExample(example);
+        return new Result(R.SUCCESS, list);
     }
 
     @Override
-    public Result sysUserCheck(String targetId, Integer type, Integer sysCheckModelType, String sUserId) {
-        VPlatformUser vPlatformUser = new VPlatformUser();
-        vPlatformUser.setId(targetId);
-        if (type == 1) {
-            vPlatformUser.setIdentifyType(sysCheckModelType == 3 ? 1 : 2);
-        } else if (type == 2) {
-            vPlatformUser.setIdentifyType(5);
-        }
+    public Result sysUserCheck(VPlatformUser vPlatformUser) {
+        userMapper.updateByPrimaryKeySelective(vPlatformUser);
+        return new Result(R.SUCCESS);
+    }
+
+    @Override
+    public Result sysUserOff(VPlatformUser vPlatformUser) {
         userMapper.updateByPrimaryKeySelective(vPlatformUser);
         return new Result(R.SUCCESS);
     }
