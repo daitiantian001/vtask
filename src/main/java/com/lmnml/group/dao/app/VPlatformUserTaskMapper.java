@@ -22,6 +22,11 @@ public interface VPlatformUserTaskMapper extends MyMapper<VPlatformUserTask> {
             "WHERE task_id=#{taskId} AND status=1")
     List<Map> findExportTask(@Param("taskId") String taskId);
 
+    @Select("SELECT ifnull(img_url,'') imgUrl,price,DATE_FORMAT(create_time,'%Y-%m-%d %H:%i') createTime,ifnull(DATE_FORMAT(end_Time,'%Y-%m-%d %H:%i'),'') endTime,ifnull(DATE_FORMAT(commit_time,'%Y-%m-%d %H:%i'),'') commitTime,ifnull(DATE_FORMAT(finish_time,'%Y-%m-%d %H:%i'),'') finishTime,ifnull(content,'') content,ifnull(category,'') category\n" +
+            "FROM v_platform_user_task\n" +
+            "WHERE task_id=#{taskId} AND status=2")
+    List<Map> exportTaskList(@Param("taskId") String taskId);
+
     @Select("SELECT vpu.photo,vpu.name,vput.content,vput.img_url imgUrl,DATE_FORMAT(vput.create_time,'%Y-%m-%d %H:%i') createTime\n" +
             "FROM v_platform_user_task vput\n" +
             "LEFT JOIN v_platform_user vpu ON vpu.id=vput.user_id\n" +

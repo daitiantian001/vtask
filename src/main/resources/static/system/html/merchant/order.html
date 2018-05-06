@@ -215,13 +215,18 @@
 	</head>
 
 	<body>
-		<div class="normal-relative">
+		<div class="normal-relative" id="order-list">
 		<div class="normal-absolute page-title">
 			<span class="page-tip-item">商家管理</span><span class="page-tip-item">订单管理</span>
 		</div>
 		<div class="normal-absolute toolbar-block">
 			<div class="normal-relative">
 				<div class="absolute-left" style="padding:5px;">
+					<div class="absolute-left" style="padding:5px;">
+						<button type="button" class="btn btn-info" v-show="currentPage!=0" @click="page(0)">首页</button>
+						<button type="button" class="btn btn-info" v-show="currentPage!=0" @click="page(-1)">上一页</button>
+						<button type="button" class="btn btn-info" @click="page(1)">下一页</button>
+					</div>
 					<!--<span class="layui-btn layui-btn-primary layui-btn-sm">批量审核</span>-->
 				</div>
 				<div class="absolute-right" style="padding:5px;">
@@ -243,7 +248,7 @@
 					</tr>
 				</thead>
 				<tbody id="data-list" class="data-tbody">
-					<tr>
+					<tr  v-for="item in items" v-cloak>
 						<td>2018-01-25 13:06:26</td>
 						<td>提现</td>
 						<td>飞腾赚客</td>
@@ -251,16 +256,6 @@
 						<td>￥500.00</td>
 						<td>
 							<span class="layui-btn layui-btn-primary layui-btn-sm" onclick="doPass();">确认提现</span>
-						</td>
-					</tr>
-					<tr>
-						<td>2018-01-25 13:06:26</td>
-						<td>微任务预支付-公众号投票 无需关注</td>
-						<td>飞腾赚客</td>
-						<td>提现中</td>
-						<td>￥100.00</td>
-						<td>
-							-
 						</td>
 					</tr>
 				</tbody>
@@ -273,5 +268,10 @@
 			</div>
 		</div>
 	</div>
+		<script type="text/javascript" src="../../js/jquery.cookie.js"></script>
+		<script src="../../js/vue/vue.min.js"></script>
+		<script type="text/javascript" src="../../js/vue/axios.js"></script>
+		<script type="text/javascript" src="../../../js/common.js"></script>
+		<script type="text/javascript" src="../../js/vue/merchant/order.js"></script>
 	</body>
 </html>

@@ -1,10 +1,7 @@
 package com.lmnml.group.service.app;
 
 import com.lmnml.group.common.model.Result;
-import com.lmnml.group.entity.app.VPlatformStep;
-import com.lmnml.group.entity.app.VPlatformTask;
-import com.lmnml.group.entity.app.VPlatformUserTask;
-import com.lmnml.group.entity.app.VSystemCategory;
+import com.lmnml.group.entity.app.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
@@ -50,9 +47,17 @@ public interface ITaskService {
 
     Result sysCategoryUpdate(VSystemCategory vSystemCategory);
 
-    Result sysTaskList(Integer currentPage);
+    Result sysTaskList(Integer currentPage, int pageSize, VPlatformTask vPlatformTask, List<Integer> status);
+
+    Result sysUserTaskList(Integer currentPage, int i, VPlatformUserTask vPlatformTask, List<Integer> status);
 
     Result sysTaskCheck(String targetId, Integer result, String sUserId);
 
     Result plaUserTaskList(String taskId, Integer currentPage, String checkType);
+
+    Result updateTask(VPlatformTask vPlatformTask);
+
+    Result updateUserTask(String taskId);
+
+    void exportTaskList(String taskId, String name, HttpServletResponse response);
 }

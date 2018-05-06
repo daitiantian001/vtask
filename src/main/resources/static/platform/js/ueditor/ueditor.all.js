@@ -14925,7 +14925,7 @@ UE.plugins['pasteplain'] = function(){
     };
 };
 
-// plugins/list.js
+// plugins/userList.js
 /**
  * 有序列表,无序列表插件
  * @file

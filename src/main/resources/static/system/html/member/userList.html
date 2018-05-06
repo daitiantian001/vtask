@@ -215,18 +215,20 @@
 	</head>
 
 	<body>
-		<div class="normal-relative">
+		<div class="normal-relative" id="user-list">
 		<div class="normal-absolute page-title">
 			<span class="page-tip-item">会员管理</span><span class="page-tip-item">会员列表</span>
 		</div>
 		<div class="normal-absolute toolbar-block">
 			<div class="normal-relative">
 				<div class="absolute-left" style="padding:5px;">
-					<!--<span class="layui-btn layui-btn-primary layui-btn-sm">批量审核</span>-->
+					<button type="button" class="btn btn-info" v-show="currentPage!=0" @click="page(0)">首页</button>
+					<button type="button" class="btn btn-info" v-show="currentPage!=0" @click="page(-1)">上一页</button>
+					<button type="button" class="btn btn-info" @click="page(1)">下一页</button>
 				</div>
 				<div class="absolute-right" style="padding:5px;">
-					<input class="normal-text" type="text" placeholder="请输入会员名称" style="margin-right:5px;"/>
-					<span class="layui-btn layui-btn-normal layui-btn-sm">搜索</span>
+					<input class="normal-text" type="text" placeholder="请输入会员名称" style="margin-right:5px;" v-model="name"/>
+					<span class="layui-btn layui-btn-normal layui-btn-sm" @click="search(name)">搜索</span>
 				</div>
 			</div>
 		</div>
@@ -243,12 +245,12 @@
 					</tr>
 				</thead>
 				<tbody id="data-list" class="data-tbody">
-					<tr>
-						<td>呵呵哒</td>
-						<td><img src="../../css/images/icon_user_photo.png" style="border-radius:50%;width:40px;height:40px;"/></td>
-						<td>16523123912</td>
-						<td>男</td>
-						<td>￥298.03</td>
+					<tr v-for="item in items">
+						<td>{{ item.name }}</td>
+						<td><img :src="item.photo" style="border-radius:50%;width:40px;height:40px;"/></td>
+						<td>{{ item.mobile}}</td>
+						<td>{{ item.sex | sexType }}</td>
+						<td>￥{{ item.account | doublePrice }}</td>
 						<td>
 							<span class="layui-btn layui-btn-normal layui-btn-sm" onclick="doBack();">查看</span>
 						</td>
@@ -263,5 +265,10 @@
 			</div>
 		</div>
 	</div>
+		<script type="text/javascript" src="../../js/jquery.cookie.js"></script>
+		<script src="../../js/vue/vue.min.js"></script>
+		<script type="text/javascript" src="../../js/vue/axios.js"></script>
+		<script type="text/javascript" src="../../../js/common.js"></script>
+		<script type="text/javascript" src="../../js/vue/member/userList.js"></script>
 	</body>
 </html>

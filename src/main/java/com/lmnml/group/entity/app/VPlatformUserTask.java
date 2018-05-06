@@ -38,8 +38,14 @@ public class VPlatformUserTask {
     private Date commitTime;
     @ApiModelProperty("审核完成时间")
     private Date finishTime;
+    @ApiModelProperty("任务结束时间")
+    private Date endTime;
     @ApiModelProperty("")
     private String id_card;
     @ApiModelProperty("审核意见")
     private String note;
+    @ApiModelProperty("任务名称")
+    private String name;
+    @ApiModelProperty("类型")
+    private String category;
 }

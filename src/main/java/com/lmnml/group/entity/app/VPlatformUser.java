@@ -65,7 +65,7 @@ public class VPlatformUser {
     private String parentId;
     @ApiModelProperty("密码")
     private String password;
-    @ApiModelProperty("权限 1.可以发布任务/可领取任务 2.不能发布任务/不能领取任务")
+    @ApiModelProperty("权限 1.可以发布任务/可领取任务 2.不能发布任务/不能领取任务 3.请求恢复权限")
     private Integer publishType;
     @ApiModelProperty("账户状态 0.未激活 1.激活 2.被禁用")
     private Integer accountStatus;

@@ -268,10 +268,7 @@
                 <td>{{ item.contactorName }}</td>
                 <td>{{ item.contactorMobile }}</td>
                 <td>
-                    <span v-show="item.publishType==1" class="layui-btn layui-btn-danger layui-btn-sm"
-                          @click="doBack(item.id,2)">封停</span>
-                    <span v-show="item.publishType==2" class="layui-btn layui-btn-info layui-btn-sm"
-                          @click="doBack(item.id,1)">解封</span>
+                    <span class="layui-btn layui-btn-primary layui-btn-sm" @click="doBack(item.id,1)">恢复权限</span>
                 </td>
             </tr>
             <tr v-for="item in items" v-cloak v-show="type==1">
@@ -282,10 +279,7 @@
                 <td>{{ item.identifyDesc }}</td>
                 <td>{{ item.identifyPhoto }}</td>
                 <td>
-                    <span v-show="item.publishType==1" class="layui-btn layui-btn-danger layui-btn-sm"
-                          @click="doBack(item.id,2)">封停</span>
-                    <span v-show="item.publishType==2" class="layui-btn layui-btn-info layui-btn-sm"
-                          @click="doBack(item.id,1)">解封</span>
+                    <span class="layui-btn layui-btn-primary layui-btn-sm" @click="doBack(item.id,1)">恢复权限</span>
                 </td>
             </tr>
             </tbody>
@@ -302,6 +296,6 @@
 <script src="../../js/vue/vue.min.js"></script>
 <script type="text/javascript" src="../../js/vue/axios.js"></script>
 <script type="text/javascript" src="../../../js/common.js"></script>
-<script type="text/javascript" src="../../js/vue/merchant/list.js"></script>
+<script type="text/javascript" src="../../js/vue/merchant/private.js"></script>
 </body>
 </html>

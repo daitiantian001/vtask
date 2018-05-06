@@ -72,6 +72,7 @@ public class SysUserController extends BaseController {
         VPlatformUser vPlatformUser= new VPlatformUser();
         vPlatformUser.setIdentifyType(sysCheckListModel.type);
         vPlatformUser.setUserType(2);//商户
+        vPlatformUser.setPublishType(sysCheckListModel.getPublishType());
         vPlatformUser.setName(sysCheckListModel.getName());
         return userService.sysUserCheckList(sysCheckListModel.getCurrentPage(),7,vPlatformUser);
     }
@@ -93,6 +94,17 @@ public class SysUserController extends BaseController {
         vPlatformUser.setIdentifyType(sysCheckModel.getType());
         return userService.sysUserCheck(vPlatformUser);
     }
+
+
+    @ApiOperation(value = "sys会员列表")
+    @PostMapping("userList")
+    public Result sysUserList(@RequestBody @Valid SysUserListModel sysUserListModel) {
+        VPlatformUser vPlatformUser= new VPlatformUser();
+        vPlatformUser.setUserType(1);//商户
+        vPlatformUser.setName(sysUserListModel.name);
+        return userService.sysUserList(sysUserListModel.getCurrentPage(),7,vPlatformUser);
+    }
+
 
     @Data
     @ApiModel("sys登录model")
@@ -136,6 +148,20 @@ public class SysUserController extends BaseController {
         private Integer type;
         @ApiModelProperty("商家名称")
         private String name;
+        @ApiModelProperty("权限类型")
+        private Integer publishType;
+    }
+
+    @Data
+    @ApiModel("sys会员列表model")
+    public static class SysUserListModel implements Serializable {
+        @ApiModelProperty("当前页")
+        @NotNull(message = "id不能为空!")
+        private Integer currentPage;
+        @ApiModelProperty("商家名称")
+        private String name;
+//        @ApiModelProperty("权限类型")
+//        private Integer publishType;
     }
 
     @Data

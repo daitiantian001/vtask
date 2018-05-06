@@ -10,6 +10,26 @@ public class ExcelJSON {
             "\"content\":\"内容\",\n" +
             "\"realName\":\"真实姓名\"\n" +
             "}";
+//    {
+//        "price":"单价",
+//            "imgUrl":"提交图片",
+//            "content":"提交内容",
+//            "createTime":"领取时间",
+//            "commitTime":"提交时间",
+//            "finishTime":"完成时间",
+//            "endTime":"任务结束时间",
+//            "category":"类型"
+//    }
+    public static final String TASK_LIST="{\n" +
+        "\"price\":\"单价\",\n" +
+        "\"imgUrl\":\"提交图片\",\n" +
+        "\"content\":\"提交内容\",\n" +
+        "\"createTime\":\"领取时间\",\n" +
+        "\"commitTime\":\"提交时间\",\n" +
+        "\"finishTime\":\"完成时间\",\n" +
+        "\"endTime\":\"任务结束时间\",\n" +
+        "\"category\":\"类型\"\n" +
+        "}";
     public static final String TEST020 = "[{\"node\":\"a0\",\n" +
             "\"name\":\"a0\",\n" +
             "\"colNum\":3,\n" +

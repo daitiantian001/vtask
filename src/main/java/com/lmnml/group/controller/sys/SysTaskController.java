@@ -2,20 +2,23 @@ package com.lmnml.group.controller.sys;
 
 import com.lmnml.group.common.model.R;
 import com.lmnml.group.common.model.Result;
+import com.lmnml.group.entity.app.VPlatformTask;
+import com.lmnml.group.entity.app.VPlatformUser;
+import com.lmnml.group.entity.app.VPlatformUserTask;
 import com.lmnml.group.entity.app.VSystemCategory;
 import com.lmnml.group.service.app.ITaskService;
 import io.swagger.annotations.*;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -45,10 +48,28 @@ public class SysTaskController {
         return taskService.sysCategoryUpdate(vSystemCategory);
     }
 
-    @ApiOperation(value = "sys任务审核列表")
+    @ApiOperation(value = "sys任务列表")
     @PostMapping("list")
     public Result sysTaskList(@RequestBody @Valid SysTaskCheckListModel sysTaskCheckListModel) {
-        return taskService.sysTaskList(sysTaskCheckListModel.getCurrentPage());
+        VPlatformTask vPlatformTask = new VPlatformTask();
+        vPlatformTask.setName(sysTaskCheckListModel.getName());
+        return taskService.sysTaskList(sysTaskCheckListModel.getCurrentPage(),7,vPlatformTask, sysTaskCheckListModel.getStatus());
+    }
+
+    @ApiOperation(value = "sys会员任务列表")
+    @PostMapping("userList")
+    public Result sysUserTaskList(@RequestBody @Valid SysTaskCheckListModel sysTaskCheckListModel) {
+        VPlatformUserTask vPlatformUser = new VPlatformUserTask();
+        vPlatformUser.setName(sysTaskCheckListModel.getName());
+        return taskService.sysUserTaskList(sysTaskCheckListModel.getCurrentPage(),7,vPlatformUser, sysTaskCheckListModel.getStatus());
+    }
+
+    @ApiOperation(value = "sys审核任务列表")
+    @PostMapping("clist")
+    public Result sysCheckTaskList(@RequestBody @Valid SysTaskCheckListModel sysTaskCheckListModel) {
+        VPlatformTask vPlatformTask = new VPlatformTask();
+        vPlatformTask.setName(sysTaskCheckListModel.getName());
+        return taskService.sysTaskList(sysTaskCheckListModel.getCurrentPage(),7,vPlatformTask,sysTaskCheckListModel.getStatus());
     }
 
     @PostMapping("taskInfo")
@@ -58,10 +79,34 @@ public class SysTaskController {
         return new Result(R.SUCCESS, map);
     }
 
+    @PostMapping("updateTask")
+    @ApiOperation(value = "sys更新任务状态")
+    public Result updateTask(@RequestBody @Valid UpTask upTask) {
+        VPlatformTask vPlatformTask = new VPlatformTask();
+        vPlatformTask.setId(upTask.getTaskId());
+        vPlatformTask.setStatus(upTask.getType());
+        if(upTask.getUpdateTime()!=null){
+            vPlatformTask.setEndTime(upTask.getUpdateTime());
+        }
+        return taskService.updateTask(vPlatformTask);
+    }
+
+    @PostMapping("updateUserTask")
+    @ApiOperation(value = "sys强制审核任务")
+    public Result updateUserTask(@RequestBody @Valid PTask pTask) {
+        return taskService.updateUserTask(pTask.getTaskId());
+    }
+
     @ApiOperation(value = "sys商户任务审核")
     @PostMapping("check")
     public Result sysTaskCheck(@RequestBody @Valid SysTaskCheck sysTaskCheck) {
         return taskService.sysTaskCheck(sysTaskCheck.getTargetId(), sysTaskCheck.getResult(), sysTaskCheck.getSUserId());
+    }
+
+    @GetMapping("export/{taskId}/{name}")
+    @ApiOperation(value = "sys强制审核任务")
+    public void exportTask(@PathVariable("taskId") String taskId,@PathVariable("name") String name, HttpServletResponse response) throws Exception {
+        taskService.exportTaskList(taskId,name,response);
     }
 
     @Data
@@ -93,11 +138,26 @@ public class SysTaskController {
     }
 
     @Data
+    @ApiModel("sys任务列表model")
+    public static class SysTaskListModel implements Serializable {
+        @ApiModelProperty("当前页")
+        @NotNull(message = "id不能为空!")
+        private Integer currentPage;
+        @ApiModelProperty("商家名称")
+        private String name;
+        @ApiModelProperty("状态 2.正在招")
+        private Integer status;
+    }
+    @Data
     @ApiModel("sys任务审核列表model")
     public static class SysTaskCheckListModel implements Serializable {
         @ApiModelProperty("当前页")
         @NotNull(message = "id不能为空!")
         private Integer currentPage;
+        @ApiModelProperty("商家名称")
+        private String name;
+        @ApiModelProperty("状态 2.正在招")
+        private List<Integer> status;
     }
 
     @Data
@@ -120,6 +180,19 @@ public class SysTaskController {
         @ApiModelProperty("任务id")
         @NotNull(message = "请输入任务id")
         private String taskId;
+    }
+
+    @Data
+    @ApiModel("plat更新任务model")
+    public static class UpTask implements Serializable {
+        @ApiModelProperty("任务id")
+        @NotNull(message = "请输入任务id")
+        private String taskId;
+        @ApiModelProperty("操作类型")
+        @NotNull(message = "类型不能为空")
+        private Integer type;
+        @ApiModelProperty("时间")
+        private Date updateTime;
     }
 
 }

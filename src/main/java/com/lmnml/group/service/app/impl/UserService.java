@@ -149,6 +149,7 @@ public class UserService implements IUserService {
                             vPlatformDealrecord.setTaskId(attach.getTargetId());
                             vPlatformDealrecord.setPayType(2);//微信;
                             vPlatformDealrecord.setStatus(1);//支出
+                            vPlatformDealrecord.setMoney(total);
                             //扣除金额
                             userMapper.updateAccount(attach.getUserId(), -total);
                             //生成记录
@@ -171,6 +172,7 @@ public class UserService implements IUserService {
                             vPlatformDealrecord.setPId(m.get("out_trade_no"));
                             vPlatformDealrecord.setPayType(2);//微信;;
                             vPlatformDealrecord.setStatus(2);//收入
+                            vPlatformDealrecord.setMoney(total);
                             //增加金额
                             userMapper.updateAccount(attach.getUserId(), total);
                             //生成记录
@@ -238,7 +240,7 @@ public class UserService implements IUserService {
                 switch (attach.getType()) {
                     case Attach.RECHARGE:
                         //TODO ; 判断金额是否相等
-                        total = Integer.parseInt(m.get("total"));
+                        total = Integer.parseInt(m.get("total"))*100;
                         vPlatformDealrecord = new VPlatformDealrecord();
                         vPlatformDealrecord.setId(StrKit.ID());
                         vPlatformDealrecord.setUserId(attach.getUserId());
@@ -249,6 +251,7 @@ public class UserService implements IUserService {
                         vPlatformDealrecord.setPId(m.get("out_trade_no"));
                         vPlatformDealrecord.setStatus(1);//支出
                         vPlatformDealrecord.setSellerId(m.get("seller_id"));
+                        vPlatformDealrecord.setMoney(total);
                         //增加金额
                         userMapper.updateAccount(attach.getUserId(), total);
                         //生成记录
@@ -266,6 +269,7 @@ public class UserService implements IUserService {
                         vPlatformDealrecord.setPayType(3);//支付宝
                         vPlatformDealrecord.setStatus(1);//支出
                         vPlatformDealrecord.setSellerId(m.get("seller_id"));
+                        vPlatformDealrecord.setMoney(total);
                         //扣除金额
                         userMapper.updateAccount(attach.getUserId(), -total);
                         //生成记录
@@ -420,5 +424,17 @@ public class UserService implements IUserService {
     public Result sysUserOff(VPlatformUser vPlatformUser) {
         userMapper.updateByPrimaryKeySelective(vPlatformUser);
         return new Result(R.SUCCESS);
+    }
+
+    @Override
+    public Result sysUserList(Integer currentPage, int i, VPlatformUser vPlatformUser) {
+        Example example = new Example(VPlatformUser.class);
+        String name = vPlatformUser.getName();
+        vPlatformUser.setName(null);
+        example.createCriteria().andEqualTo(vPlatformUser).andLike("name",StrKit.isBlank(name)?null:'%'+name+'%');
+        example.setOrderByClause("account desc");
+        PageHelper.startPage(currentPage,i,true);
+        List list = userMapper.selectByExample(example);
+        return new Result(R.SUCCESS, list);
     }
 }

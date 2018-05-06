@@ -215,18 +215,22 @@
 	</head>
 
 	<body>
-		<div class="normal-relative">
+		<div class="normal-relative" id="task_check" v-cloak>
 		<div class="normal-absolute page-title">
 			<span class="page-tip-item">任务管理</span><span class="page-tip-item">任务审核</span>
 		</div>
 		<div class="normal-absolute toolbar-block">
 			<div class="normal-relative">
-				<div class="absolute-left" style="padding:5px;">
-					<!--<span class="layui-btn layui-btn-primary layui-btn-sm">批量审核</span>-->
-				</div>
-				<div class="absolute-right" style="padding:5px;">
-					<input class="normal-text" type="text" placeholder="请输入角色名称" style="margin-right:5px;"/>
-					<span class="layui-btn layui-btn-normal layui-btn-sm">搜索</span>
+				<div class="normal-relative">
+					<div class="absolute-left" style="padding:5px;">
+						<button type="button" class="btn btn-info" v-show="currentPage!=0" @click="page(0)">首页</button>
+						<button type="button" class="btn btn-info" v-show="currentPage!=0" @click="page(-1)">上一页</button>
+						<button type="button" class="btn btn-info" @click="page(1)">下一页</button>
+					</div>
+					<div class="absolute-right" style="padding:5px;">
+						<input class="normal-text" type="text" placeholder="请输入任务名称" style="margin-right:5px;" v-model="name"/>
+						<span class="layui-btn layui-btn-normal layui-btn-sm" @click="search(name)">搜索</span>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -234,7 +238,6 @@
 			<table class="data-table">
 				<thead class="data-thead">
 					<tr>
-						<td>商家</td>
 						<td>任务名称</td>
 						<td>任务类型</td>
 						<td>数量</td>
@@ -249,22 +252,21 @@
 					</tr>
 				</thead>
 				<tbody id="data-list" class="data-tbody">
-					<tr>
-						<td>小商家</td>
-						<td>微信转发</td>
-						<td>分享</td>
-						<td>12</td>
-						<td>0.80</td>
-						<td>2018-03-22 09:21:55</td>
-						<td>12小时制</td>
-						<td>不限</td>
-						<td>1先生</td>
-						<td>13699135141</td>
-						<td>yan@163.com</td>
+					<tr v-for="item in items">
+						<td>{{ item.name }}</td>
+						<td>{{ item.category }}</td>
+						<td>{{ item.num }}</td>
+						<td>{{ item.price | doublePrice }}</td>
+						<td>{{ item.endTime  | fTime}}</td>
+						<td>{{ item.checkTime }}</td>
+						<td>{{ item.deviceType | divType }}</td>
+						<td>{{ item.contactorName }}</td>
+						<td>{{ item.contactorMobile }}</td>
+						<td>{{ item.contactorEmail }}</td>
 						<td>
-							<span class="layui-btn layui-btn-normal layui-btn-sm" onclick="detail();">查看</span>
-							<span class="layui-btn layui-btn-primary layui-btn-sm" onclick="doPass();">通过</span>
-							<span class="layui-btn layui-btn-danger layui-btn-sm" onclick="doBack();">打回</span>
+							<span class="layui-btn layui-btn-normal layui-btn-sm" @click="detail(item.id);">查看</span>
+							<span class="layui-btn layui-btn-primary layui-btn-sm" @click="doBack(item.id,2);">通过</span>
+							<span class="layui-btn layui-btn-danger layui-btn-sm" @click="doBack(item.id,5);">打回</span>
 						</td>
 					</tr>
 				</tbody>
@@ -277,5 +279,11 @@
 			</div>
 		</div>
 	</div>
+		<script type="text/javascript" src="../../js/jquery.cookie.js"></script>
+		<script src="../../js/vue/vue.min.js"></script>
+		<script type="text/javascript" src="../../js/vue/axios.js"></script>
+		<script type="text/javascript" src="../../../js/common.js"></script>
+		<script type="text/javascript" src="../../js/vue/task/check.js"></script>
+	</body>
 	</body>
 </html>

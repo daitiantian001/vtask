@@ -19,6 +19,7 @@ public class VPlatformTask {
     private Integer price;
     private Date endTime;
     private Integer checkTime;
+    //0不限 1安卓 2ios
     private Integer deviceType;
     private Integer submitType;
     private String textExplain;

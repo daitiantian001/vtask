@@ -9,10 +9,7 @@ import com.lmnml.group.common.model.R;
 import com.lmnml.group.common.model.Result;
 import com.lmnml.group.dao.app.*;
 import com.lmnml.group.entity.MyPageInfo;
-import com.lmnml.group.entity.app.VPlatformStep;
-import com.lmnml.group.entity.app.VPlatformTask;
-import com.lmnml.group.entity.app.VPlatformUserTask;
-import com.lmnml.group.entity.app.VSystemCategory;
+import com.lmnml.group.entity.app.*;
 import com.lmnml.group.service.app.ITaskService;
 import com.lmnml.group.util.StrKit;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +43,10 @@ public class TaskService implements ITaskService {
 
     @Autowired
     private VPlatformUserTaskMapper vPlatformUserTaskMapper;
+    @Autowired
+    private VPlatFormUserMapper userMapper;
+    @Autowired
+    private VPlatformDealrecordMapper vPlatformDealrecordMapper;
 
     @Override
     public List<VSystemCategory> categoty() {
@@ -191,10 +192,10 @@ public class TaskService implements ITaskService {
         example.createCriteria().andEqualTo("userId", vPlatformUserTask.getUserId()).andEqualTo("status", vPlatformUserTask.getStatus());
         List userTasks = vPlatformUserTaskMapper.selectByExample(example);
         PageInfo pageInfo = new PageInfo(userTasks);
-        MyPageInfo myPageInfo = new MyPageInfo(currentPage , Integer.parseInt(pageInfo.getTotal() + ""));
+        MyPageInfo myPageInfo = new MyPageInfo(currentPage, Integer.parseInt(pageInfo.getTotal() + ""));
         Map map = new HashMap();
-        map.put("pageInfo",myPageInfo);
-        map.put("userTasks",userTasks);
+        map.put("pageInfo", myPageInfo);
+        map.put("userTasks", userTasks);
         return new Result(R.SUCCESS, myPageInfo);
     }
 
@@ -212,14 +213,14 @@ public class TaskService implements ITaskService {
     public void delTask(String taskId) {
 
         Integer taskStatus = vPlatformTaskMapper.findTaskStatus(taskId);
-        if(taskStatus==0){
+        if (taskStatus == 0) {
             VPlatformTask vPlatformTask = new VPlatformTask();
             vPlatformTask.setId(taskId);
             vPlatformTaskMapper.delete(vPlatformTask);
-            VPlatformStep vPlatformStep=new VPlatformStep();
+            VPlatformStep vPlatformStep = new VPlatformStep();
             vPlatformStep.setTaskId(taskId);
             vPlatformStepMapper.delete(vPlatformStep);
-        }else{
+        } else {
             throw new MyTestException("订单已经支付,不能删除");
         }
     }
@@ -227,16 +228,16 @@ public class TaskService implements ITaskService {
     @Override
     public void exportTask(String taskId, String userId, HttpServletResponse response) throws Exception {
         //查询数据
-        List<Map> maps=vPlatformUserTaskMapper.findExportTask(taskId);
-        ExcelUtil.export("用户任务数据导出", ExcelJSON.USER_TASK,maps,response);
+        List<Map> maps = vPlatformUserTaskMapper.findExportTask(taskId);
+        ExcelUtil.export("用户任务数据导出", ExcelJSON.USER_TASK, maps, response);
     }
 
     @Override
     @Transactional
     public Result sysCategoryAdd(VSystemCategory vSystemCategory) {
         //查询
-        VSystemCategory v= (VSystemCategory) vSystemCategoryMapper.selectOne(vSystemCategory);
-        if(v!=null){
+        VSystemCategory v = (VSystemCategory) vSystemCategoryMapper.selectOne(vSystemCategory);
+        if (v != null) {
             return new Result("名称重复!");
         }
         vSystemCategory.setId(StrKit.ID());
@@ -248,8 +249,8 @@ public class TaskService implements ITaskService {
     @Override
     @Transactional
     public Result sysCategoryUpdate(VSystemCategory vSystemCategory) {
-        List<String> names=vSystemCategoryMapper.findName(vSystemCategory.getName());
-        if(names.contains(vSystemCategory.getName())){
+        List<String> names = vSystemCategoryMapper.findName(vSystemCategory.getName());
+        if (names.contains(vSystemCategory.getName())) {
             return new Result("名称已经存在,换个名称");
         }
         vSystemCategoryMapper.insertSelective(vSystemCategory);
@@ -257,24 +258,36 @@ public class TaskService implements ITaskService {
     }
 
     @Override
-    public Result sysTaskList(Integer currentPage) {
+    public Result sysTaskList(Integer currentPage, int i, VPlatformTask vPlatformTask, List<Integer> status) {
+        Example example = new Example(VPlatformTask.class);
+        String name = vPlatformTask.getName();
+        vPlatformTask.setName(null);
+        example.createCriteria().andEqualTo(vPlatformTask).andLike("name", StrKit.isBlank(name) ? null : '%' + name + '%').andIn("status", status);
+        example.setOrderByClause("create_time desc");
+        PageHelper.startPage(currentPage, i);
+        List list = vPlatformTaskMapper.selectByExample(example);
+        return new Result(R.SUCCESS, list);
+    }
 
-        Map map = new HashMap();
-        Integer total=vPlatformTaskMapper.total();
-        List<VPlatformTask> vPlatformTasks = vPlatformTaskMapper.findTasks(currentPage);
-        MyPageInfo myPageInfo = new MyPageInfo(currentPage,total);
-        map.put("pageInfo",myPageInfo);
-        map.put("tasks",vPlatformTasks);
-        return new Result(R.SUCCESS,map);
+    @Override
+    public Result sysUserTaskList(Integer currentPage, int i, VPlatformUserTask vPlatformTask, List<Integer> status) {
+        Example example = new Example(VPlatformUserTask.class);
+        String name = vPlatformTask.getName();
+        vPlatformTask.setName(null);
+        example.createCriteria().andEqualTo(vPlatformTask).andLike("name", StrKit.isBlank(name) ? null : '%' + name + '%').andIn("status", status);
+        example.setOrderByClause("commit_time asc");
+        PageHelper.startPage(currentPage, i);
+        List list = vPlatformUserTaskMapper.selectByExample(example);
+        return new Result(R.SUCCESS, list);
     }
 
     @Override
     public Result sysTaskCheck(String targetId, Integer result, String sUserId) {
-        VPlatformTask vPlatformTask =new VPlatformTask();
+        VPlatformTask vPlatformTask = new VPlatformTask();
         vPlatformTask.setId(targetId);
-        if(result==1){
+        if (result == 1) {
             vPlatformTask.setStatus(2);
-        }else if(result==2){
+        } else if (result == 2) {
             vPlatformTask.setStatus(5);
         }
         vPlatformTaskMapper.updateByPrimaryKeySelective(vPlatformTask);
@@ -283,11 +296,66 @@ public class TaskService implements ITaskService {
 
     @Override
     public Result plaUserTaskList(String taskId, Integer currentPage, String checkType) {
-        List<Map> checks=vPlatformUserTaskMapper.findCheckListByTaskId(taskId,currentPage,checkType);
-       Integer total= vPlatformUserTaskMapper.findCheckListTotalByTaskId(taskId,checkType);
-       Map map = new HashMap();
-       map.put("checks",checks);
-       map.put("total",total);
-        return new Result(R.SUCCESS,map);
+        List<Map> checks = vPlatformUserTaskMapper.findCheckListByTaskId(taskId, currentPage, checkType);
+        Integer total = vPlatformUserTaskMapper.findCheckListTotalByTaskId(taskId, checkType);
+        Map map = new HashMap();
+        map.put("checks", checks);
+        map.put("total", total);
+        return new Result(R.SUCCESS, map);
+    }
+
+    @Override
+    public Result updateTask(VPlatformTask vPlatformTask) {
+        vPlatformTaskMapper.updateByPrimaryKeySelective(vPlatformTask);
+        return new Result(R.SUCCESS);
+    }
+
+    @Override
+    @Transactional
+    public Result updateUserTask(String taskId) {
+        //查询用户提交任务
+        VPlatformUserTask vPlatformUserTask = (VPlatformUserTask) vPlatformUserTaskMapper.selectByPrimaryKey(taskId);
+        if(vPlatformUserTask.getStatus()==2){
+            return new Result("该任务已经审核过!");
+        }
+        //查询任务
+        VPlatformTask vPlatformTask = (VPlatformTask) vPlatformTaskMapper.selectByPrimaryKey(vPlatformUserTask.getTaskId());
+        //加钱
+        VPlatformDealrecord vPlatformDealrecord = new VPlatformDealrecord();
+        vPlatformDealrecord.setId(StrKit.ID());
+        vPlatformDealrecord.setUserId(vPlatformUserTask.getUserId());
+        vPlatformDealrecord.setCreateTime(new Date());
+        vPlatformDealrecord.setType(4);//微任务佣金
+        vPlatformDealrecord.setTaskId(vPlatformUserTask.getTaskId());
+        vPlatformDealrecord.setPayType(1);//账户余额;
+        vPlatformDealrecord.setStatus(2);//收人
+        vPlatformDealrecord.setMoney(vPlatformTask.getPrice());
+        //增加金额
+        userMapper.updateAccount(vPlatformUserTask.getUserId(), +vPlatformUserTask.getPrice());
+        //修改状态已完成
+        vPlatformUserTask.setStatus(2);
+        vPlatformUserTaskMapper.updateByPrimaryKeySelective(vPlatformUserTask);
+        //生成记录
+        vPlatformDealrecordMapper.insertSelective(vPlatformDealrecord);
+        //提交次数+1
+        vPlatformTask.setCheckTime(vPlatformTask.getCheckTime()+1);
+        vPlatformTaskMapper.updateByPrimaryKeySelective(vPlatformTask);
+        return new Result(R.SUCCESS);
+    }
+
+    @Override
+    public void exportTaskList(String taskId,String name,HttpServletResponse response) {
+        List<Map> list =vPlatformUserTaskMapper.exportTaskList(taskId);
+        list.forEach(k->{
+            k.get("imgUrl").toString().replaceAll(",","\r\n");
+
+            System.out.println();
+        });
+
+        try {
+            ExcelUtil.export(name,ExcelJSON.TASK_LIST,list,response);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -48,4 +48,6 @@ public interface IUserService {
     Result sysUserOff(VPlatformUser vPlatformUser);
 
     Result sysUserCheck(VPlatformUser vPlatformUser);
+
+    Result sysUserList(Integer currentPage, int i, VPlatformUser vPlatformUser);
 }
