@@ -377,12 +377,13 @@ public class UserService implements IUserService {
     public Result rechargeAccount(String userId, Integer total, Integer type, String ip, HttpServletResponse response) throws Exception {
         Map result = new HashMap();
         String id = StrKit.ID();
+//        ip="39.106.148.195";
         String attach = JsonUtil.toJson(new Attach(id, userId, Attach.RECHARGE));//附带信息 targetId,userId
         //充值
         switch (type) {
             case 2:
                 //微信支付
-                String code = PayUtil.smPay(WxPay.smPay("赚客-微任务微信支付", id, total, attach, ip, "WX_RECHARGE"));
+                String code = PayUtil.smPay(WxPay.smPay("微信支付", id, total, attach, ip,"10001"));
                 result.put("payType", 2);
                 result.put("payInfo", code);
                 return new Result(R.SUCCESS, result);

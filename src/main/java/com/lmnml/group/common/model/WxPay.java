@@ -69,7 +69,7 @@ public class WxPay {
         this();
         this.trade_type=tradeType;
         this.body=body;
-        this.notify_url=notify_url+url;
+        this.notify_url+=url;
         this.out_trade_no = out_trade_no;
         this.total_fee = total_fee;
         this.spbill_create_ip = spbill_create_ip;

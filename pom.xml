@@ -5,7 +5,7 @@
 
 	<groupId>com.lmnml.group</groupId>
 	<artifactId>vtask</artifactId>
-	<version>2.0</version>
+	<version>3.0</version>
 	<packaging>jar</packaging>
 
 	<name>vtask</name>
@@ -48,9 +48,9 @@
 		</dependency>
 		<!--pagehelper-->
 		<dependency>
-		<groupId>com.github.pagehelper</groupId>
-		<artifactId>pagehelper-spring-boot-starter</artifactId>
-		<version>1.2.1</version>
+			<groupId>com.github.pagehelper</groupId>
+			<artifactId>pagehelper-spring-boot-starter</artifactId>
+			<version>1.2.1</version>
 		</dependency>
 		<!--简写bean-->
 		<dependency>
