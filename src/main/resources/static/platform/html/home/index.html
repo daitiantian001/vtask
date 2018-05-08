@@ -65,7 +65,7 @@
 			<img id="top-photo" class="top-photo" src="//iconfont.alicdn.com/t/1493123647101.png@200h_200w.jpg"/>
 			<div class="publish-btn" onclick="javascript:window.location.href='publish.html'">立即发布</div>
 			<div class="top-win-block" style="display:none;">
-				<div id="nick-name" class="nick-name">小米商城</div>
+				<div id="nick-name" class="nick-name">赚客商户</div>
 				<div class="win-menu-item" url="merchant">商家信息</div>
 				<div class="win-menu-item" url="logout">退出</div>
 			</div>
@@ -94,16 +94,9 @@
 				</div>
 			</div>
 			<div class="page-block">
-				<div class="page-num-btn"><span>上一页</span></div>
-				<div class="page-num-btn active"><span>1</span></div>
-				<div class="page-num-btn"><span>2</span></div>
-				<div class="page-num-btn"><span>3</span></div>
-				<div class="page-num-btn"><span>4</span></div>
-				<div class="page-num-btn"><span>25</span></div>
-				<div class="page-num-point">…</div>
-				<div class="page-num-btn"><span>下一页</span></div>
-				<div class="page-num-btn"><input type="text"/></div>
-				<div class="page-num-btn"><span>跳转</span></div>
+				<ul id="page"></ul>
+				<!--<div class="page-num-btn" onclick="pageUp()"><span>上一页</span></div>-->
+				<!--<div class="page-num-btn" onclick="pageDown()"><span>下一页</span></div>-->
 			</div>
 		</div>
 	</div>
@@ -116,9 +109,40 @@
 		</div>
 		<div class="page-footer-text">粤ICP备14067646号-1  口袋兼职 版权所有Copyright © 2018 kdjz.com, All Rights Reserved</div>
 	</div>
+<input hidden id="cp" value="0">
+<input hidden id="cs" value="2">
 </body>
 <script type="text/javascript">
     const userInfo=JSON.parse($.cookie("userInfo"));
+    function pageUp(){
+       var cpage=parseInt($("#cp").val());
+       var cs=parseInt($("#cs").val());
+       	var s=parseInt($(".menu-tab-item.active").attr('url'));
+       	console(cpage,cs,s);
+       	if(cs!=s){
+       	    $("#cp").val(0)
+            $("#cs").val(s);
+		}
+        console(cpage,cs,s);
+        if(cpage=0){
+            loadTask(s,0);
+            console(cpage,cs,s);
+        }else{
+            $("#cp").val(cpage-1);
+            loadTask(s,cpage-1);
+        }
+    }
+    function pageDown() {
+       var s=parseInt($(".menu-tab-item.active").attr('url'));
+        var cpage=parseInt($("#cp").val());
+        var cs=parseInt($("#cs").val());
+        if(cs!=s){
+            $("#cp").val(0)
+            $("#cs").val(s);
+        }
+        $("#cp").val(cpage+1);
+        loadTask(s,cpage+1)
+    }
 function loadTask(status,currentPage){
 	$.ajax({
 		type: "POST",

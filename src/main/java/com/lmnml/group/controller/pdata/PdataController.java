@@ -108,7 +108,7 @@ public class PdataController extends BaseController {
         vPlatformUser.setState(0);
         vPlatformUser.setUserType(2);
         userService.insertUser(vPlatformUser);
-        return new Result(R.SUCCESS);
+        return new Result(R.SUCCESS,vPlatformUser);
     }
 
 

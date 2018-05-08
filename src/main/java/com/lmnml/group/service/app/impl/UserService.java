@@ -377,7 +377,7 @@ public class UserService implements IUserService {
     public Result rechargeAccount(String userId, Integer total, Integer type, String ip, HttpServletResponse response) throws Exception {
         Map result = new HashMap();
         String id = StrKit.ID();
-//        ip="39.106.148.195";
+        ip="39.106.148.195";
         String attach = JsonUtil.toJson(new Attach(id, userId, Attach.RECHARGE));//附带信息 targetId,userId
         //充值
         switch (type) {

@@ -1,122 +1,155 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <title></title>
-    <meta charset="UTF-8"/>
-    <meta http-equiv="pragma" content="no-cache">
-    <meta http-equiv="cache-control" content="no-cache">
-    <meta http-equiv="expires" content="0">
-    <meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
-    <meta http-equiv="description" content="This is my page">
-    <link rel="stylesheet" type="text/css" href="../../css/basic.css"/>
-    <link rel="stylesheet" type="text/css" href="../../css/loading.css"/>
-    <link rel="stylesheet" type="text/css" href="../../js/bootstrap/css/bootstrap-datetimepicker.css"/>
-    <link rel="stylesheet" type="text/css" href="../../js/select/bootstrap.css"/>
-    <link rel="stylesheet" type="text/css" href="../../js/select/bootstrap-select.css"/>
+	<title></title>
+	<meta charset="UTF-8"/>
+	<meta http-equiv="pragma" content="no-cache">
+	<meta http-equiv="cache-control" content="no-cache">
+	<meta http-equiv="expires" content="0">    
+	<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+	<meta http-equiv="description" content="This is my page">
+	<link rel="stylesheet" type="text/css" href="../../css/basic.css"/>
+	<link rel="stylesheet" type="text/css" href="../../css/loading.css"/>
+	<link rel="stylesheet" type="text/css" href="../../js/bootstrap/css/bootstrap-datetimepicker.css"/>
+	<link rel="stylesheet" type="text/css" href="../../js/select/bootstrap.css"/>
+	<link rel="stylesheet" type="text/css" href="../../js/select/bootstrap-select.css"/>
+	
+	<script type="text/javascript" src="../../js/jquery-1.11.1.js"></script>
+	<script type="text/javascript" src="../../js/basic.js"></script>
+	<script type="text/javascript" src="../../js/bootstrap/js/bootstrap-datetimepicker.js"></script>
+	<script type="text/javascript" src="../../js/select/bootstrap.min.js"></script>
+	<script type="text/javascript" src="../../js/select/bootstrap-select.js"></script>
+	
+	<link rel="stylesheet" type="text/css" href="../../js/layer/css/layui.css"/>
+	<script type="text/javascript" src="../../js/layer/layui.js"></script>
 
-    <script type="text/javascript" src="../../js/jquery-1.11.1.js"></script>
-    <script type="text/javascript" src="../../js/jquery.cookie.js"></script>
-    <script type="text/javascript" src="../../js/basic.js"></script>
-    <script type="text/javascript" src="../../js/bootstrap/js/bootstrap-datetimepicker.js"></script>
-    <script type="text/javascript" src="../../js/select/bootstrap.min.js"></script>
-    <script type="text/javascript" src="../../js/select/bootstrap-select.js"></script>
+	<link rel="stylesheet" type="text/css" href="../../../js/sweetalert.min.css"/>
+	<script src="../../../js/sweetalert.min.js"></script>
 
-    <link rel="stylesheet" type="text/css" href="../../js/layer/css/layui.css"/>
-    <script type="text/javascript" src="../../js/layer/layui.js"></script>
-    <script type="text/javascript" src="../../../js/common.js"></script>
-
-    <link rel="stylesheet" type="text/css" href="../../js/ztree/css/zTreeStyle/zTreeStyle.css"/>
-    <script type="text/javascript" src="../../js/ztree/js/jquery.ztree.core.js"></script>
-    <script type="text/javascript">
-        layui.use('layer', function () {
-            var layer = layui.layer;
-        });
-        $(document).ready(function () {
-            $(".win-menu-item").click(function () {
-                window.location.href = "platform/" + $(this).attr("url") + ".do";
-            });
-
-            $(".top-photo").click(function () {
-                $(".top-win-block").fadeIn(200);
-                $("body").bind("click", function (event) {
-                    var e = e || window.event;
-                    var elem = e.target || e.srcElement;
-                    while (elem) {
-                        if (elem.className == "top-win-block" || elem.className == "top-photo") {
-                            return;
-                        }
-                        elem = elem.parentNode;
-                    }
-                    $("body").unbind("click");
-                    $(".top-win-block").fadeOut(200);
-                });
-            });
-        });
-    </script>
+	<link rel="stylesheet" type="text/css" href="../../js/ztree/css/zTreeStyle/zTreeStyle.css"/>
+	<script type="text/javascript" src="../../js/ztree/js/jquery.ztree.core.js"></script>
+	<script src="../../../js/jquery.qrcode.min.js"></script>
+	<script src="../../../js/common.js"></script>
+	<script type="text/javascript" src="../../js/jquery.cookie.js"></script>
+	<script type="text/javascript">
+	layui.use('layer', function(){
+		var layer = layui.layer;
+	});
+	$(document).ready(function(){
+		$(".win-menu-item").click(function(){
+			window.location.href = "platform/"+$(this).attr("url")+".do";
+		});
+		
+		$(".top-photo").click(function(){
+			$(".top-win-block").fadeIn(200);
+			$("body").bind("click", function(event){
+				var e = e || window.event; 
+				var elem = e.target || e.srcElement; 
+				while (elem) {
+					if (elem.className == "top-win-block" || elem.className == "top-photo") {
+						return; 
+					}
+					elem = elem.parentNode; 
+				}
+				$("body").unbind("click");
+				$(".top-win-block").fadeOut(200);
+			});
+		});
+	});
+	</script>
 </head>
 <body>
-<div class="top-bar">
-    <div class="top-bar-block">
-        <img class="top-logo" src="../../css/images/icon_platform_logo.png"/>
-        <div class="top-menus">
-            <div id="task-menu" class="top-menu-bar" url="task" onclick="javascript:window.location.href='index.html'">
-                微任务
-            </div>
-            <div id="purse-menu" class="top-menu-bar" url="purse"
-                 onclick="javascript:window.location.href='purse.html'">我的钱包
-            </div>
-        </div>
-        <img id="top-photo" class="top-photo" src="//iconfont.alicdn.com/t/1493123647101.png@200h_200w.jpg"/>
-        <div class="publish-btn" onclick="javascript:window.location.href='publish.html'">立即发布</div>
-        <div class="top-win-block" style="display:none;">
-            <div id="nick-name" class="nick-name">小米商城</div>
-            <div class="win-menu-item" url="merchant">商家信息</div>
-            <div class="win-menu-item" url="logout">退出</div>
-        </div>
-    </div>
-</div>
-<div class="container-block">
-    <div class="container-bg" style="padding:20px;">
-        <div class="page-color-title">钱包充值</div>
-        <div class="tip-info-item">1、钱包功能仅支持支付工资之用，不得用于洗钱、套现、虚假交易等禁止行为。</div>
-        <div class="tip-info-item">2、对于用户利用钱包进行恶意充值提现、洗钱、套现等用途，口袋兼职将扣留充值金额一个月，情节严重者，将会报警处理。</div>
-        <div class="tip-info-item">3、使用钱包充值即默认遵守以上使用条款。</div>
-        <div class="charge-form">
-            <div class="charge-form-title">充值金额</div>
-            <div class="charge-form-value"><input type="text" value="1"/></div>
-        </div>
-        <div class="pay-type-title">请选择支付方式：</div>
-        <div class="pay-type-item">
-            <input name="pay-type" type="radio" checked="checked"/>
-            <img src="../../css/images/icon_pay_zbf.png"/>
-        </div>
-        <div class="pay-type-item">
-            <input name="pay-type" type="radio"/>
-            <img src="../../css/images/icon_pay_wx.png"/>
-        </div>
-        <div style="width:240px;padding:20px 0;">
-            <div class="submit-btn">立即支付</div>
-        </div>
-    </div>
-</div>
-<div class="page-footer">
-    <div class="page-footer-link">
-        <span>服务协议</span>
-        <!--<span>在线客服</span>
-        <span>意见反馈</span>-->
-        <span>服务热线 : 020-61789961 ( 9:30-18:00 )</span>
-    </div>
-    <div class="page-footer-text">粤ICP备14067646号-1 口袋兼职 版权所有Copyright © 2018 kdjz.com, All Rights Reserved</div>
-</div>
+	<div class="top-bar">
+		<div class="top-bar-block">
+			<img class="top-logo" src="../../css/images/icon_platform_logo.png"/>
+			<div class="top-menus">
+				<div id="task-menu" class="top-menu-bar" url="task" onclick="javascript:window.location.href='index.html'">微任务</div>
+				<div id="purse-menu" class="top-menu-bar" url="purse" onclick="javascript:window.location.href='purse.html'">我的钱包</div>
+			</div>
+			<img class="top-photo" src="//iconfont.alicdn.com/t/1493123647101.png@200h_200w.jpg"/>
+			<div class="publish-btn">立即发布</div>
+			<div class="top-win-block" style="display:none;">
+				<div class="nick-name">赚客商户</div>
+				<div class="win-menu-item" url="merchant">商家信息</div>
+				<div class="win-menu-item" url="logout">退出</div>
+			</div>
+		</div>
+	</div>
+	<div class="container-block">
+		<div class="container-bg" style="padding:20px;">
+			<div class="page-color-title">钱包充值</div>
+			<div class="tip-info-item">1、钱包功能仅支持支付工资之用，不得用于洗钱、套现、虚假交易等禁止行为。</div>
+			<div class="tip-info-item">2、对于用户利用钱包进行恶意充值提现、洗钱、套现等用途，口袋兼职将扣留充值金额一个月，情节严重者，将会报警处理。</div>
+			<div class="tip-info-item">3、使用钱包充值即默认遵守以上使用条款。</div>
+			<div class="charge-form">
+				<div class="charge-form-title">充值金额</div>
+				<div class="charge-form-value"><input id="pay-total" type="text" value="1"/></div>
+			</div>
+			<div class="pay-type-title">请选择支付方式：</div>
+			<div class="pay-type-item" id="wrap">
+				<input name="pay-type" type="radio" checked="checked" value="3"/>
+				<img src="../../css/images/icon_pay_zbf.png"/>
+			</div>
+			<div class="pay-type-item">
+				<input name="pay-type" type="radio" value="2"/>
+				<img src="../../css/images/icon_pay_wx.png"/>
+			</div>
+			<div style="width:240px;padding:20px 0;">
+				<div class="submit-btn" onclick="wxPay();">立即支付</div>
+			</div>
+		</div>
+	</div>
+	<div class="page-footer">
+		<div class="page-footer-link">
+			<span>服务协议</span>
+			<!--<span>在线客服</span>
+			<span>意见反馈</span>-->
+			<span>服务热线 : 020-61789961 ( 9:30-18:00 )</span>
+		</div>
+		<div class="page-footer-text">粤ICP备14067646号-1  口袋兼职 版权所有Copyright © 2018 kdjz.com, All Rights Reserved</div>
+	</div>
 </body>
 <script type="text/javascript">
+    function wxPay(){
+        var val = $('.pay-type-item input[name="pay-type"]:checked ').val();
+        $.ajax({
+            type: "POST",
+            url:url_set.urlHead+'pdata/account/recharge',
+            data:JSON.stringify({
+                userId: userInfo.id,
+                type: val,
+                total: $("#pay-total").val()*100
+            }),
+            dataType: "json",
+            contentType:"application/json;charset=utf-8",
+            async: false,
+            traditional: true,
+            success: function(data){
+                if(data.result==1){
+                    var code=data.data.payInfo;
+                    var imageUrl=val==2?'../../css/images/icon_pay_wx_win.jpg':'../../css/images/icon_pay_zbf.png';
+                    swal({
+						title:'',
+                        imageUrl:imageUrl,
+                        text: "<div id='aaa'></div>",
+                        html: true
+                	});
+                    $("#aaa").qrcode({width:160,height:160,text:code});
+                }else{
+                    layer.msg(data.exception);
+                }
+            }
+
+        })
+
+
+    }
+
     const userInfo = JSON.parse($.cookie("userInfo"));
 
-    $(document).ready(function () {
-
-        $("#nick-name").html(userInfo.name);
-        $("#top-photo").attr('src', userInfo.photo);
-
-    });
+$(document).ready(function(){
+    $("#nick-name").html(userInfo.name);
+    $("#top-photo").attr('src', userInfo.photo);
+});
 </script>
 </html>
