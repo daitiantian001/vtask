@@ -44,7 +44,7 @@ public class PdataAccount {
     }
 
     @PostMapping("recharge")
-    @ApiOperation(value = "CHECK plat充值")
+    @ApiOperation(value = "plat充值")
     public Result rechargeAccount(@RequestBody @Valid RechargeModel rechargeModel, HttpServletRequest request, HttpServletResponse response) throws Exception {
         String ip=IpUtil.getIp(request);
         return userService.rechargeAccount(rechargeModel.getUserId(),rechargeModel.getTotal(),rechargeModel.getType(),ip,response);

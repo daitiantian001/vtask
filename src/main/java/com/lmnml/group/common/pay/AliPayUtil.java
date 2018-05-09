@@ -4,16 +4,20 @@ import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
 import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.domain.AlipayTradeAppPayModel;
+import com.alipay.api.domain.AlipayTradeCreateModel;
+import com.alipay.api.domain.ExtendParams;
 import com.alipay.api.internal.util.AlipaySignature;
 import com.alipay.api.request.AlipayTradeAppPayRequest;
 import com.alipay.api.request.AlipayTradePrecreateRequest;
 import com.alipay.api.response.AlipayTradeAppPayResponse;
 import com.alipay.api.response.AlipayTradePrecreateResponse;
 import com.lmnml.group.common.model.AliPay;
+import com.lmnml.group.common.model.Attach;
 import com.lmnml.group.util.JsonUtil;
 import com.lmnml.group.util.StrKit;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -98,23 +102,22 @@ public class AliPayUtil {
     public static String smPay(AliPay aliPay) {
         AlipayTradePrecreateRequest request = new AlipayTradePrecreateRequest();
         AlipayTradeAppPayModel model = new AlipayTradeAppPayModel();
-//        model.setBody(aliPay.getBody());
+//        AlipayTradeCreateModel model = new AlipayTradeCreateModel();
+        model.setBody(aliPay.getAttach());
         model.setSubject(aliPay.getBody());
         model.setTimeoutExpress("30m");
         model.setOutTradeNo(aliPay.getId());
         model.setStoreId(aliPay.getStoreId());
         model.setTotalAmount(StrKit.addPoint(aliPay.getTotal() + ""));
-//        model.setProductCode("QUICK_MSECURITY_PAY");
-        String passbackParams = URLEncoder.encode(aliPay.getAttach());
-        model.setPassbackParams(passbackParams);
-        request.setBizModel(model);
-        request.setNotifyUrl(NOTIFY_URL+ Ali_SM_PAY );
+        System.out.println("阿里附加数据"+aliPay.getAttach());
         try {
-            //这里和普通的接口调用不同，使用的是sdkExecute
+//            model.setPassbackParams(URLEncoder.encode(aliPay.getAttach(),"UTF-8"));
+            request.setBizModel(model);
+            request.setNotifyUrl(NOTIFY_URL+ Ali_SM_PAY );
             AlipayTradePrecreateResponse execute= alipayClient.execute(request);
             String qrCode=execute.getQrCode();
             return execute.getQrCode();
-        } catch (AlipayApiException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
@@ -138,7 +141,7 @@ public class AliPayUtil {
     public static boolean verify(Map<String, String> params) {
         boolean sign = false;
         try {
-            sign = AlipaySignature.rsaCheckV1(params, ALIPAY_PUBLIC_KEY, "utf-8", "RSA");
+            sign = AlipaySignature.rsaCheckV1(params, ZFB_PUBLIC_KEY, "utf-8", "RSA2");
         } catch (AlipayApiException e) {
             e.printStackTrace();
         }

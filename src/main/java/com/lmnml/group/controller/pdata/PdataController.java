@@ -1,5 +1,6 @@
 package com.lmnml.group.controller.pdata;
 
+import com.lmnml.group.common.model.Icon;
 import com.lmnml.group.common.model.R;
 import com.lmnml.group.common.model.Result;
 import com.lmnml.group.controller.BaseController;
@@ -23,6 +24,7 @@ import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Random;
 
 /**
  * Created by daitian on 2018/4/16.
@@ -90,9 +92,9 @@ public class PdataController extends BaseController {
         }
         vPlatformUser = new VPlatformUser();
         vPlatformUser.setId(StrKit.ID());
-        vPlatformUser.setName("赚客商户_" + platUserRegister.getMobile());
+        vPlatformUser.setName("商户_" + platUserRegister.getMobile());
         vPlatformUser.setMobile(platUserRegister.getMobile());
-        vPlatformUser.setPhoto("http://yuejinimg.oss-cn-beijing.aliyuncs.com/app_icon_default_photo.png");
+        vPlatformUser.setPhoto("http://feitengtask.oss-cn-beijing.aliyuncs.com/"+ Icon.getIcon()+"jpg");
         vPlatformUser.setBirthday(new Date());
         vPlatformUser.setIdentifyType(0);
         vPlatformUser.setSex(0);

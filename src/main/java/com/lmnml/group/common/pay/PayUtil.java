@@ -38,6 +38,7 @@ public class PayUtil {
     private static final String SCRKEY = "5e39e1b3333c3f63188c447137184ab5";
     public static final String MCH_ID = "1500654521";
     public static final String NOTIFY_URL = "http://lmnml.com/openApi/notify/";
+//    public static final String NOTIFY_URL = "http://just2do.picp.io/openApi/notify/";
     public static final String WX_JS_PAY = "wx";
     public static final String WX_JS_2_PAY = "wx2";
     public static final String WX_SM_PAY = "wx";

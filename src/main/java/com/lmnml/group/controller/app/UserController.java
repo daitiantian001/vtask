@@ -1,5 +1,6 @@
 package com.lmnml.group.controller.app;
 
+import com.lmnml.group.common.model.Icon;
 import com.lmnml.group.common.model.R;
 import com.lmnml.group.common.model.Result;
 import com.lmnml.group.controller.BaseController;
@@ -83,7 +84,7 @@ public class UserController extends BaseController {
         vPlatformUser.setId(StrKit.ID());
         vPlatformUser.setName("赚客_" + userRegister.getMobile());
         vPlatformUser.setMobile(userRegister.getMobile());
-        vPlatformUser.setPhoto("http://yuejinimg.oss-cn-beijing.aliyuncs.com/app_icon_default_photo.png");
+        vPlatformUser.setPhoto("http://feitengtask.oss-cn-beijing.aliyuncs.com/"+ Icon.getIcon()+"jpg");
         vPlatformUser.setBirthday(new Date());
         vPlatformUser.setIdentifyType(0);
         vPlatformUser.setSex(0);

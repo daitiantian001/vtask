@@ -33,7 +33,7 @@ public interface IUserService {
 
     Result payTask(String userId, String taskId, Integer type, String ip, String productId) throws Exception;
 
-    void wxPay(Map<String, String> m, HttpServletRequest request, HttpServletResponse resp);
+    void wxPay(Map<String, String> m);
 
     Result rechargeAccount(String userId, Integer total, Integer type, String ip, HttpServletResponse response) throws Exception;
 
@@ -41,7 +41,7 @@ public interface IUserService {
 
     Result findSysList(String id);
 
-    void aliPay(Map<String, String> m, HttpServletRequest request, HttpServletResponse resp);
+    String aliPay(Map<String, String> m, HttpServletRequest request, HttpServletResponse resp);
 
     Result sysUserCheckList(Integer currentPage, int pageSize, VPlatformUser vPlatformUser);
 
