@@ -114,7 +114,7 @@ public class PdataTaskController extends BaseController {
     @PostMapping("checkTask")
     @ApiOperation(value = "审核任务")
     public Result checkTask(@RequestBody @Valid CheckTask checkTask) {
-        taskService.checkTask(checkTask.getUserTaskId(), checkTask.getNote(), checkTask.getIsAgree() == 1 ? 5 : 4);
+        taskService.checkTask(checkTask.getUserTaskId(), checkTask.getNote(), checkTask.getIsAgree());
         return new Result(R.SUCCESS);
     }
 

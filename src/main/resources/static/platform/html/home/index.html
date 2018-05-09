@@ -105,9 +105,9 @@
 			<span>服务协议</span>
 			<!--<span>在线客服</span>
 			<span>意见反馈</span>-->
-			<span>服务热线 : 020-61789961 ( 9:30-18:00 )</span>
+			<span>服务热线 : 001-100010 ( 9:30-18:00 )</span>
 		</div>
-		<div class="page-footer-text">粤ICP备14067646号-1  口袋兼职 版权所有Copyright © 2018 kdjz.com, All Rights Reserved</div>
+		<div class="page-footer-text">飞腾赚客 版权所有Copyright © 2018</div>
 	</div>
 <input hidden id="cp" value="0">
 <input hidden id="cs" value="2">
@@ -167,7 +167,7 @@ function loadTask(status,currentPage){
 					var btns = "";
 					if(status==0){
 						btns = "<span class=\"layui-btn layui-btn-primary\" onclick=\"delTask('"+n.id+"');\">删除</span>"+
-						    "<span class=\"layui-btn layui-btn-normal\" onclick=\"payTask('"+n.id+"');\">立即付款</span>";
+						    "<span class=\"layui-btn layui-btn-normal\" onclick=\"payTask('"+n.id+"','"+(n.price*parseInt(n.num))+"');\">立即付款</span>";
                         $("#data-list").append("<div class=\"task-item\">"+
                             "<img class=\"task-item-icon\" src=\"../../css/images/icon_type_task.png\"/>"+
                             "<div class=\"task-item-title\">"+n.name+"</div>"+
@@ -224,8 +224,8 @@ function loadTask(status,currentPage){
 	});
 }
 
-function payTask(id){
-	window.location.href = url_set.urlHead+"platform/pay?taskId="+id;
+function payTask(id,m){
+	window.location.href = url_set.urlHead+"platform/html/home/chargep.html?taskId="+id+"&m="+m;
 }
 
 function delTask(id) {
@@ -244,6 +244,23 @@ function delTask(id) {
             loadTask(0,0);
         }});
 }
+
+    function delTask(id) {
+        $.ajax({
+            type: "POST",
+            url: url_set.urlHead+"pdata/task/delTask",
+            data:JSON.stringify({
+                taskId:id,
+            }) ,
+            dataType: "json",
+            contentType:"application/json;charset=utf-8",
+            async:true,
+            traditional:true,
+            success: function(data) {
+                layer.msg("删除成功!");
+                loadTask(0,0);
+            }});
+    }
 
 $(document).ready(function(){
 	$(".menu-tab-item").click(function(){

@@ -143,7 +143,6 @@ public class UserService implements IUserService {
                         if (sign.equals(sign1)) {
                             //TODO ; 判断金额是否相等
                             Integer total = Integer.parseInt(m.get("total_fee"));
-                            System.out.println("订单金额："+total);
                             VPlatformDealrecord vPlatformDealrecord = new VPlatformDealrecord();
                             vPlatformDealrecord.setId(m.get("out_trade_no"));
                             vPlatformDealrecord.setUserId(attach.getUserId());
@@ -275,7 +274,7 @@ public class UserService implements IUserService {
                     //扣除金额
                     userMapper.updateAccount(userId, -money);
                     //生成记录
-                    vPlatformDealrecordMapper.insert(vPlatformDealrecord);
+                    vPlatformDealrecordMapper.insertSelective(vPlatformDealrecord);
                     //修改状态
                     vPlatformTaskMapper.updateTaskStatus(taskId, 1);//待审核
                     return new Result(R.SUCCESS);

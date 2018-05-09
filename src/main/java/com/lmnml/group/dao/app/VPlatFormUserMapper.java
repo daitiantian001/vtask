@@ -36,7 +36,7 @@ public interface VPlatFormUserMapper extends MyMapper<VPlatformUser> {
             "WHERE user_id=#{userId} AND status=#{status} \n")
     Integer platDetailTotal(@Param("userId") String userId, @Param("status")Integer status);
 
-    @Update("UPDATE v_platform_user SET account=account+#{money} AND used_account=used_account+#{money} WHERE id=#{userId}")
+    @Update("UPDATE v_platform_user SET account=account+#{money},used_account=used_account+#{money} WHERE id=#{userId}")
     void updateAccount(@Param("userId") String userId, @Param("money")Integer money);
 
     @Select("SELECT vpu.id,vpu.contactor_name contactorName,vpu.identify_num identifyNum,vpu.contactor_mobile contactorMobile,vpu.identify_photo identifyPhoto,vpu.identify_address identifyAddress\n" +

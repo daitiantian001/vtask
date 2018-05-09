@@ -27,12 +27,12 @@ public interface VPlatformUserTaskMapper extends MyMapper<VPlatformUserTask> {
             "WHERE task_id=#{taskId} AND status=2")
     List<Map> exportTaskList(@Param("taskId") String taskId);
 
-    @Select("SELECT vpu.photo,vpu.name,vput.content,vput.img_url imgUrl,DATE_FORMAT(vput.create_time,'%Y-%m-%d %H:%i') createTime\n" +
+    @Select("SELECT vput.id,vpu.photo,vpu.name,vput.content,vput.img_url imgUrl,DATE_FORMAT(vput.create_time,'%Y-%m-%d %H:%i') createTime\n" +
             "FROM v_platform_user_task vput\n" +
             "LEFT JOIN v_platform_user vpu ON vpu.id=vput.user_id\n" +
             "WHERE vput.status=#{checkType} AND vput.task_id=#{taskId}\n" +
             "ORDER BY vput.create_time DESC\n" +
-            "LIMIT #{currentPage},10")
+            "LIMIT #{currentPage},100")
     List<Map> findCheckListByTaskId(@Param("taskId") String taskId, @Param("currentPage") Integer currentPage, @Param("checkType") String checkType);
 
     @Select("SELECT count(vput.id)\n" +

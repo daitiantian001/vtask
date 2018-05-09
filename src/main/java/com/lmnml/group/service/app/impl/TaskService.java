@@ -200,11 +200,29 @@ public class TaskService implements ITaskService {
     }
 
     @Override
+    @Transactional
     public void checkTask(String userTaskId, String note, int i) {
         VPlatformUserTask vPlatformUserTask = new VPlatformUserTask();
         vPlatformUserTask.setId(userTaskId);
+        VPlatformUserTask v = (VPlatformUserTask) vPlatformUserTaskMapper.selectByPrimaryKey(vPlatformUserTask);
         vPlatformUserTask.setNote(note);
-        vPlatformUserTask.setStatus(i);
+        if(i==2){
+            //加钱
+            userMapper.updateAccount(v.getUserId(),v.getPrice());
+            //加记录
+            VPlatformDealrecord vPlatformDealrecord = new VPlatformDealrecord();
+            vPlatformDealrecord.setId(StrKit.ID());
+            vPlatformDealrecord.setUserId(v.getUserId());
+            vPlatformDealrecord.setCreateTime(new Date());
+            vPlatformDealrecord.setType(4);//微任务佣金
+            vPlatformDealrecord.setTaskId(v.getTaskId());
+            vPlatformDealrecord.setPayType(1);//账户余额
+            vPlatformDealrecord.setStatus(2);//收人
+            vPlatformDealrecordMapper.insertSelective(vPlatformDealrecord);
+            vPlatformUserTask.setStatus(2);
+        }else if(i==4){
+            vPlatformUserTask.setStatus(4);
+        }
         vPlatformUserTaskMapper.updateByPrimaryKeySelective(vPlatformUserTask);
     }
 
@@ -301,7 +319,7 @@ public class TaskService implements ITaskService {
         Map map = new HashMap();
         map.put("checks", checks);
         map.put("total", total);
-        return new Result(R.SUCCESS, map);
+        return new Result(R.SUCCESS, checks);
     }
 
     @Override

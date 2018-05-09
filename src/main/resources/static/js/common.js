@@ -1,6 +1,6 @@
 //路径请求统一配置
 const url_set = {
-    // urlHead: 'http://just2do.picp.io/',
+    // urlHead: 'http://localhost:7055/',
     urlHead: 'http://lmnml.com/',
     raffleId: getParam('raffleId'),
     token: getParam('token')

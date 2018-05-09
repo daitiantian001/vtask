@@ -102,16 +102,13 @@ public class AliPayUtil {
     public static String smPay(AliPay aliPay) {
         AlipayTradePrecreateRequest request = new AlipayTradePrecreateRequest();
         AlipayTradeAppPayModel model = new AlipayTradeAppPayModel();
-//        AlipayTradeCreateModel model = new AlipayTradeCreateModel();
         model.setBody(aliPay.getAttach());
         model.setSubject(aliPay.getBody());
         model.setTimeoutExpress("30m");
         model.setOutTradeNo(aliPay.getId());
         model.setStoreId(aliPay.getStoreId());
         model.setTotalAmount(StrKit.addPoint(aliPay.getTotal() + ""));
-        System.out.println("阿里附加数据"+aliPay.getAttach());
         try {
-//            model.setPassbackParams(URLEncoder.encode(aliPay.getAttach(),"UTF-8"));
             request.setBizModel(model);
             request.setNotifyUrl(NOTIFY_URL+ Ali_SM_PAY );
             AlipayTradePrecreateResponse execute= alipayClient.execute(request);

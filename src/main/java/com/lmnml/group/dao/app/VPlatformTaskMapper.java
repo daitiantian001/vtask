@@ -17,12 +17,12 @@ import java.util.Map;
 public interface VPlatformTaskMapper extends MyMapper<VPlatformTask> {
     @Select("SELECT vpt.id taskId,vpt.name,vsc.icon,vpt.price\n" +
             "FROM v_platform_task vpt LEFT JOIN v_system_category vsc ON vpt.category_id=vsc.id\n" +
-            "WHERE vpt.status=2 AND vpt.end_time>NOW() ORDER BY vpt.create_time DESC limit #{currentPage},20")
+            "WHERE vpt.status=2 AND vpt.end_time>NOW() ORDER BY vpt.create_time DESC limit #{currentPage},100")
     List<Map> findAllInfo(Integer currentPage);
 
     @Select("SELECT vpt.id taskId,vpt.name,vsc.icon,vpt.price\n" +
             "FROM v_platform_task vpt LEFT JOIN v_system_category vsc ON vpt.category_id=vsc.id\n" +
-            "WHERE vpt.status=2 AND vpt.end_time>NOW() AND vpt.category_id=#{type} ORDER BY vpt.create_time DESC limit #{currentPage},20 ")
+            "WHERE vpt.status=2 AND vpt.end_time>NOW() AND vpt.category_id=#{type} ORDER BY vpt.create_time DESC limit #{currentPage},100 ")
     List<Map> findAllInfo2(@Param("currentPage") Integer currentPage,@Param("type") String type);
 
     @Select("SELECT COUNT(vpt.id)\n" +
@@ -42,7 +42,7 @@ public interface VPlatformTaskMapper extends MyMapper<VPlatformTask> {
             "FROM v_platform_task vps\n" +
             "WHERE vps.status=#{status} AND vps.user_id=#{userId}\n" +
             "ORDER BY vps.create_time DESC\n" +
-            "LIMIT #{currentPage},10")
+            "LIMIT #{currentPage},100")
     List<Map> platTaskList(@Param("userId") String userId, @Param("status")Integer status, @Param("currentPage")Integer currentPage);
 
     @Select("SELECT count(vps.id)" +
@@ -83,6 +83,6 @@ public interface VPlatformTaskMapper extends MyMapper<VPlatformTask> {
     @Select("SELECT count(id) FROM v_platform_task WHERE status in (1,4)")
     Integer total();
 
-    @Select("SELECT * FROM v_platform_task WHERE status in (1,4) ORDER BY create_time DESC limit #{currentPage},10")
+    @Select("SELECT * FROM v_platform_task WHERE status in (1,4) ORDER BY create_time DESC limit #{currentPage},100")
     List<VPlatformTask> findTasks(Integer currentPage);
 }

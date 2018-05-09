@@ -33,6 +33,6 @@ public class VPlatformDealrecord {
     private String orderNum;
     @ApiModelProperty("支付人id")
     private String sellerId;
-    @ApiModelProperty("收支类型")
+    @ApiModelProperty("收支类型 1支出 2收人")
     private Integer status;
 }

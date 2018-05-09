@@ -77,13 +77,10 @@
 	</div>
 	<div class="container-block">
 		<div class="container-bg" style="padding:20px;">
-			<div class="page-color-title">钱包充值</div>
-			<div class="tip-info-item">1、钱包功能仅支持支付工资之用，不得用于洗钱、套现、虚假交易等禁止行为。</div>
-			<div class="tip-info-item">2、对于用户利用钱包进行恶意充值提现、洗钱、套现等用途，口袋兼职将扣留充值金额一个月，情节严重者，将会报警处理。</div>
-			<div class="tip-info-item">3、使用钱包充值即默认遵守以上使用条款。</div>
+			<div class="page-color-title">微任务支付</div>
 			<div class="charge-form">
-				<div class="charge-form-title">充值金额</div>
-				<div class="charge-form-value"><input id="pay-total" type="text" value="1"/></div>
+				<div class="charge-form-title">支付金额</div>
+				<div class="charge-form-value"><input id="pay-total" readonly="readonly" type="text"/></div>
 			</div>
 			<div class="pay-type-title">请选择支付方式：</div>
 			<div class="pay-type-item" id="wrap">
@@ -93,6 +90,10 @@
 			<div class="pay-type-item">
 				<input name="pay-type" type="radio" value="2"/>
 				<img src="../../css/images/icon_pay_wx.png"/>
+			</div>
+			<div class="pay-type-item">
+				<input name="pay-type" type="radio" value="1"/>
+				<span>账户余额</span>
 			</div>
 			<div style="width:240px;padding:20px 0;">
 				<div class="submit-btn" onclick="wxPay();">立即支付</div>
@@ -114,11 +115,11 @@
         var val = $('.pay-type-item input[name="pay-type"]:checked ').val();
         $.ajax({
             type: "POST",
-            url:url_set.urlHead+'pdata/account/recharge',
+            url:url_set.urlHead+'pdata/account/pay',
             data:JSON.stringify({
                 userId: userInfo.id,
                 type: val,
-                total: $("#pay-total").val()*100
+				taskId:getParam("taskId")
             }),
             dataType: "json",
             contentType:"application/json;charset=utf-8",
@@ -126,6 +127,10 @@
             traditional: true,
             success: function(data){
                 if(data.result==1){
+                    if(!code){
+                        window.location.href="index.html";
+                        return;
+					}
                     var code=data.data.payInfo;
                     var imageUrl=val==2?'../../css/images/icon_pay_wx_win.jpg':'../../css/images/icon_pay_zbf.png';
                     swal({
@@ -150,6 +155,7 @@
 $(document).ready(function(){
     $("#nick-name").html(userInfo.name);
     $("#top-photo").attr('src', userInfo.photo);
+    $("#pay-total").val(getParam("m"));
 });
 </script>
 </html>
