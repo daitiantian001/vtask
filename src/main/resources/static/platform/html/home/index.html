@@ -167,7 +167,7 @@ function loadTask(status,currentPage){
 					var btns = "";
 					if(status==0){
 						btns = "<span class=\"layui-btn layui-btn-primary\" onclick=\"delTask('"+n.id+"');\">删除</span>"+
-						    "<span class=\"layui-btn layui-btn-normal\" onclick=\"payTask('"+n.id+"','"+(n.price*parseInt(n.num))+"');\">立即付款</span>";
+						    "<span class=\"layui-btn layui-btn-normal\" onclick=\"payTask('"+n.id+"','"+(n.price*parseInt(n.num)/100)+"');\">立即付款</span>";
                         $("#data-list").append("<div class=\"task-item\">"+
                             "<img class=\"task-item-icon\" src=\"../../css/images/icon_type_task.png\"/>"+
                             "<div class=\"task-item-title\">"+n.name+"</div>"+

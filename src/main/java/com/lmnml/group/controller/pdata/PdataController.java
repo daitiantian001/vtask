@@ -94,7 +94,7 @@ public class PdataController extends BaseController {
         vPlatformUser.setId(StrKit.ID());
         vPlatformUser.setName("商户_" + platUserRegister.getMobile());
         vPlatformUser.setMobile(platUserRegister.getMobile());
-        vPlatformUser.setPhoto("http://feitengtask.oss-cn-beijing.aliyuncs.com/"+ Icon.getIcon()+"jpg");
+        vPlatformUser.setPhoto("http://feitengtask.oss-cn-beijing.aliyuncs.com/"+ Icon.getIcon()+".jpg");
         vPlatformUser.setBirthday(new Date());
         vPlatformUser.setIdentifyType(0);
         vPlatformUser.setSex(0);

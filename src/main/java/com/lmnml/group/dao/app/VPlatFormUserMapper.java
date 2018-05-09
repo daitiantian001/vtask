@@ -25,10 +25,12 @@ public interface VPlatFormUserMapper extends MyMapper<VPlatformUser> {
             "WHERE vpu.id=#{userId}")
     Map<String,Integer> platAccount(String userId);
 
-    @Select("SELECT id,DATE_FORMAT(create_time,'%Y-%m-%d %H:%i') createTime,type,money,pay_status payStatus\n" +
+    @Select("SELECT v.id,DATE_FORMAT(v.create_time,'%Y-%m-%d %H:%i') createTime,v.type,v.money,v.pay_status payStatus,vu.name userName,vpt.name taskName\n" +
             "FROM v_platform_dealrecord v\n" +
-            "WHERE user_id=#{userId} AND status=#{status} \n" +
-            "ORDER BY create_time DESC\n")
+            "LEFT JOIN v_platform_user vu ON vu.id=v.user_id\n" +
+            "LEFT JOIN v_platform_task vpt ON vpt.id=v.task_id\n" +
+            "WHERE v.user_id=#{userId} AND v.status=#{status} \n" +
+            "ORDER BY v.create_time DESC\n")
     List<Map> platDetail(@Param("userId") String userId, @Param("status")Integer status);
 
     @Select("SELECT count(id)\n" +

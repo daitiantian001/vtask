@@ -127,11 +127,11 @@
             traditional: true,
             success: function(data){
                 if(data.result==1){
+                    var code=data.data.payInfo;
                     if(!code){
                         window.location.href="index.html";
                         return;
-					}
-                    var code=data.data.payInfo;
+                    }
                     var imageUrl=val==2?'../../css/images/icon_pay_wx_win.jpg':'../../css/images/icon_pay_zbf.png';
                     swal({
 						title:'',

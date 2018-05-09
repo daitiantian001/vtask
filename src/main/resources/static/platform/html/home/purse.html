@@ -169,11 +169,11 @@ function loadRecord(type,currentPage){
 				}else{
 					$("#data-list").html("");
 				}
-				$.each(data.data, function(i, n){
+				$.each(data.data.details, function(i, n){
 					switch(n.type){
 					case 1:
 						$("#data-list").append("<tr>"+
-							"<td>"+(new Date(n.createTime).format("yyyy-MM-dd HH:mm:ss"))+"</td>"+
+							"<td>"+n.createTime+"</td>"+
 							"<td>充值</td>"+
 							"<td>飞腾赚客</td>"+
 							"<td>交易成功</td>"+
@@ -190,7 +190,7 @@ function loadRecord(type,currentPage){
 							status = "提现成功";
 						}
 						$("#data-list").append("<tr>"+
-							"<td>"+(new Date(n.createTime).format("yyyy-MM-dd HH:mm:ss"))+"</td>"+
+							"<td>"+n.createTime+"</td>"+
 							"<td>提现</td>"+
 							"<td>飞腾赚客</td>"+
 							"<td>"+status+"</td>"+
@@ -199,8 +199,8 @@ function loadRecord(type,currentPage){
 						break;
 					case 3:
 						$("#data-list").append("<tr>"+
-							"<td>"+(new Date(n.createTime).format("yyyy-MM-dd HH:mm:ss"))+"</td>"+
-							"<td>微任务预支付-"+n.task.name+"</td>"+
+                            "<td>"+n.createTime+"</td>"+
+							"<td>微任务预支付-"+n.taskName+"</td>"+
 							"<td>飞腾赚客</td>"+
 							"<td>交易成功</td>"+
 							"<td>￥"+parseFloat(n.money*0.01).toFixed(2)+"</td>"+
@@ -208,8 +208,8 @@ function loadRecord(type,currentPage){
 						break;
 					case 4:
 						$("#data-list").append("<tr>"+
-							"<td>"+(new Date(n.createTime).format("yyyy-MM-dd HH:mm:ss"))+"</td>"+
-							"<td>微任务佣金-"+n.task.name+"</td>"+
+                            "<td>"+n.createTime+"</td>"+
+							"<td>微任务佣金-"+n.taskName+"</td>"+
 							"<td>"+n.user.name+"</td>"+
 							"<td>交易成功</td>"+
 							"<td>￥"+parseFloat(n.money*0.01).toFixed(2)+"</td>"+
@@ -217,16 +217,16 @@ function loadRecord(type,currentPage){
 						break;
 					case 5:
 						$("#data-list").append("<tr>"+
-							"<td>"+(new Date(n.createTime).format("yyyy-MM-dd HH:mm:ss"))+"</td>"+
+                            "<td>"+n.createTime+"</td>"+
 							"<td>微任务邀请佣金</td>"+
-							"<td>"+n.user.name+"</td>"+
+							"<td>"+n.userName+"</td>"+
 							"<td>交易成功</td>"+
 							"<td>￥"+parseFloat(n.money*0.01).toFixed(2)+"</td>"+
 						"</tr>");
 						break;
 					case 6:
 						$("#data-list").append("<tr>"+
-							"<td>"+(new Date(n.createTime).format("yyyy-MM-dd HH:mm:ss"))+"</td>"+
+                            "<td>"+n.createTime+"</td>"+
 							"<td>误判充值补偿</td>"+
 							"<td>飞腾赚客</td>"+
 							"<td>交易成功</td>"+
@@ -235,8 +235,8 @@ function loadRecord(type,currentPage){
 						break;
 					case 7:
 						$("#data-list").append("<tr>"+
-							"<td>"+(new Date(n.createTime).format("yyyy-MM-dd HH:mm:ss"))+"</td>"+
-							"<td>微任务预支付退款-"+n.task.name+"</td>"+
+                            "<td>"+n.createTime+"</td>"+
+							"<td>微任务预支付退款-"+n.taskName+"</td>"+
 							"<td>飞腾赚客</td>"+
 							"<td>交易成功</td>"+
 							"<td>￥"+parseFloat(n.money*0.01).toFixed(2)+"</td>"+

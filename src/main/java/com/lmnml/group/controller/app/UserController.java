@@ -84,7 +84,7 @@ public class UserController extends BaseController {
         vPlatformUser.setId(StrKit.ID());
         vPlatformUser.setName("赚客_" + userRegister.getMobile());
         vPlatformUser.setMobile(userRegister.getMobile());
-        vPlatformUser.setPhoto("http://feitengtask.oss-cn-beijing.aliyuncs.com/"+ Icon.getIcon()+"jpg");
+        vPlatformUser.setPhoto("http://feitengtask.oss-cn-beijing.aliyuncs.com/"+ Icon.getIcon()+".jpg");
         vPlatformUser.setBirthday(new Date());
         vPlatformUser.setIdentifyType(0);
         vPlatformUser.setSex(0);

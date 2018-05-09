@@ -13,6 +13,7 @@ import com.lmnml.group.dao.sys.VSystemUserMapper;
 import com.lmnml.group.entity.app.MsgCode;
 import com.lmnml.group.entity.app.VPlatformDealrecord;
 import com.lmnml.group.entity.app.VPlatformUser;
+import com.lmnml.group.entity.app.VPlatformUserTask;
 import com.lmnml.group.entity.web.VSystemUser;
 import com.lmnml.group.service.app.IUserService;
 import com.lmnml.group.util.JsonUtil;
@@ -255,6 +256,14 @@ public class UserService implements IUserService {
     public Result payTask(String userId, String taskId, Integer type, String ip, String productId) throws Exception {
         //根据taskId查询总额
         Integer money = vPlatformTaskMapper.findTotalPriceByTd(taskId);
+
+        VPlatformDealrecord v = new VPlatformDealrecord();
+        v.setTaskId(taskId);
+        List select = vPlatformDealrecordMapper.select(v);
+        if(select!=null &&select.size()>0){
+            return new Result("已经支付过该任务");
+        }
+
         Map result = new HashMap();
         String id = StrKit.ID();
         String attach = JsonUtil.toJson(new Attach(taskId, userId, Attach.PAY_TASK));//附带信息 targetId,id
@@ -262,13 +271,14 @@ public class UserService implements IUserService {
             case 1:
                 //查询可用余额
                 Map<String, Integer> map = userMapper.platAccount(userId);
-                if (map.get("usedAccount") >= money) {
+                if (map.get("account")-map.get("frozenAccount") >= money) {
                     VPlatformDealrecord vPlatformDealrecord = new VPlatformDealrecord();
                     vPlatformDealrecord.setId(id);
                     vPlatformDealrecord.setUserId(userId);
                     vPlatformDealrecord.setCreateTime(new Date());
                     vPlatformDealrecord.setType(3);//微信任务预支付
                     vPlatformDealrecord.setTaskId(taskId);
+                    vPlatformDealrecord.setMoney(money);
                     vPlatformDealrecord.setPayType(1);//余额
                     vPlatformDealrecord.setStatus(1);//支出
                     //扣除金额
