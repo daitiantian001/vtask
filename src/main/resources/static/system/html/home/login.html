@@ -146,7 +146,7 @@
             traditional: true,
             success: function(data){
                 if(data.result==1){
-                    $.cookie('userInfo',JSON.stringify(data.data));
+                    $.cookie('suserInfo',JSON.stringify(data.data));
                     window.location.href="index.html";
                 }else{
                     layer.msg(data.exception);

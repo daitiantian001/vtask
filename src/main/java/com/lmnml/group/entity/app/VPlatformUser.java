@@ -7,6 +7,7 @@ import io.swagger.models.auth.In;
 import lombok.Data;
 
 import javax.persistence.Id;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -15,7 +16,7 @@ import java.util.Date;
  */
 @Data
 @ApiModel
-public class VPlatformUser {
+public class VPlatformUser implements Serializable{
     @ApiModelProperty("用户id")
     @Id
     private String id;
