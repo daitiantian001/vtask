@@ -30,8 +30,9 @@ public interface VPlatFormUserMapper extends MyMapper<VPlatformUser> {
             "LEFT JOIN v_platform_user vu ON vu.id=v.user_id\n" +
             "LEFT JOIN v_platform_task vpt ON vpt.id=v.task_id\n" +
             "WHERE v.user_id=#{userId} AND v.status=#{status} \n" +
-            "ORDER BY v.create_time DESC\n")
-    List<Map> platDetail(@Param("userId") String userId, @Param("status")Integer status);
+            "ORDER BY v.create_time DESC\n" +
+            "limit #{currentPage},20")
+    List<Map> platDetail(@Param("userId") String userId, @Param("status") Integer status, @Param("currentPage") Integer currentPage);
 
     @Select("SELECT count(id)\n" +
             "FROM v_platform_dealrecord\n" +

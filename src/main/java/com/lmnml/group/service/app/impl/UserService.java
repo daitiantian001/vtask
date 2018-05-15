@@ -106,8 +106,8 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public Result platDetail(String userId, Integer status) {
-        List list = userMapper.platDetail(userId, status);
+    public Result platDetail(String userId, Integer status,Integer currentPage) {
+        List list = userMapper.platDetail(userId, status,currentPage*20);
         Integer total = userMapper.platDetailTotal(userId, status);
         Map map = new HashMap();
         map.put("details", list);
@@ -175,7 +175,7 @@ public class UserService implements IUserService {
                             vPlatformDealrecord.setStatus(1);//支出
                             vPlatformDealrecord.setMoney(total);
                             //减少金额
-                            userMapper.updateAccount(attach.getUserId(), -total);
+//                            userMapper.updateAccount(attach.getUserId(), -total);
                             //生成记录
                             vPlatformDealrecordMapper.insertSelective(vPlatformDealrecord);
                             //修改状态
@@ -234,7 +234,7 @@ public class UserService implements IUserService {
                         vPlatformDealrecord.setSellerId(m.get("seller_id"));
                         vPlatformDealrecord.setMoney(total);
                         //扣除金额
-                        userMapper.updateAccount(attach.getUserId(), -total);
+//                        userMapper.updateAccount(attach.getUserId(), -total);
                         //生成记录
                         vPlatformDealrecordMapper.insertSelective(vPlatformDealrecord);
                         //修改状态
@@ -373,5 +373,30 @@ public class UserService implements IUserService {
         PageHelper.startPage(currentPage,i,true);
         List list = userMapper.selectByExample(example);
         return new Result(R.SUCCESS, list);
+    }
+
+    @Override
+    public Result cashAccount(String userId, Integer total) {
+        VPlatformUser vPlatformUser = new VPlatformUser();
+        vPlatformUser.setId(userId);
+
+        VPlatformUser v = (VPlatformUser) userMapper.selectByPrimaryKey(vPlatformUser);
+        if(v.getAccount()-v.getFrozenAccount()<total){
+            return new Result("提现金额不足!");
+        }
+
+        VPlatformDealrecord vPlatformDealrecord = new VPlatformDealrecord();
+        vPlatformDealrecord.setId(StrKit.ID());
+        vPlatformDealrecord.setUserId(userId);
+        vPlatformDealrecord.setMoney(total*100);
+        vPlatformDealrecord.setCreateTime(new Date());
+        vPlatformDealrecord.setType(2);
+        vPlatformDealrecord.setStatus(1);
+        vPlatformDealrecord.setPayStatus("0");
+        vPlatformDealrecord.setPayType(0);
+
+        vPlatformDealrecordMapper.insertSelective(vPlatformDealrecord);
+        userMapper.updateAccount(userId,-total*100);
+        return new Result(R.SUCCESS);
     }
 }

@@ -25,7 +25,7 @@ public class VPlatformDealrecord {
     private String pId;
     @ApiModelProperty("类型 1.账户余额 2.微信 3.支付宝")
     private Integer payType;
-    @ApiModelProperty("支付状态")
+    @ApiModelProperty("支付状态 1提现成功 0.提现中")
     private String payStatus;
     @ApiModelProperty("任务id")
     private String taskId;

@@ -37,7 +37,7 @@ public class UserAccountController {
     @PostMapping("detail")
     @ApiOperation(value = "app账单明细")
     public Result appDetail(@RequestBody @Valid AppDetail appDetail) {
-        return userService.platDetail(appDetail.getUserId(), appDetail.getStatus());
+        return userService.platDetail(appDetail.getUserId(), appDetail.getStatus(),appDetail.getCurrentPage());
     }
 
     @PostMapping("bind")
@@ -63,6 +63,7 @@ public class UserAccountController {
         @ApiModelProperty("支出/收人 1支出 2.收人")
         @NotNull(message = "用户不能为空!")
         private Integer status;
+        private Integer currentPage;
     }
 
     @Data

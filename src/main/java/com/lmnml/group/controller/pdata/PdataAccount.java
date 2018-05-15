@@ -40,7 +40,7 @@ public class PdataAccount {
     @PostMapping("detail")
     @ApiOperation(value = "plat账单明细")
     public Result platDetail(@RequestBody @Valid PlatDetail platDetail) {
-        return userService.platDetail(platDetail.getUserId(), platDetail.getStatus());
+        return userService.platDetail(platDetail.getUserId(), platDetail.getStatus(),platDetail.getCurrentPage());
     }
 
     @PostMapping("recharge")
@@ -58,11 +58,9 @@ public class PdataAccount {
     }
 
     @PostMapping("cash")
-    @ApiOperation(value = "TODO plat提现")
-    public Result cashAccount(@RequestBody @Valid RechargeModel rechargeModel, HttpServletRequest request) throws Exception {
-        String ip=IpUtil.getIp(request);
-//        return userService.cashAccount(rechargeModel.getUserId(),rechargeModel.getTotal(),rechargeModel.getType(),ip);
-        return null;
+    @ApiOperation(value = "plat提现")
+    public Result cashAccount(@RequestBody @Valid CashModel cashModel) throws Exception {
+        return userService.cashAccount(cashModel.getUserId(),cashModel.getTotal());
     }
 
     @Data
@@ -82,6 +80,7 @@ public class PdataAccount {
         @ApiModelProperty("支出/收人 1支出 2.收人")
         @NotNull(message = "收支状态不能为空")
         private Integer status;
+        private Integer currentPage;
     }
 
     @Data
@@ -111,5 +110,17 @@ public class PdataAccount {
         @NotNull(message = "金额不能为空")
         private Integer total;
     }
+
+    @Data
+    @ApiModel("plat提现model")
+    public static class CashModel implements Serializable {
+        @ApiModelProperty("用户id")
+        @NotNull(message = "用户不能为空!")
+        private String userId;
+        @ApiModelProperty("充值金额（分）")
+        @NotNull(message = "金额不能为空")
+        private Integer total;
+    }
+
 
 }

@@ -96,7 +96,7 @@ public class TaskService implements ITaskService {
 
     @Override
     public Map platTaskList(String userId, Integer status, Integer currentPage) {
-        List vt = vPlatformTaskMapper.platTaskList(userId, status, currentPage);
+        List vt = vPlatformTaskMapper.platTaskList(userId, status, currentPage*100);
         Integer vtTotal = vPlatformTaskMapper.platTaskListTotal(userId, status, currentPage);
         Map map = new HashMap();
         map.put("tasks", vt);

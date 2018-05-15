@@ -24,7 +24,11 @@
 	<link rel="stylesheet" type="text/css" href="../../js/layer/css/layui.css"/>
 	<script type="text/javascript" src="../../js/layer/layui.js"></script>
 	<script type="text/javascript" src="../../../js/common.js"></script>
-	
+
+	<link rel="stylesheet" type="text/css" href="../../../js/sweetalert.min.css"/>
+	<script src="../../../js/sweetalert.min.js"></script>
+
+
 	<link rel="stylesheet" type="text/css" href="../../js/ztree/css/zTreeStyle/zTreeStyle.css"/>
 	<script type="text/javascript" src="../../js/ztree/js/jquery.ztree.core.js"></script>
 	<style type="text/css">
@@ -231,7 +235,7 @@ function initCategory(){
 		success: function(data) {
 			if(data.result==1){
 				$.each(data.data, function(i, n){
-					$("#categoryId").append("<option value=\""+n.id+"\">"+n.name+"</option>");
+					$("#categoryId").append("<option value=\""+n.id+"\" title=\""+n.name+"\">"+n.name+"</option>");
 				});
 				$("#categoryId").selectpicker("refresh");
 			}else{
@@ -335,7 +339,6 @@ function initForm(){
 
 function publishTask(){
 	var categoryId = $("#categoryId").val();
-	var category= "";
 	var name = $("#name").val();
 	if(name==""){
 		$("#name-tips").html("<div>请填写任务名称！</div>");
@@ -454,13 +457,13 @@ function publishTask(){
     if(stopSubmit){
         return;
 	}
-	
+
 	$.ajax({
 		type: "POST",
 		url: url_set.urlHead+"pdata/task/sendTask",
 		data:JSON.stringify( {
             categoryId: categoryId,
-            category:category,
+            category:"",
             userId:userInfo.id,
             name: name,
             num: num,

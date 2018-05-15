@@ -25,6 +25,10 @@
 	<script type="text/javascript" src="../../js/layer/layui.js"></script>
 	<script type="text/javascript" src="../../../js/common.js"></script>
 
+	<link rel="stylesheet" type="text/css" href="../../../js/sweetalert.min.css"/>
+	<script src="../../../js/sweetalert.min.js"></script>
+
+
 	<link rel="stylesheet" type="text/css" href="../../js/ztree/css/zTreeStyle/zTreeStyle.css"/>
 	<script type="text/javascript" src="../../js/ztree/js/jquery.ztree.core.js"></script>
 	<script type="text/javascript">
@@ -73,12 +77,11 @@
 	</div>
 	<div class="container-block">
 		<div class="menu-tabs">
+			<div class="menu-tab-item active" url="2">已发布</div>
+			<div class="menu-tab-item" url="3">已下架</div>
 			<div class="menu-tab-item" url="0">待付款</div>
 			<div class="menu-tab-item" url="1">待审核</div>
-			<div class="menu-tab-item active" url="2">正在招</div>
-			<div class="menu-tab-item" url="3">已下架</div>
 			<div class="menu-tab-item" url="4">不通过</div>
-			<div class="menu-tab-item" url="5">二次审核</div>
 		</div>
 		<div class="container-bg" style="padding:20px;">
 			<div id="data-list">
@@ -95,8 +98,8 @@
 			</div>
 			<div class="page-block">
 				<ul id="page"></ul>
-				<!--<div class="page-num-btn" onclick="pageUp()"><span>上一页</span></div>-->
-				<!--<div class="page-num-btn" onclick="pageDown()"><span>下一页</span></div>-->
+				<div class="page-num-btn" onclick="page(-1)"><span>上一页</span></div>
+				<div class="page-num-btn" onclick="page(1)"><span>下一页</span></div>
 			</div>
 		</div>
 	</div>
@@ -114,35 +117,19 @@
 </body>
 <script type="text/javascript">
     const userInfo=JSON.parse($.cookie("userInfo"));
-    function pageUp(){
-       var cpage=parseInt($("#cp").val());
-       var cs=parseInt($("#cs").val());
-       	var s=parseInt($(".menu-tab-item.active").attr('url'));
-       	console(cpage,cs,s);
-       	if(cs!=s){
-       	    $("#cp").val(0)
-            $("#cs").val(s);
+    function page(i){
+        var val = parseInt($("#cp").val())+i;
+        var status=$("#cs").val();
+        if(val<=0){
+            loadTask(status,0);
+            swal("已经是第一页了");
+		}else{
+            $("#cp").val(val);
+            loadTask(status,val);
 		}
-        console(cpage,cs,s);
-        if(cpage=0){
-            loadTask(s,0);
-            console(cpage,cs,s);
-        }else{
-            $("#cp").val(cpage-1);
-            loadTask(s,cpage-1);
-        }
-    }
-    function pageDown() {
-       var s=parseInt($(".menu-tab-item.active").attr('url'));
-        var cpage=parseInt($("#cp").val());
-        var cs=parseInt($("#cs").val());
-        if(cs!=s){
-            $("#cp").val(0)
-            $("#cs").val(s);
-        }
-        $("#cp").val(cpage+1);
-        loadTask(s,cpage+1)
-    }
+	}
+
+
 function loadTask(status,currentPage){
 	$.ajax({
 		type: "POST",
@@ -185,7 +172,7 @@ function loadTask(status,currentPage){
                             "</div>");
 					}else if(status==2){
                         btns =
-//                        "<span class=\"layui-btn layui-btn-primary\" onclick=\"offTask('"+n.id+"');\">下架</span>"+
+                        "<span class=\"layui-btn layui-btn-primary\" onclick=\"offTask('"+n.id+"');\">下架</span>"+
 //                            "<span class=\"layui-btn layui-btn-primary\" onclick=\"offTask('"+n.id+"');\">增加数量</span>"+
                             "<span class=\"layui-btn layui-btn-normal\" onclick=\"javascript:window.location.href='check.html?taskId="+n.id+"';\">去审核</span>";
                         $("#data-list").append("<div class=\"task-item\">"+
@@ -267,8 +254,9 @@ $(document).ready(function(){
 		$(".menu-tab-item.active").removeClass("active");
 		$(this).addClass("active");
 		status = parseInt($(this).attr("url"));
-		currentPage = 0;
-		loadTask(status,currentPage);
+        $("#cp").val(0);
+        $("#cs").val(status);
+		loadTask(status,0);
 	});
 
 	$("#nick-name").html(userInfo.name);

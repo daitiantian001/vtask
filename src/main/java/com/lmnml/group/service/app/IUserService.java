@@ -4,6 +4,7 @@ import com.lmnml.group.common.model.Result;
 import com.lmnml.group.entity.app.MsgCode;
 import com.lmnml.group.entity.app.VPlatformUser;
 import com.lmnml.group.entity.web.VSystemUser;
+import io.swagger.models.auth.In;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -27,7 +28,7 @@ public interface IUserService {
 
     Result platAccount(String userId);
 
-    Result platDetail(String userId, Integer status);
+    Result platDetail(String userId, Integer status,Integer currentPage);
 
     Result appBindAccount(String userId, Integer type, String openId);
 
@@ -50,4 +51,6 @@ public interface IUserService {
     Result sysUserCheck(VPlatformUser vPlatformUser);
 
     Result sysUserList(Integer currentPage, int i, VPlatformUser vPlatformUser);
+
+    Result cashAccount(String userId, Integer total);
 }
