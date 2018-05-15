@@ -42,7 +42,7 @@ public class UserController extends BaseController {
     @PostMapping("login")
     @ApiResponses({
             @ApiResponse(code = 1, message = "成功"),
-            @ApiResponse(code = 0, message = "失败", response = Result.class),
+            @ApiResponse(code = 0, message = "失败", response = VPlatformUser.class),
     })
     public Result userLogin(@RequestBody @Valid UserLogin userLogin) {
         //查询用户
