@@ -5,6 +5,7 @@ import com.lmnml.group.util.MyMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 import java.util.Map;
@@ -40,4 +41,8 @@ public interface VPlatformUserTaskMapper extends MyMapper<VPlatformUserTask> {
             "LEFT JOIN v_platform_user vpu ON vpu.id=vput.user_id\n" +
             "WHERE vput.status=#{checkType} AND vput.task_id=#{taskId}\n")
     Integer findCheckListTotalByTaskId(@Param("taskId") String taskId, @Param("checkType") String checkType);
+
+    @Update("update v_platform_user_task \n" +
+            "SET status=2 WHERE status=1 AND task_id =#{id}")
+    void updateAllTask(@Param("id") String id);
 }

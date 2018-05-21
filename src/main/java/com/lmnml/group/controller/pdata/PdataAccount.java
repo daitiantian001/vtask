@@ -51,7 +51,7 @@ public class PdataAccount {
     }
 
     @PostMapping("pay")
-    @ApiOperation(value = "CHECK plat支付")
+    @ApiOperation(value = "plat支付")
     public Result payTask(@RequestBody @Valid PayTask payTask, HttpServletRequest request) throws Exception {
         String ip=IpUtil.getIp(request);
         return userService.payTask(payTask.getUserId(), payTask.getTaskId(),payTask.getType(),ip,"WX_PAY_01");
@@ -60,8 +60,10 @@ public class PdataAccount {
     @PostMapping("cash")
     @ApiOperation(value = "plat提现")
     public Result cashAccount(@RequestBody @Valid CashModel cashModel) throws Exception {
-        return userService.cashAccount(cashModel.getUserId(),cashModel.getTotal());
+        return userService.cashAccount(cashModel.getUserId(),cashModel.getTotal(),cashModel.getType());
     }
+
+    //定时任务,处理过期任务.自动审核 退款审核不通过资金.
 
     @Data
     @ApiModel("plat用户钱包model")
@@ -120,6 +122,9 @@ public class PdataAccount {
         @ApiModelProperty("充值金额（分）")
         @NotNull(message = "金额不能为空")
         private Integer total;
+        @ApiModelProperty("2.微信 3.支付宝")
+        @NotNull(message = "提现渠道")
+        private Integer type;
     }
 
 

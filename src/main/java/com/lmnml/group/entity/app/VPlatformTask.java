@@ -38,4 +38,7 @@ public class VPlatformTask {
     private String describeback;
     private Integer ratio;
     private String category;
+    private Integer ctlStatus;//1.正常,2.暂停 3.关闭
+    private Integer ctlType; //是否自动审核过 1否 2是
+    private Integer ctlPrice; //是否自动审核过 1否 2是
 }

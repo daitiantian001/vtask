@@ -3,6 +3,7 @@ package com.lmnml.group;
 import com.google.gson.Gson;
 import com.lmnml.group.common.excel.ExcelJSON;
 import com.lmnml.group.common.excel2.ExcelNode;
+import com.lmnml.group.util.DateKit;
 import com.lmnml.group.util.JsonUtil;
 import lombok.Data;
 import org.junit.Test;
@@ -23,6 +24,10 @@ public class VtaskApplicationTests {
 
     @Test
     public void name() throws Exception {
+        System.out.println("===============");
+        System.out.println(DateKit.getDay(-1));
+        System.out.println(DateKit.getDay(0));
+        System.out.println(DateKit.getDay(1));
     }
 
     @Test

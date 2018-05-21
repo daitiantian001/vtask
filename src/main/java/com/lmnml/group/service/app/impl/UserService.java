@@ -13,12 +13,10 @@ import com.lmnml.group.dao.sys.VSystemUserMapper;
 import com.lmnml.group.entity.app.MsgCode;
 import com.lmnml.group.entity.app.VPlatformDealrecord;
 import com.lmnml.group.entity.app.VPlatformUser;
-import com.lmnml.group.entity.app.VPlatformUserTask;
 import com.lmnml.group.entity.web.VSystemUser;
 import com.lmnml.group.service.app.IUserService;
 import com.lmnml.group.util.JsonUtil;
 import com.lmnml.group.util.StrKit;
-import org.apache.poi.xwpf.usermodel.TOC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -376,13 +374,24 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public Result cashAccount(String userId, Integer total) {
+    @Transactional
+    public Result cashAccount(String userId, Integer total, Integer type) {
         VPlatformUser vPlatformUser = new VPlatformUser();
         vPlatformUser.setId(userId);
 
         VPlatformUser v = (VPlatformUser) userMapper.selectByPrimaryKey(vPlatformUser);
         if(v.getAccount()-v.getFrozenAccount()<total){
-            return new Result("提现金额不足!");
+            return new Result("金额不足!");
+        }
+        String targetId=null;
+        if(type==2){
+            targetId=v.getOpenId();
+        }else{
+            targetId=v.getZfbId();
+        }
+
+        if(targetId==null){
+            return new Result(String.format("请先绑定%s!",type==2?"微信":"支付宝"));
         }
 
         VPlatformDealrecord vPlatformDealrecord = new VPlatformDealrecord();
@@ -392,6 +401,7 @@ public class UserService implements IUserService {
         vPlatformDealrecord.setCreateTime(new Date());
         vPlatformDealrecord.setType(2);
         vPlatformDealrecord.setStatus(1);
+        vPlatformDealrecord.setPId(targetId);
         vPlatformDealrecord.setPayStatus("0");
         vPlatformDealrecord.setPayType(0);
 

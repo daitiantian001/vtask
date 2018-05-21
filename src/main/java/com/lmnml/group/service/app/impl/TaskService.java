@@ -78,7 +78,12 @@ public class TaskService implements ITaskService {
         Integer status = vPlatformTaskMapper.findAppUserStatus(userId, taskId);
         if (status == null) {
             //查询价格
-            Integer price = vPlatformTaskMapper.findTaskPrice(taskId);
+//            Integer price = vPlatformTaskMapper.findTaskPrice(taskId);
+            VPlatformTask vPlatformTask = new VPlatformTask();
+            vPlatformTask.setId(taskId);
+            VPlatformTask v = (VPlatformTask) vPlatformTaskMapper.selectByPrimaryKey(vPlatformTask);
+            Integer price=v.getPrice()*((100-v.getRatio())/100);
+
             String userTaskId = insertTask(userId, taskId, price);
             Map map = new HashMap();
             map.put("userTaskId", userTaskId);
@@ -89,9 +94,10 @@ public class TaskService implements ITaskService {
 
     @Override
     @Transactional
-    public void sendTask(VPlatformTask vPlatformTask, List<VPlatformStep> vPlatformStep) {
+    public Result sendTask(VPlatformTask vPlatformTask, List<VPlatformStep> vPlatformStep) {
         vPlatformTaskMapper.insertSelective(vPlatformTask);
         vPlatformStep.forEach(k -> vPlatformStepMapper.insertSelective(k));
+        return new Result(R.SUCCESS);
     }
 
     @Override
@@ -300,9 +306,10 @@ public class TaskService implements ITaskService {
     }
 
     @Override
-    public Result sysTaskCheck(String targetId, Integer result, String sUserId) {
+    public Result sysTaskCheck(String targetId, Integer result, String sUserId, String radio) {
         VPlatformTask vPlatformTask = new VPlatformTask();
         vPlatformTask.setId(targetId);
+        vPlatformTask.setRatio(StrKit.isBlank(radio)?100:Integer.parseInt(radio));
         if (result == 1) {
             vPlatformTask.setStatus(2);
         } else if (result == 2) {
@@ -375,5 +382,14 @@ public class TaskService implements ITaskService {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public Result ctlTask(String taskId, Integer status) {
+        VPlatformTask vPlatformTask = new VPlatformTask();
+        vPlatformTask.setId(taskId);
+        vPlatformTask.setCtlStatus(status);
+        vPlatformTaskMapper.updateByPrimaryKeySelective(vPlatformTask);
+        return new Result(R.SUCCESS);
     }
 }

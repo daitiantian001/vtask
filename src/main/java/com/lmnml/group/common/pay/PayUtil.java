@@ -43,6 +43,8 @@ public class PayUtil {
     public static final String WX_JS_2_PAY = "wx2";
     public static final String WX_SM_PAY = "wx";
     private static final String API_URL = "https://api.mch.weixin.qq.com/pay/unifiedorder";
+
+    private static final String WX_PAY_REFUND="https://api.mch.weixin.qq.com/secapi/pay/refund";
     public static String WX_P12_PATH = PayUtil.class.getClassLoader().getResource("crt/wx/apiclient_cert.p12").getPath();
 
     private static final String hexDigits[] = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d",
@@ -141,6 +143,17 @@ public class PayUtil {
     public static String smPay(WxPay wxPay) throws Exception {
         Map map = parseXml(doPost(API_URL,toXml(wxPay)));
         return map.get("code_url")+"";
+    }
+
+    /**
+     *
+     * 退款接口
+     * @return
+     * @throws Exception
+     */
+    public static String smPayBack(WxPay wxPay) throws Exception {
+        Map map=parseXml(sendXMLDataByPost(WX_PAY_REFUND,WX_P12_PATH,MCH_ID,toXml(wxPay)));
+        return null;
     }
 
     public static Map<String, String> parseXml(String strxml) throws Exception {

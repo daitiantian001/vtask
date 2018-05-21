@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -63,7 +62,11 @@ public class PdataTaskController extends BaseController {
         vPlatformTask.setId(taskId);
         vPlatformTask.setCreateTime(new Date());
         vPlatformTask.setStatus(0);//待付款
+        vPlatformTask.setRatio(0);//默认佣金比列  0-100/0
         vPlatformTask.setLastNum(sendTask.getNum());
+        vPlatformTask.setCtlStatus(1);
+        vPlatformTask.setCtlType(1);//否
+        vPlatformTask.setCtlPrice(1);//否
         vPlatformTask.setEndTime(DateKit.getTime(sendTask.endTime));
         List<VPlatformStep> vPlatformSteps = new ArrayList<>();
         sendTask.getTaskSteps().forEach(k -> {
@@ -73,11 +76,17 @@ public class PdataTaskController extends BaseController {
             vPlatformStep.setTaskId(taskId);
             vPlatformSteps.add(vPlatformStep);
         });
-        taskService.sendTask(vPlatformTask, vPlatformSteps);
-        return new Result(R.SUCCESS, taskId);
+        return taskService.sendTask(vPlatformTask, vPlatformSteps);
     }
 
     //TODO 二次发布任务,删除任务，主动下架任务,支付任务,任务详情
+
+    @PostMapping("ctlTask")
+    @ApiOperation(value = "暂停/取消/关闭任务", notes = "暂停,取消")
+    public Result ctlTask(@RequestBody @Valid CtlTaskModel ctlTaskModel) {
+        return taskService.ctlTask(ctlTaskModel.getTaskId(),ctlTaskModel.getStatus());
+    }
+
 
     @PostMapping("list")
     @ApiOperation(value = "任务列表", notes = "0.待付款 1.待审核 2.正在招 3.已下架 4.二次审核 5.不通过")
@@ -96,8 +105,8 @@ public class PdataTaskController extends BaseController {
             @ApiResponse(code = 0, message = "成功"),
             @ApiResponse(code = 1, message = "失败")
     })
-    public Result plaUserTaskList(@RequestBody  @Valid PlatUserTaskList platUserTaskList) {
-        return taskService.plaUserTaskList(platUserTaskList.getTaskId(), platUserTaskList.getCurrentPage(),platUserTaskList.getCheckType());
+    public Result plaUserTaskList(@RequestBody @Valid PlatUserTaskList platUserTaskList) {
+        return taskService.plaUserTaskList(platUserTaskList.getTaskId(), platUserTaskList.getCurrentPage(), platUserTaskList.getCheckType());
     }
 
     @PostMapping("taskInfo")
@@ -127,7 +136,7 @@ public class PdataTaskController extends BaseController {
 
     @GetMapping("exportTask")
     @ApiOperation(value = "CHECK 数据导出")
-    public Result exportTask(String taskId,String userId, HttpServletResponse response) {
+    public Result exportTask(String taskId, String userId, HttpServletResponse response) {
         try {
             taskService.exportTask(taskId, userId, response);
             return new Result(R.SUCCESS);
@@ -177,7 +186,7 @@ public class PdataTaskController extends BaseController {
     @Data
     @ApiModel("plat任务列表model")
     public static class PlatTaskList implements Serializable {
-//        @Size(min = -2, max = 7, message = "状态必须是数字")
+        //        @Size(min = -2, max = 7, message = "状态必须是数字")
         private Integer status;
         @NotNull(message = "当前页不能为空")
         private Integer currentPage;
@@ -214,6 +223,16 @@ public class PdataTaskController extends BaseController {
         private String note;
         @ApiModelProperty("是否同意 1.同意 2.拒绝")
         private Integer isAgree;
+    }
+
+    @Data
+    @ApiModel("plat任务控制model")
+    public static class CtlTaskModel implements Serializable {
+        @ApiModelProperty("任务id")
+        @NotNull(message = "请输入任务id")
+        private String taskId;
+        @ApiModelProperty("1.正常 2.暂停 3.关闭")
+        private Integer status;
     }
 
 }

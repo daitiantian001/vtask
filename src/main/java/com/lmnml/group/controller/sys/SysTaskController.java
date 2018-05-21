@@ -100,11 +100,11 @@ public class SysTaskController {
     @ApiOperation(value = "sys商户任务审核")
     @PostMapping("check")
     public Result sysTaskCheck(@RequestBody @Valid SysTaskCheck sysTaskCheck) {
-        return taskService.sysTaskCheck(sysTaskCheck.getTargetId(), sysTaskCheck.getResult(), sysTaskCheck.getSUserId());
+        return taskService.sysTaskCheck(sysTaskCheck.getTargetId(), sysTaskCheck.getResult(), sysTaskCheck.getSUserId(),sysTaskCheck.getRadio());
     }
 
     @GetMapping("export/{taskId}/{name}")
-    @ApiOperation(value = "sys强制审核任务")
+    @ApiOperation(value = "sys导出任务数据")
     public void exportTask(@PathVariable("taskId") String taskId,@PathVariable("name") String name, HttpServletResponse response) throws Exception {
         taskService.exportTaskList(taskId,name,response);
     }
@@ -172,6 +172,8 @@ public class SysTaskController {
         @ApiModelProperty("审核对象id")
         @NotNull(message = "对象id不能为空")
         private String targetId;
+        @ApiModelProperty("佣金比例")
+        private String radio;
     }
 
     @Data

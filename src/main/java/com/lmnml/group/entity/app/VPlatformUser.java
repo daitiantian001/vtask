@@ -1,6 +1,7 @@
 package com.lmnml.group.entity.app;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.models.auth.In;
@@ -27,6 +28,7 @@ public class VPlatformUser implements Serializable{
     @ApiModelProperty("头像")
     private String photo;
     @ApiModelProperty("生日")
+    @JsonFormat(locale="zh", timezone="GMT+8", pattern="yyyy-MM-dd")
     private Date birthday;
     @ApiModelProperty("性别 1.男,2女")
     private Integer sex;
@@ -73,11 +75,13 @@ public class VPlatformUser implements Serializable{
     @ApiModelProperty("邀请码")
     private String inventCode;
     @ApiModelProperty("注册时间")
+    @JsonFormat(locale="zh", timezone="GMT+8", pattern="yyyy-MM-dd HH:mm:ss")
     private Date createTime;
     @ApiModelProperty("区域 0.某地区")
     private Integer state;
     @ApiModelProperty("用户类型 1.普通用户 2.商家 3.系统")
     private Integer userType;
     @ApiModelProperty("发起认证时间")
+    @JsonFormat(locale="zh", timezone="GMT+8", pattern="yyyy-MM-dd HH:mm:ss")
     private Date checkTime;
 }

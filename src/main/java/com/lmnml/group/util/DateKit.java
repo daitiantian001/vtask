@@ -16,6 +16,12 @@ public class DateKit {
         return calendar.getTime();
     }
 
+    public static Date getDay(Integer n) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DATE, n);
+        return calendar.getTime();
+    }
+
     public static Date getTime(String str){
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         try {

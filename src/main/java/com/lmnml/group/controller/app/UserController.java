@@ -200,5 +200,8 @@ public class UserController extends BaseController {
         private String zfbId;
         @ApiModelProperty("用户Id")
         private String userId;
+        @ApiModelProperty("用户性别")
+        private String sex;
+
     }
 }

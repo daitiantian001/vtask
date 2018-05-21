@@ -58,6 +58,10 @@ public class WxPay {
     //商品标记
     private String goods_tag;
 
+    //==============================退款属性===================================
+    private int refund_fee;
+    private String out_refund_no;
+
     private WxPay() {
         this.appid = PayUtil.APPID;
         this.mch_id = PayUtil.MCH_ID;
@@ -77,6 +81,17 @@ public class WxPay {
         this.product_id=product_id;
         this.scene_info=scene_info;
         this.attach=attach;
+        this.sign = PayUtil.sign(this);
+    }
+
+    private WxPay(String out_trade_no,String out_refund_no,Integer total_fee,Integer refund_fee) throws Exception {
+        this.appid = PayUtil.APPID;
+        this.mch_id = PayUtil.MCH_ID;
+        this.nonce_str = PayUtil.nonceStr();
+        this.out_trade_no=out_trade_no;
+        this.out_refund_no=out_refund_no;
+        this.total_fee=total_fee;
+        this.refund_fee=refund_fee;
         this.sign = PayUtil.sign(this);
     }
 
@@ -140,5 +155,18 @@ public class WxPay {
      */
     public static WxPay smPay(String body, String out_trade_no, int total_fee, String attach, String spbill_create_ip, String product_id) throws Exception {
         return new WxPay(body,PayUtil.WX_SM_PAY,WxPayEnum.SM.getType(),out_trade_no,total_fee,attach,spbill_create_ip,null,product_id,null);
+    }
+
+    /**
+     * 退款接口
+     * @param out_trade_no 订单号
+     * @param out_refund_no 退款号（任务id防止重复提交）
+     * @param total_fee 总额
+     * @param refund_fee 退款金额
+     * @return
+     * @throws Exception
+     */
+    public static WxPay smPayBack(String out_trade_no, String out_refund_no,int total_fee,int refund_fee) throws Exception {
+        return new WxPay(out_trade_no,out_refund_no,total_fee,refund_fee);
     }
 }

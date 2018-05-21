@@ -23,7 +23,7 @@ public interface ITaskService {
 
     Result receiveTack(String userId, String taskId);
 
-    void sendTask(VPlatformTask vPlatformTask, List<VPlatformStep> vPlatformStep);
+    Result sendTask(VPlatformTask vPlatformTask, List<VPlatformStep> vPlatformStep);
 
     Map platTaskList(String userId, Integer status, Integer currentPage);
 
@@ -51,7 +51,7 @@ public interface ITaskService {
 
     Result sysUserTaskList(Integer currentPage, int i, VPlatformUserTask vPlatformTask, List<Integer> status);
 
-    Result sysTaskCheck(String targetId, Integer result, String sUserId);
+    Result sysTaskCheck(String targetId, Integer result, String sUserId, String radio);
 
     Result plaUserTaskList(String taskId, Integer currentPage, String checkType);
 
@@ -60,4 +60,6 @@ public interface ITaskService {
     Result updateUserTask(String taskId);
 
     void exportTaskList(String taskId, String name, HttpServletResponse response);
+
+    Result ctlTask(String taskId, Integer status);
 }
