@@ -62,6 +62,15 @@ public class WxPay {
     private int refund_fee;
     private String out_refund_no;
 
+    //=================================企业付款属性=======================================
+    private String mch_appid;
+    private String mchid;
+    private String partner_trade_no;
+    private String check_name;//NO_CHECK：不校验真实姓名  FORCE_CHECK：强校验真实姓名
+    private String re_user_name;
+    private int amount;
+    private String desc;
+
     private WxPay() {
         this.appid = PayUtil.APPID;
         this.mch_id = PayUtil.MCH_ID;
@@ -92,6 +101,19 @@ public class WxPay {
         this.out_refund_no=out_refund_no;
         this.total_fee=total_fee;
         this.refund_fee=refund_fee;
+        this.sign = PayUtil.sign(this);
+    }
+    //
+    private WxPay(String partner_trade_no,String openid,int amount,String desc,String ip) throws Exception {
+        this.mch_appid = PayUtil.APPID;
+        this.mchid = PayUtil.MCH_ID;
+        this.nonce_str = PayUtil.nonceStr();
+        this.partner_trade_no=partner_trade_no;
+        this.check_name="NO_CHECK";//"FORCE_CHECK";
+        this.amount=amount;
+        this.desc=desc;
+        this.spbill_create_ip=ip;
+        this.openid=openid;
         this.sign = PayUtil.sign(this);
     }
 
@@ -168,5 +190,19 @@ public class WxPay {
      */
     public static WxPay smPayBack(String out_trade_no, String out_refund_no,int total_fee,int refund_fee) throws Exception {
         return new WxPay(out_trade_no,out_refund_no,total_fee,refund_fee);
+    }
+
+    /**
+     * 微信企业付款
+     * @param partner_trade_no 订单号
+     * @param openid 微信openId
+     * @param amount 金额
+     * @param desc 描述
+     * @param ip ip
+     * @return
+     * @throws Exception
+     */
+    public static WxPay companyPay(String partner_trade_no,String openid,int amount,String desc,String ip) throws Exception {
+        return new WxPay(partner_trade_no,openid,amount,desc,ip);
     }
 }

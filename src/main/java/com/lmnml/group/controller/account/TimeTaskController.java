@@ -1,7 +1,10 @@
 package com.lmnml.group.controller.account;
 
+import com.lmnml.group.common.model.AliPay;
 import com.lmnml.group.common.model.WxPay;
+import com.lmnml.group.common.pay.AliPayUtil;
 import com.lmnml.group.common.pay.PayUtil;
+import com.lmnml.group.dao.app.VPlatFormUserMapper;
 import com.lmnml.group.dao.app.VPlatformDealrecordMapper;
 import com.lmnml.group.dao.app.VPlatformTaskMapper;
 import com.lmnml.group.dao.app.VPlatformUserTaskMapper;
@@ -27,6 +30,8 @@ import java.util.List;
 @Component
 public class TimeTaskController {
 
+
+
     @Autowired
     private VPlatformTaskMapper vPlatformTaskMapper;
 
@@ -38,6 +43,9 @@ public class TimeTaskController {
 
     @Autowired
     private ITaskService taskService;
+
+    @Autowired
+    private VPlatFormUserMapper userMapper;
 
     //修改任务状态,30秒执行一次
     @Scheduled(fixedRate = 30000)
@@ -66,8 +74,8 @@ public class TimeTaskController {
     }
 
     //自动退款.(滞后周期)
-//    @Scheduled(fixedRate = 60000 * 60 * 12)
-//    @Transactional
+    @Scheduled(fixedRate = 60000 * 60 * 12)
+    @Transactional
     public void selfR() throws Exception {
         Example example = new Example(VPlatformTask.class);
         example.createCriteria().andEqualTo("status", 3).andEqualTo("ctlPrice", 1).andBetween("endTime", DateKit.getDay(-3), new Date());
@@ -92,19 +100,30 @@ public class TimeTaskController {
             VPlatformDealrecord vPlatformTask1 = list1.get(0);
             String orderId = vPlatformTask1.getId();
 
-//            VPlatformDealrecord vPlatformDealrecord = new VPlatformDealrecord();
-//            vPlatformDealrecord.setId(StrKit.ID());
-//            vPlatformDealrecord.setType();
+            //添加退款记录.
+            VPlatformDealrecord vPlatformDealrecord = new VPlatformDealrecord();
+            vPlatformDealrecord.setId(StrKit.ID());
+            vPlatformDealrecord.setCreateTime(new Date());
+            vPlatformDealrecord.setType(7);
+            vPlatformDealrecord.setUserId(vPlatformTask.getUserId());
+            vPlatformDealrecord.setMoney(total);
+            vPlatformDealrecord.setPayType(vPlatformTask1.getPayType());
+            vPlatformDealrecord.setPId(orderId);
+            vPlatformDealrecord.setTaskId(vPlatformTask.getId());
+            vPlatformDealrecord.setStatus(2);
+
             //调用退款接口  orderId, vPlatformTask.getId(),num*vPlatformTask.getPrice(),total
             //1,2,3
             switch (vPlatformTask1.getPayType()) {
                 case 1:
+                    //账户加钱
+                    userMapper.updateAccount(vPlatformTask.getUserId(), total);
                     break;
                 case 2:
-                    PayUtil.smPayBack(WxPay.smPayBack(orderId, vPlatformTask.getId(),num*vPlatformTask.getPrice(),total));
+                    PayUtil.smPayBack(WxPay.smPayBack(orderId, vPlatformTask.getId(), num * vPlatformTask.getPrice(), total));
                     break;
                 case 3:
-
+                    AliPayUtil.smPayBack(new AliPay("",orderId,num * vPlatformTask.getPrice(),"","",""));
                     break;
                 default:
                     break;

@@ -38,7 +38,11 @@ public class SysOrderController {
         return  null;
     }
 
-    //转账
+    @ApiOperation(value = "转账订单")
+    @PostMapping("companyPay")
+    public Result sysCompanyPay(){
+        return null;
+    }
 
     @Data
     @ApiModel("sys任务审核列表model")

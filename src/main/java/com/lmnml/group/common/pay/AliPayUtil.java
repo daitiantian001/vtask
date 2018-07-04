@@ -3,14 +3,16 @@ package com.lmnml.group.common.pay;
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
 import com.alipay.api.DefaultAlipayClient;
-import com.alipay.api.domain.AlipayTradeAppPayModel;
-import com.alipay.api.domain.AlipayTradeCreateModel;
-import com.alipay.api.domain.ExtendParams;
+import com.alipay.api.domain.*;
 import com.alipay.api.internal.util.AlipaySignature;
+import com.alipay.api.request.AlipayFundTransToaccountTransferRequest;
 import com.alipay.api.request.AlipayTradeAppPayRequest;
 import com.alipay.api.request.AlipayTradePrecreateRequest;
+import com.alipay.api.request.AlipayTradeRefundRequest;
+import com.alipay.api.response.AlipayFundTransToaccountTransferResponse;
 import com.alipay.api.response.AlipayTradeAppPayResponse;
 import com.alipay.api.response.AlipayTradePrecreateResponse;
+import com.alipay.api.response.AlipayTradeRefundResponse;
 import com.lmnml.group.common.model.AliPay;
 import com.lmnml.group.common.model.Attach;
 import com.lmnml.group.util.JsonUtil;
@@ -118,6 +120,50 @@ public class AliPayUtil {
             e.printStackTrace();
         }
         return null;
+    }
+
+    //退款smPayBack
+    public static String smPayBack(AliPay aliPay) throws AlipayApiException {
+        AlipayTradeRefundRequest request=new AlipayTradeRefundRequest();
+        AlipayTradeRefundModel model = new AlipayTradeRefundModel();
+        model.setOutTradeNo(aliPay.getId());
+        model.setRefundAmount(StrKit.addPoint(aliPay.getTotal()+""));
+        request.setBizModel(model);
+        AlipayTradeRefundResponse response=alipayClient.execute(request);
+        if(response.isSuccess()){
+            return "success";
+        }else {
+            return null;
+        }
+    }
+
+
+    //转账功能
+
+    /**
+     *  id: 订单id
+     *  storeId: zfbId
+     *  total: 转账金额
+     * @param aliPay
+     * @return
+     * @throws AlipayApiException
+     */
+    public static String smPayTransfer(AliPay aliPay) throws AlipayApiException {
+        AlipayFundTransToaccountTransferRequest request= new AlipayFundTransToaccountTransferRequest();
+        AlipayFundTransToaccountTransferModel model = new AlipayFundTransToaccountTransferModel();
+        model.setOutBizNo(aliPay.getId());
+        model.setPayeeType("ALIPAY_USERID");
+        model.setPayeeAccount(aliPay.getStoreId());
+        model.setAmount(StrKit.addPoint(aliPay.getTotal() + ""));
+        model.setPayerShowName("飞腾赚客官方付款");
+        model.setRemark("提现完成!");
+        request.setBizModel(model);
+        AlipayFundTransToaccountTransferResponse response = alipayClient.execute(request);
+        if(response.isSuccess()){
+            return "success";
+        }else {
+            return null;
+        }
     }
 
     public static Map parseReq(HttpServletRequest request) {

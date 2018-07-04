@@ -85,6 +85,8 @@ public class TaskService implements ITaskService {
             Integer price=v.getPrice()*((100-v.getRatio())/100);
 
             String userTaskId = insertTask(userId, taskId, price);
+            //次数减1
+            vPlatformTaskMapper.updateNum(taskId,-1);
             Map map = new HashMap();
             map.put("userTaskId", userTaskId);
             return new Result(R.SUCCESS, map);

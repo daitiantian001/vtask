@@ -1,17 +1,16 @@
 package com.lmnml.group;
 
-import com.google.gson.Gson;
 import com.lmnml.group.common.excel.ExcelJSON;
 import com.lmnml.group.common.excel2.ExcelNode;
-import com.lmnml.group.util.DateKit;
 import com.lmnml.group.util.JsonUtil;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,16 +21,28 @@ import java.util.regex.Pattern;
 @SpringBootTest
 public class VtaskApplicationTests {
 
-    @Test
-    public void name() throws Exception {
-        System.out.println("===============");
-        System.out.println(DateKit.getDay(-1));
-        System.out.println(DateKit.getDay(0));
-        System.out.println(DateKit.getDay(1));
-    }
+//    @Test
+//    public void name() throws Exception {
+//        AliPayUtil.smPayBack(new AliPay("","90947ab273ca41c982c65d7c77e5cfe5",1,"","",""));
+//    }
+    static int i=0;
 
     @Test
     public void contextLoads() {
+        for (int j = 0; j <100 ; j++) {
+            new Thread(() -> {
+                System.out.print("======="+Thread.currentThread().getName()+"=======");
+                System.out.println(new A(++i + "", i + ""));
+            }).start();
+        }
+    }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class A{
+        private String name;
+        private String value;
     }
 
     public static String getCotent(String source){

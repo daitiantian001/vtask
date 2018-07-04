@@ -15,12 +15,12 @@ import java.util.Map;
  */
 @Mapper
 public interface VPlatformTaskMapper extends MyMapper<VPlatformTask> {
-    @Select("SELECT vpt.id taskId,vpt.name,vsc.icon,vpt.price*((100-vpt.ratio)/100) price\n" +
+    @Select("SELECT vpt.id taskId,vpt.name,vsc.icon,vpt.price*((100-vpt.ratio)/100) price,vpt.last_num lastNum\n" +
             "FROM v_platform_task vpt LEFT JOIN v_system_category vsc ON vpt.category_id=vsc.id\n" +
             "WHERE vpt.status=2 AND vpt.ctl_status=1 AND vpt.end_time>NOW() ORDER BY vpt.create_time DESC limit #{currentPage},100")
     List<Map> findAllInfo(Integer currentPage);
 
-    @Select("SELECT vpt.id taskId,vpt.name,vsc.icon,vpt.price*((100-vpt.ratio)/100) price\n" +
+    @Select("SELECT vpt.id taskId,vpt.name,vsc.icon,vpt.price*((100-vpt.ratio)/100) price,vpt.last_num lastNum\n" +
             "FROM v_platform_task vpt LEFT JOIN v_system_category vsc ON vpt.category_id=vsc.id\n" +
             "WHERE vpt.status=2 AND vpt.ctl_status=1 AND vpt.end_time>NOW() AND vpt.category_id=#{type} ORDER BY vpt.create_time DESC limit #{currentPage},100 ")
     List<Map> findAllInfo2(@Param("currentPage") Integer currentPage,@Param("type") String type);
@@ -88,4 +88,7 @@ public interface VPlatformTaskMapper extends MyMapper<VPlatformTask> {
 
     @Update("update v_platform_task set status=3 where now()>end_time and status=2")
     void updateExpireTaskStatus();
+
+    @Update("update v_platform_task set last_num=last_num+#{i} where id=#{taskId}")
+    void updateNum(@Param("taskId") String taskId, @Param("i") int i);
 }

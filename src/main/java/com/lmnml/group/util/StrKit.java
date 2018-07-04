@@ -79,4 +79,9 @@ public class StrKit {
         }
         return sb.toString();
     }
+
+    public static Double stringToDouble( String  money) {
+        Double  moneyDouble =Double.parseDouble(addPoint(money));
+        return moneyDouble;
+    }
 }
